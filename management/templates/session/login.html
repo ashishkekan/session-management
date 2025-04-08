@@ -4,31 +4,34 @@
     <title>Login</title>
     <style>
         body {
-            font-family: Arial;
+            font-family: Arial, sans-serif;
             background-color: #f4f4f4;
-            padding: 30px;
         }
+
         .login-container {
-            background-color: white;
+            background-color: #fff;
             padding: 30px;
             max-width: 400px;
             margin: 100px auto;
             border-radius: 10px;
             box-shadow: 0 0 15px rgba(0,0,0,0.1);
         }
+
         h2 {
             text-align: center;
             color: #007bff;
             margin-bottom: 25px;
         }
-        input[type="text"], input[type="password"] {
+
+        input[type="text"],
+        input[type="password"] {
             width: 100%;
             padding: 10px;
-            margin-top: 8px;
-            margin-bottom: 20px;
+            margin: 8px 0 20px;
             border: 1px solid #ccc;
             border-radius: 6px;
         }
+
         button {
             width: 100%;
             padding: 12px;
@@ -39,9 +42,7 @@
             font-size: 16px;
             cursor: pointer;
         }
-        button:hover {
-            background-color: #007bff;
-        }
+
         .error {
             color: red;
             text-align: center;
@@ -61,10 +62,10 @@
             {% csrf_token %}
             <label>Username</label>
             <input type="text" name="username" required>
-            
+
             <label>Password</label>
             <input type="password" name="password" required>
-            
+
             <button type="submit">Login</button>
         </form>
     </div>

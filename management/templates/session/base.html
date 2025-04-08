@@ -3,21 +3,17 @@
 <head>
     <title>{% block title %}Session Management{% endblock %}</title>
     <style>
-        html, body {
-            height: 100%;
-            margin: 0;
-            padding: 0;
-        }
-
         body {
-            display: flex;
-            flex-direction: column;
+            margin: 0;
             font-family: Arial, sans-serif;
             background-color: #f7f7f7;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
         }
 
         header {
-            background-color: #87CEFA; /* Light Blue */
+            background-color: #87CEFA;
             color: #fff;
             padding: 15px 30px;
             display: flex;
@@ -29,12 +25,11 @@
         header h1 {
             margin: 0;
             font-size: 24px;
-            color: #fff;
         }
 
         nav {
             display: flex;
-            gap: 6px; /* spacing between links */
+            gap: 6px;
             flex-wrap: wrap;
         }
 
@@ -44,7 +39,7 @@
             font-weight: bold;
             text-decoration: none;
             font-size: 14px;
-            transition: background-color 0.3s ease, color 0.3s ease;
+            transition: background-color 0.3s ease;
         }
 
         nav a:hover {
@@ -56,7 +51,7 @@
         }
 
         .content {
-            flex: 1; /* Pushes footer to bottom when there's not enough content */
+            flex: 1;
             padding: 30px;
         }
 

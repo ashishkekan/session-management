@@ -12,7 +12,6 @@
         border-radius: 12px;
         box-shadow: 0 0 20px rgba(0,0,0,0.1);
         border-top: 5px solid #007bff;
-        position: relative;
     }
 
     .form-container h2 {
@@ -20,11 +19,6 @@
         color: #007bff;
         font-size: 26px;
         text-align: center;
-    }
-
-    .form-container label {
-        font-weight: bold;
-        color: #555;
     }
 
     .form-container input, 
@@ -52,7 +46,6 @@
         border: none;
         cursor: pointer;
         text-decoration: none;
-        display: inline-block;
     }
 
     .back-btn {
@@ -67,7 +60,6 @@
     .save-btn {
         background-color: #007bff;
         color: white;
-        border: none;
     }
 
     .save-btn:hover {
@@ -81,7 +73,7 @@
         {% csrf_token %}
         {{ form.as_p }}
         <div class="form-actions">
-            <a href="{% url 'home' %}" class="back-btn">← Back</a>
+            <a href="{% url 'session_list' %}" class="back-btn">← Back</a>
             <button type="submit" class="save-btn">Save</button>
         </div>
     </form>

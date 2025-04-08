@@ -31,7 +31,6 @@
     .table th,
     .table td {
         border: 1px solid #dee2e6;
-        vertical-align: middle !important;
         font-size: 15px;
         padding: 10px;
         text-align: center;
@@ -82,46 +81,44 @@
 <div class="user-table-container">
     <div class="user-table-card">
         <h3>👥 Registered Users</h3>
-        <div class="table-responsive">
-            <table class="table">
-                <thead class="thead-light bg-light">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>No.</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Is Staff?</th>
+                    {% if request.user.is_staff %}
+                        <th>Actions</th>
+                    {% endif %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
                     <tr>
-                        <th>No.</th>
-                        <th>Name</th>
-                        <th>Email</th>
-                        <th>Is Staff?</th>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ user.first_name }} {{ user.last_name }}</td>
+                        <td>{{ user.email }}</td>
+                        <td>
+                            {% if user.is_staff %}
+                                <span class="text-success">✅ Yes</span>
+                            {% else %}
+                                <span class="text-danger">❌ No</span>
+                            {% endif %}
+                        </td>
                         {% if request.user.is_staff %}
-                            <th>Actions</th>
+                            <td>
+                                <a href="{% url 'edit_user' user.id %}" class="edit-btn">Edit</a>
+                            </td>
                         {% endif %}
                     </tr>
-                </thead>
-                <tbody>
-                    {% for user in users %}
-                        <tr>
-                            <td>{{ forloop.counter }}</td>
-                            <td>{{ user.first_name }} {{ user.last_name }}</td>
-                            <td>{{ user.email }}</td>
-                            <td>
-                                {% if user.is_staff %}
-                                    <span class="text-success">✅ Yes</span>
-                                {% else %}
-                                    <span class="text-danger">❌ No</span>
-                                {% endif %}
-                            </td>
-                            {% if request.user.is_staff %}
-                                <td>
-                                    <a href="{% url 'edit_user' user.id %}" class="edit-btn">Edit</a>
-                                </td>
-                            {% endif %}
-                        </tr>
-                    {% empty %}
-                        <tr>
-                            <td colspan="{% if request.user.is_staff %}5{% else %}4{% endif %}" class="text-muted text-center">No users found.</td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
+                {% empty %}
+                    <tr>
+                        <td colspan="{% if request.user.is_staff %}5{% else %}4{% endif %}" class="text-muted text-center">No users found.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
 
         <!-- Pagination -->
         <div class="pagination">
