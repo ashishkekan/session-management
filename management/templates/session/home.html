@@ -82,6 +82,36 @@
                 <p>No upcoming sessions found.</p>
             {% endif %}
         </div>
+        <div class="card">
+            <h3>Completed sessions</h3>
+            {% if completed %}
+                <ul class="session-list">
+                    {% for session in completed %}
+                        <li>
+                            <strong>{{ session.topic }}</strong><br>
+                            📅 {{ session.date|date:"M d, Y" }}
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>No upcoming sessions found.</p>
+            {% endif %}
+        </div>
+        <div class="card">
+            <h3>Pending sessions</h3>
+            {% if pending %}
+                <ul class="session-list">
+                    {% for session in pending %}
+                        <li>
+                            <strong>{{ session.topic }}</strong><br>
+                            📅 {{ session.date|date:"M d, Y" }}
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>No upcoming sessions found.</p>
+            {% endif %}
+        </div>
     {% else %}
         <div class="card">
             <h3>Total Sessions Assigned</h3>

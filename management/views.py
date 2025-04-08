@@ -36,7 +36,13 @@ def home(request):
     if user.is_staff:
         top_sessions = SessionTopic.objects.filter(
             date__gte=timezone.now()
-        ).order_by("date")[:5]  # ascending order: soonest first
+        ).order_by("date")[:3]  # ascending order: soonest first
+        completed = SessionTopic.objects.filter(
+            status="Completed"
+        ).order_by("date")[:3]
+        pending = SessionTopic.objects.filter(
+            status="Pending"
+        ).order_by("date")[:3]
 
         context.update(
             {
@@ -45,6 +51,8 @@ def home(request):
                 "total_sessions": SessionTopic.objects.count(),
                 "all_sessions": SessionTopic.objects.order_by("-date"),
                 "top_sessions": top_sessions,
+                "completed": completed,
+                "pending": pending,
             }
         )
     else:
