@@ -34,12 +34,17 @@ def home(request):
     context = {}
 
     if user.is_staff:
+        top_sessions = SessionTopic.objects.filter(
+            date__gte=timezone.now()
+        ).order_by("date")[:5]  # ascending order: soonest first
+
         context.update(
             {
                 "is_admin": True,
                 "total_users": User.objects.count(),
                 "total_sessions": SessionTopic.objects.count(),
                 "all_sessions": SessionTopic.objects.order_by("-date"),
+                "top_sessions": top_sessions,
             }
         )
     else:

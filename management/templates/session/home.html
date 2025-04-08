@@ -67,6 +67,21 @@
                 <p style="color: #007bff; font-size: 14px;">View All Sessions →</p>
             </div>
         </a>
+        <div class="card">
+            <h3>Top 5 Upcoming Sessions</h3>
+            {% if top_sessions %}
+                <ul class="session-list">
+                    {% for session in top_sessions %}
+                        <li>
+                            <strong>{{ session.topic }}</strong><br>
+                            📅 {{ session.date|date:"M d, Y" }}
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>No upcoming sessions found.</p>
+            {% endif %}
+        </div>
     {% else %}
         <div class="card">
             <h3>Total Sessions Assigned</h3>
