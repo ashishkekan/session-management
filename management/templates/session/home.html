@@ -55,11 +55,13 @@
     </div>
     
     {% if is_admin %}
-        <div class="card">
-            <h3>Total Users</h3>
-            <p class="count">{{ total_users }}</p>
-        </div>
-
+        <a href="{% url 'user_list' %}" class="card-link">
+            <div class="card">
+                <h3>Total Users</h3>
+                <p class="count">{{ total_users }}</p>
+                <p style="color: #007bff; font-size: 14px;">View All Users →</p>
+            </div>
+        </a>
         <a href="{% url 'session_list' %}" class="card-link">
             <div class="card">
                 <h3>Total Sessions</h3>
@@ -68,7 +70,7 @@
             </div>
         </a>
         <div class="card">
-            <h3>Top 5 Upcoming Sessions</h3>
+            <h3>Top 3 Upcoming Sessions</h3>
             {% if top_sessions %}
                 <ul class="session-list">
                     {% for session in top_sessions %}
@@ -83,7 +85,7 @@
             {% endif %}
         </div>
         <div class="card">
-            <h3>Completed sessions</h3>
+            <h3>Completed Sessions</h3>
             {% if completed %}
                 <ul class="session-list">
                     {% for session in completed %}
@@ -94,11 +96,11 @@
                     {% endfor %}
                 </ul>
             {% else %}
-                <p>No upcoming sessions found.</p>
+                <p>No completed sessions found.</p>
             {% endif %}
         </div>
         <div class="card">
-            <h3>Pending sessions</h3>
+            <h3>Pending Sessions</h3>
             {% if pending %}
                 <ul class="session-list">
                     {% for session in pending %}
@@ -109,7 +111,7 @@
                     {% endfor %}
                 </ul>
             {% else %}
-                <p>No upcoming sessions found.</p>
+                <p>No pending sessions found.</p>
             {% endif %}
         </div>
     {% else %}
