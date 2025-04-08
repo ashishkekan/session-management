@@ -10,12 +10,11 @@
     }
 
     .card {
-        background-color: white;
+        background-color: #fff;
         border-radius: 12px;
-        box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
         padding: 20px 30px;
         margin-bottom: 30px;
-        cursor: pointer;
         transition: transform 0.2s ease;
     }
 
@@ -37,38 +36,46 @@
         margin-bottom: 12px;
     }
 
-    .session-meta {
-        color: gray;
-        font-size: 14px;
-    }
-
-    a.card-link {
+    .card-link {
         text-decoration: none;
         color: inherit;
         display: block;
     }
+
+    .card-footer {
+        color: #007bff;
+        font-size: 14px;
+    }
+
+    .welcome-message {
+        margin-bottom: 20px;
+        font-size: 20px;
+        font-weight: 600;
+    }
 </style>
 
 <div class="dashboard-container">
-    <div style="margin-bottom: 20px; font-size: 20px; font-weight: 600;">
+    <div class="welcome-message">
         👋 Welcome, {{ request.user.username|default:request.user.username }}!
     </div>
-    
+
     {% if is_admin %}
         <a href="{% url 'user_list' %}" class="card-link">
             <div class="card">
                 <h3>Total Users</h3>
                 <p class="count">{{ total_users }}</p>
-                <p style="color: #007bff; font-size: 14px;">View All Users →</p>
+                <p class="card-footer">View All Users →</p>
             </div>
         </a>
+
         <a href="{% url 'session_list' %}" class="card-link">
             <div class="card">
                 <h3>Total Sessions</h3>
                 <p class="count">{{ total_sessions }}</p>
-                <p style="color: #007bff; font-size: 14px;">View All Sessions →</p>
+                <p class="card-footer">View All Sessions →</p>
             </div>
         </a>
+
         <div class="card">
             <h3>Top 3 Upcoming Sessions</h3>
             {% if top_sessions %}
@@ -84,6 +91,7 @@
                 <p>No upcoming sessions found.</p>
             {% endif %}
         </div>
+
         <div class="card">
             <h3>Completed Sessions</h3>
             {% if completed %}
@@ -99,6 +107,7 @@
                 <p>No completed sessions found.</p>
             {% endif %}
         </div>
+
         <div class="card">
             <h3>Pending Sessions</h3>
             {% if pending %}
@@ -114,6 +123,7 @@
                 <p>No pending sessions found.</p>
             {% endif %}
         </div>
+
     {% else %}
         <div class="card">
             <h3>Total Sessions Assigned</h3>
@@ -136,6 +146,5 @@
             {% endif %}
         </div>
     {% endif %}
-
 </div>
 {% endblock %}

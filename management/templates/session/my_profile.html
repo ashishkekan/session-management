@@ -33,8 +33,7 @@
         font-size: 15px;
     }
 
-    .form-group input[type="text"],
-    .form-group input[type="email"] {
+    .form-group input {
         width: 100%;
         padding: 12px;
         border: 1px solid #ccc;
@@ -54,15 +53,20 @@
         margin-top: 25px;
     }
 
+    .update-btn,
+    .change-password-btn {
+        padding: 10px 24px;
+        border-radius: 6px;
+        font-size: 15px;
+        transition: background-color 0.3s ease;
+        text-decoration: none;
+        color: white;
+        border: none;
+        cursor: pointer;
+    }
+
     .update-btn {
         background-color: #007bff;
-        color: white;
-        padding: 10px 24px;
-        border: none;
-        border-radius: 6px;
-        font-size: 16px;
-        cursor: pointer;
-        transition: background-color 0.3s ease;
     }
 
     .update-btn:hover {
@@ -70,13 +74,7 @@
     }
 
     .change-password-btn {
-        text-decoration: none;
         background-color: #6c757d;
-        color: white;
-        padding: 10px 18px;
-        border-radius: 6px;
-        font-size: 15px;
-        transition: background-color 0.3s ease;
     }
 
     .change-password-btn:hover {
