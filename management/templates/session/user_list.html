@@ -1,0 +1,146 @@
+{% extends 'session/base.html' %}
+
+{% block title %}User List{% endblock %}
+
+{% block content %}
+<style>
+    .user-table-container {
+        max-width: 960px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    .user-table-card {
+        background-color: #ffffff;
+        border-radius: 16px;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        padding: 30px;
+    }
+
+    .user-table-card h3 {
+        margin-bottom: 25px;
+        text-align: center;
+        color: #333;
+    }
+
+    .table {
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    .table th,
+    .table td {
+        border: 1px solid #dee2e6;
+        vertical-align: middle !important;
+        font-size: 15px;
+        padding: 10px;
+        text-align: center;
+    }
+
+    .table tbody tr:hover {
+        background-color: #e9f3ff;
+        cursor: pointer;
+    }
+
+    .edit-btn {
+        background-color: #28a745;
+        border: none;
+        color: white;
+        padding: 5px 10px;
+        font-size: 13px;
+        border-radius: 5px;
+        text-decoration: none;
+    }
+
+    .edit-btn:hover {
+        background-color: #218838;
+    }
+
+    .pagination {
+        display: flex;
+        justify-content: center;
+        margin-top: 20px;
+    }
+
+    .pagination a,
+    .pagination span {
+        color: #007bff;
+        padding: 8px 12px;
+        margin: 0 4px;
+        text-decoration: none;
+        border: 1px solid #dee2e6;
+        border-radius: 5px;
+    }
+
+    .pagination .current {
+        background-color: #989da2;
+        color: white;
+        font-weight: bold;
+    }
+</style>
+
+<div class="user-table-container">
+    <div class="user-table-card">
+        <h3>👥 Registered Users</h3>
+        <div class="table-responsive">
+            <table class="table">
+                <thead class="thead-light bg-light">
+                    <tr>
+                        <th>No.</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Is Staff?</th>
+                        {% if request.user.is_staff %}
+                            <th>Actions</th>
+                        {% endif %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in users %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td>{{ user.first_name }} {{ user.last_name }}</td>
+                            <td>{{ user.email }}</td>
+                            <td>
+                                {% if user.is_staff %}
+                                    <span class="text-success">✅ Yes</span>
+                                {% else %}
+                                    <span class="text-danger">❌ No</span>
+                                {% endif %}
+                            </td>
+                            {% if request.user.is_staff %}
+                                <td>
+                                    <a href="{% url 'edit_user' user.id %}" class="edit-btn">Edit</a>
+                                </td>
+                            {% endif %}
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="{% if request.user.is_staff %}5{% else %}4{% endif %}" class="text-muted text-center">No users found.</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination -->
+        <div class="pagination">
+            {% if users.has_previous %}
+                <a href="?page={{ users.previous_page_number }}">« Previous</a>
+            {% endif %}
+
+            {% for num in users.paginator.page_range %}
+                {% if users.number == num %}
+                    <span class="current">{{ num }}</span>
+                {% elif num > users.number|add:'-3' and num < users.number|add:'3' %}
+                    <a href="?page={{ num }}">{{ num }}</a>
+                {% endif %}
+            {% endfor %}
+
+            {% if users.has_next %}
+                <a href="?page={{ users.next_page_number }}">Next »</a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

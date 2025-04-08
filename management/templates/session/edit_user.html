@@ -1,0 +1,137 @@
+{% extends 'session/base.html' %}
+{% block title %}Edit User{% endblock %}
+
+{% block content %}
+<style>
+    .user-table-container {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    .user-table-card {
+        background-color: #ffffff;
+        border-radius: 16px;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        padding: 30px;
+    }
+
+    .user-table-card h3 {
+        margin-bottom: 25px;
+        text-align: center;
+        color: #333;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-group-row {
+        display: flex;
+        gap: 20px;
+        flex-wrap: wrap;
+    }
+
+    .form-group.half-width {
+        flex: 1 1 48%;
+    }
+
+    @media (max-width: 600px) {
+        .form-group.half-width {
+            flex: 1 1 100%;
+        }
+    }
+
+    label {
+        font-weight: 500;
+    }
+
+    input.form-control {
+        width: 100%;
+        padding: 8px 12px;
+        border: 1px solid #ced4da;
+        border-radius: 5px;
+    }
+
+    .form-check {
+        margin-top: 10px;
+    }
+
+    .save-btn {
+        background-color: #28a745;
+        border: none;
+        color: white;
+        padding: 8px 18px;
+        font-size: 15px;
+        border-radius: 6px;
+        transition: background-color 0.3s ease;
+    }
+
+    .save-btn:hover {
+        background-color: #218838;
+    }
+
+    .form-footer {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 30px;
+    }
+
+    .back-btn, .save-btn {
+        padding: 8px 18px;
+        font-size: 15px;
+        border-radius: 6px;
+        text-decoration: none;
+        border: none;
+        cursor: pointer;
+    }
+
+    .back-btn {
+        background-color: #6c757d;
+        color: white;
+    }
+
+    .back-btn:hover {
+        background-color: #5a6268;
+    }
+
+    .save-btn {
+        background-color: #28a745;
+        color: white;
+    }
+
+    .save-btn:hover {
+        background-color: #218838;
+    }
+
+</style>
+
+<div class="user-table-container">
+    <div class="user-table-card">
+        <h3>✏️ Edit User - {{ user_obj.username }}</h3>
+        <form method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="{{ form.first_name.id_for_label }}">{{ form.first_name.label }}</label>
+                {{ form.first_name }}
+            </div>
+            <div class="form-group">
+                <label for="{{ form.last_name.id_for_label }}">{{ form.last_name.label }}</label>
+                {{ form.last_name }}
+            </div>
+            <div class="form-group">
+                <label for="{{ form.username.id_for_label }}">{{ form.username.label }}</label>
+                {{ form.username }}
+            </div>
+            <div class="form-group">
+                <label for="{{ form.email.id_for_label }}">{{ form.email.label }}</label>
+                {{ form.email }}
+            </div>
+            <div class="form-footer">
+                <a href="{% url 'user_list' %}" class="back-btn">← Back</a>
+                <button type="submit" class="save-btn">Update</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

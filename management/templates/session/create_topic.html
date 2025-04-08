@@ -1,0 +1,89 @@
+{% extends 'session/base.html' %}
+
+{% block title %}Create Session{% endblock %}
+
+{% block content %}
+<style>
+    .form-container {
+        background-color: white;
+        padding: 30px;
+        max-width: 600px;
+        margin: 40px auto;
+        border-radius: 12px;
+        box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        border-top: 5px solid #007bff;
+        position: relative;
+    }
+
+    .form-container h2 {
+        margin-bottom: 25px;
+        color: #007bff;
+        font-size: 26px;
+        text-align: center;
+    }
+
+    .form-container label {
+        font-weight: bold;
+        color: #555;
+    }
+
+    .form-container input, 
+    .form-container select, 
+    .form-container textarea {
+        width: 100%;
+        padding: 10px 12px;
+        margin-top: 5px;
+        margin-bottom: 20px;
+        border-radius: 6px;
+        border: 1px solid #ccc;
+        font-size: 15px;
+    }
+
+    .form-actions {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 20px;
+    }
+
+    .back-btn, .save-btn {
+        padding: 10px 20px;
+        font-size: 16px;
+        border-radius: 6px;
+        border: none;
+        cursor: pointer;
+        text-decoration: none;
+        display: inline-block;
+    }
+
+    .back-btn {
+        background-color: #6c757d;
+        color: white;
+    }
+
+    .back-btn:hover {
+        background-color: #5a6268;
+    }
+
+    .save-btn {
+        background-color: #007bff;
+        color: white;
+        border: none;
+    }
+
+    .save-btn:hover {
+        background-color: #007bff;
+    }
+</style>
+
+<div class="form-container">
+    <h2>Create Session Topic</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <div class="form-actions">
+            <a href="{% url 'home' %}" class="back-btn">← Back</a>
+            <button type="submit" class="save-btn">Save</button>
+        </div>
+    </form>
+</div>
+{% endblock %}
