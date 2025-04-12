@@ -6,7 +6,7 @@
 <style>
     .dashboard-container {
         max-width: 1000px;
-        margin: 30px auto;
+        margin: -15px auto;
     }
 
     .card {
@@ -81,8 +81,11 @@
             {% if top_sessions %}
                 <ul class="session-list">
                     {% for session in top_sessions %}
-                        <li>
-                            <strong>{{ session.topic }}</strong><br>
+                        <li style="display: flex; justify-content: space-between; align-items: center;">
+                            <strong>{{ session.topic }}</strong>
+                            <span style="font-size: 0.9em; color: #555;"><strong>{{ session.conducted_by.first_name }}</strong></span>
+                        </li>
+                        <li style="margin-bottom: 10px;">
                             📅 {{ session.date|date:"M d, Y" }}
                         </li>
                     {% endfor %}
@@ -90,15 +93,18 @@
             {% else %}
                 <p>No upcoming sessions found.</p>
             {% endif %}
-        </div>
+        </div>        
 
         <div class="card">
             <h3>Completed Sessions</h3>
             {% if completed %}
                 <ul class="session-list">
                     {% for session in completed %}
-                        <li>
-                            <strong>{{ session.topic }}</strong><br>
+                        <li style="display: flex; justify-content: space-between; align-items: center;">
+                            <strong>{{ session.topic }}</strong>
+                            <span style="font-size: 0.9em; color: #555;"><strong>{{ session.conducted_by.first_name }}</strong></span>
+                        </li>
+                        <li style="margin-bottom: 10px;">
                             📅 {{ session.date|date:"M d, Y" }}
                         </li>
                     {% endfor %}
@@ -107,14 +113,17 @@
                 <p>No completed sessions found.</p>
             {% endif %}
         </div>
-
+        
         <div class="card">
             <h3>Pending Sessions</h3>
             {% if pending %}
                 <ul class="session-list">
                     {% for session in pending %}
-                        <li>
-                            <strong>{{ session.topic }}</strong><br>
+                        <li style="display: flex; justify-content: space-between; align-items: center;">
+                            <strong>{{ session.topic }}</strong>
+                            <span style="font-size: 0.9em; color: #555;"><strong>{{ session.conducted_by.first_name }}</strong></span>
+                        </li>
+                        <li style="margin-bottom: 10px;">
                             📅 {{ session.date|date:"M d, Y" }}
                         </li>
                     {% endfor %}
@@ -122,7 +131,7 @@
             {% else %}
                 <p>No pending sessions found.</p>
             {% endif %}
-        </div>
+        </div>        
 
     {% else %}
         <div class="card">
