@@ -6,37 +6,57 @@
 <style>
     .form-container {
         background-color: white;
-        padding: 30px;
-        max-width: 600px;
+        padding: 30px 40px;
+        max-width: 650px;
         margin: 40px auto;
-        border-radius: 12px;
-        box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        border-radius: 16px;
+        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
         border-top: 5px solid #007bff;
     }
 
     .form-container h2 {
-        margin-bottom: 25px;
+        margin-bottom: 30px;
         color: #007bff;
-        font-size: 26px;
+        font-size: 28px;
         text-align: center;
     }
 
-    .form-container input, 
-    .form-container select, 
-    .form-container textarea {
-        width: 100%;
-        padding: 10px 12px;
-        margin-top: 5px;
+    .form-group {
         margin-bottom: 20px;
-        border-radius: 6px;
-        border: 1px solid #ccc;
+    }
+
+    .form-group label {
+        display: block;
+        font-weight: bold;
+        margin-bottom: 6px;
+        color: #333;
         font-size: 15px;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        font-size: 15px;
+        transition: border-color 0.3s;
+        box-sizing: border-box;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+        border-color: #007bff;
+        outline: none;
     }
 
     .form-actions {
         display: flex;
         justify-content: space-between;
-        margin-top: 20px;
+        align-items: center;
+        margin-top: 30px;
     }
 
     .back-btn, .save-btn {
@@ -63,7 +83,13 @@
     }
 
     .save-btn:hover {
-        background-color: #007bff;
+        background-color: #0056b3;
+    }
+
+    .error {
+        color: red;
+        font-size: 14px;
+        margin-top: 5px;
     }
 </style>
 
@@ -71,7 +97,16 @@
     <h2>Create Session Topic</h2>
     <form method="post">
         {% csrf_token %}
-        {{ form.as_p }}
+        {% for field in form %}
+            <div class="form-group">
+                {{ field.label_tag }}
+                {{ field }}
+                {% if field.errors %}
+                    <div class="error">{{ field.errors }}</div>
+                {% endif %}
+            </div>
+        {% endfor %}
+
         <div class="form-actions">
             <a href="{% url 'session_list' %}" class="back-btn">← Back</a>
             <button type="submit" class="save-btn">Save</button>

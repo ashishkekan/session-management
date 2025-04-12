@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 from django.core.paginator import Paginator
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
+from django.utils.timezone import now
 
 from .forms import (
     CustomPasswordChangeForm,
@@ -35,8 +36,8 @@ def home(request):
 
     if user.is_staff:
         top_sessions = SessionTopic.objects.filter(
-            date__gte=timezone.now()
-        ).order_by("date")[:3]  # ascending order: soonest first
+            date__gt=now(),
+        ).exclude(status="Completed").order_by("date")[:3]
         completed = SessionTopic.objects.filter(
             status="Completed"
         ).order_by("date")[:3]
