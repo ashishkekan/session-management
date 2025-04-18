@@ -9,6 +9,7 @@ from django.utils.timezone import now
 
 from .forms import (
     CustomPasswordChangeForm,
+    ExternalTopicForm,
     SessionTopicForm,
     UserCreationForm,
     UserEditForm,
@@ -213,3 +214,16 @@ def change_password(request):
     else:
         form = CustomPasswordChangeForm(user=request.user)
     return render(request, 'session/change_password.html', {'form': form})
+
+
+@login_required
+def create_external_topic(request):
+    if request.method == "POST":
+        form = ExternalTopicForm(request.POST)
+        if form.is_valid:
+            form.save()
+            messages.success(request, "New topic create succussfully.")
+    else:
+        form = ExternalTopicForm()
+
+    return render(request, "session/create_external_topic.html", {"form": form})
