@@ -18,6 +18,3 @@ class SessionTopic(models.Model):
         choices=STATUSES,
         default="Pending",
     )
-
-    def __str__(self):
-        return self.topic
