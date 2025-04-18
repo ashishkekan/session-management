@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from management.models import SessionTopic
+from management.models import ExternalTopic, SessionTopic
 
 
 @admin.register(SessionTopic)
@@ -15,3 +15,11 @@ class SessionTopicAdmin(admin.ModelAdmin):
 
     get_conducted_by_name.short_description = "Conducted By"
     get_conducted_by_name.admin_order_field = "conducted_by"
+
+
+@admin.register(ExternalTopic)
+class ExternalTopicAdmin(admin.ModelAdmin):
+    list_display = ("coming_soon", "created_at")
+    list_filter = ("created_at",)
+    search_fields = ("coming_soon",)
+    ordering = ("-created_at",)
