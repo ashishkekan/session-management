@@ -10,6 +10,7 @@ from .views import (
     edit_session_view,
     edit_user,
     home,
+    learning_view,
     my_profile,
     user_list,
     user_login,
@@ -30,4 +31,6 @@ urlpatterns = [
     path("sessions/<int:session_id>/delete/", delete_session_view, name="delete_session"),
     path("create-topic/", create_topic, name="create-topic"),
     path("create-learning-topic/", create_external_topic, name="create-learning-topic"),
+    path("learning-view/", learning_view, name="learning-view"),
+    
 ]

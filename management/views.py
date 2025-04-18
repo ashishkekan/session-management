@@ -14,7 +14,7 @@ from .forms import (
     UserCreationForm,
     UserEditForm,
 )
-from .models import SessionTopic
+from .models import ExternalTopic, SessionTopic
 
 
 @login_required
@@ -227,3 +227,12 @@ def create_external_topic(request):
         form = ExternalTopicForm()
 
     return render(request, "session/create_external_topic.html", {"form": form})
+
+
+@login_required
+def learning_view(request):
+    sessions = ExternalTopic.objects.all()
+    paginator = Paginator(sessions, 10)
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
+    return render(request, "session/learning-topic-list.html", {"sessions": page_obj})
