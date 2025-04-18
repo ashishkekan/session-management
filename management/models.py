@@ -24,3 +24,4 @@ class ExternalTopic(models.Model):
     coming_soon = models.CharField(
         max_length=255, null=True, blank=True, verbose_name="Learning Topic"
     )
+    created_at = models.DateField(auto_now_add=True, null=True, blank=True)

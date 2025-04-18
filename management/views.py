@@ -32,8 +32,11 @@ def create_topic(request):
 @login_required
 def home(request):
     user = request.user
+    latest_topic = ExternalTopic.objects.order_by("-created_at").first()
 
-    context = {}
+    context = {
+        "learning_topic": latest_topic,
+    }
 
     if user.is_staff:
         top_sessions = SessionTopic.objects.filter(
@@ -60,7 +63,7 @@ def home(request):
     else:
         sessions = SessionTopic.objects.filter(conducted_by=user)
         upcoming_sessions = sessions.filter(
-            status="Pending", date__gte=timezone.now()
+            status="Pending", date__gte=now()
         ).order_by("date")
 
         context.update(
