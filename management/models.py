@@ -2,6 +2,12 @@ from django.contrib.auth.models import User
 from django.db import models
 from django.utils import timezone
 
+STATUSES = [
+    ("Pending", "Pending"),
+    ("Completed", "Completed"),
+    ("Cancelled", "Cancelled"),
+]
+
 
 class SessionTopic(models.Model):
     topic = models.CharField(max_length=255)
@@ -9,7 +15,7 @@ class SessionTopic(models.Model):
     date = models.DateTimeField(default=timezone.now)
     status = models.CharField(
         max_length=50,
-        choices=[("Pending", "Pending"), ("Completed", "Completed")],
+        choices=STATUSES,
         default="Pending",
     )
 
