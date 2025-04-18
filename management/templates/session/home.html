@@ -59,6 +59,14 @@
         👋 Welcome, {{ request.user.username|default:request.user.username }}!
     </div>
 
+    <a href="" class="card-link">
+        <div class="card">
+            <h3>Coming Soon...</h3>
+            <p class="count">{{ total_sessions }}</p>
+            <p class="card-footer">View All Sessions →</p>
+        </div>
+    </a>
+
     {% if is_admin %}
         <a href="{% url 'user_list' %}" class="card-link">
             <div class="card">

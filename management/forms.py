@@ -3,7 +3,7 @@ from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.models import User
 from django.forms import DateTimeInput
 
-from .models import SessionTopic
+from .models import ExternalTopic, SessionTopic
 
 
 class SessionTopicForm(forms.ModelForm):
@@ -53,3 +53,9 @@ class CustomPasswordChangeForm(PasswordChangeForm):
         label="Confirm New Password",
         widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Confirm new password'})
     )
+
+
+class ExternalTopicForm(forms.ModelForm):
+    class Meta:
+        model = ExternalTopic
+        fields = ["coming_soon"]

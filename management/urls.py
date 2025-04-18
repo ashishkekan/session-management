@@ -3,6 +3,8 @@ from django.urls import path
 from .views import (
     add_user,
     all_sessions_view,
+    change_password,
+    create_external_topic,
     create_topic,
     delete_session_view,
     edit_session_view,
@@ -12,7 +14,6 @@ from .views import (
     user_list,
     user_login,
     user_logout,
-    change_password
 )
 
 urlpatterns = [
@@ -28,4 +29,5 @@ urlpatterns = [
     path("sessions/<int:session_id>/edit/", edit_session_view, name="edit_session"),
     path("sessions/<int:session_id>/delete/", delete_session_view, name="delete_session"),
     path("create-topic/", create_topic, name="create-topic"),
+    path("create-learning-topic/", create_external_topic, name="create-learning-topic"),
 ]

@@ -18,3 +18,9 @@ class SessionTopic(models.Model):
         choices=STATUSES,
         default="Pending",
     )
+
+
+class ExternalTopic(models.Model):
+    coming_soon = models.CharField(
+        max_length=255, null=True, blank=True, verbose_name="Learning Topic"
+    )
