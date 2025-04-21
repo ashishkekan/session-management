@@ -39,15 +39,16 @@ def home(request):
     }
 
     if user.is_staff:
-        top_sessions = SessionTopic.objects.filter(
-            date__gt=now(),
-        ).exclude(status="Completed").order_by("date")[:3]
-        completed = SessionTopic.objects.filter(
-            status="Completed"
-        ).order_by("date")[:3]
-        pending = SessionTopic.objects.filter(
-            status="Pending"
-        ).order_by("date")[:3]
+        top_sessions = (
+            SessionTopic.objects.filter(
+                date__gt=now(),
+            )
+            .exclude(status="Completed")
+            .order_by("date")[:3]
+        )
+        completed = SessionTopic.objects.filter(status="Completed").order_by("date")[:3]
+        pending = SessionTopic.objects.filter(status="Pending").order_by("date")[:3]
+        cancelled = SessionTopic.objects.filter(status="Cancelled").order_by("date")[:3]
 
         context.update(
             {
@@ -58,13 +59,14 @@ def home(request):
                 "top_sessions": top_sessions,
                 "completed": completed,
                 "pending": pending,
+                "cancelled": cancelled,
             }
         )
     else:
         sessions = SessionTopic.objects.filter(conducted_by=user)
-        upcoming_sessions = sessions.filter(
-            status="Pending", date__gte=now()
-        ).order_by("date")
+        upcoming_sessions = sessions.filter(status="Pending", date__gte=now()).order_by(
+            "date"
+        )
 
         context.update(
             {
@@ -167,12 +169,17 @@ def user_list(request):
 
     return render(request, "session/user_list.html", {"users": page_obj})
 
+
 @login_required
 def all_sessions_view(request):
     if request.user.is_staff:
         sessions = SessionTopic.objects.select_related("conducted_by").order_by("date")
     else:
-        sessions = SessionTopic.objects.select_related("conducted_by").filter(conducted_by=request.user).order_by("date")
+        sessions = (
+            SessionTopic.objects.select_related("conducted_by")
+            .filter(conducted_by=request.user)
+            .order_by("date")
+        )
 
     paginator = Paginator(sessions, 10)
     page_number = request.GET.get("page")
@@ -193,7 +200,9 @@ def edit_session_view(request, session_id):
     else:
         form = SessionTopicForm(instance=session)
 
-    return render(request, "session/edit_session.html", {"form": form, "session": session})
+    return render(
+        request, "session/edit_session.html", {"form": form, "session": session}
+    )
 
 
 @login_required
@@ -204,19 +213,20 @@ def delete_session_view(request, session_id):
     return redirect("session_list")
 
 
-
 @login_required
 def change_password(request):
-    if request.method == 'POST':
+    if request.method == "POST":
         form = CustomPasswordChangeForm(user=request.user, data=request.POST)
         if form.is_valid():
             user = form.save()
-            update_session_auth_hash(request, user)  # Keep the user logged in after password change
-            messages.success(request, 'Your password was successfully updated!')
-            return redirect('my_profile')  # Update with your profile page name
+            update_session_auth_hash(
+                request, user
+            )  # Keep the user logged in after password change
+            messages.success(request, "Your password was successfully updated!")
+            return redirect("my_profile")  # Update with your profile page name
     else:
         form = CustomPasswordChangeForm(user=request.user)
-    return render(request, 'session/change_password.html', {'form': form})
+    return render(request, "session/change_password.html", {"form": form})
 
 
 @login_required
