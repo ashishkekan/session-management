@@ -136,6 +136,25 @@
             {% else %}
                 <p>No pending sessions found.</p>
             {% endif %}
+        </div>
+
+        <div class="card">
+            <h3>Cancelled Sessions</h3>
+            {% if cancelled %}
+                <ul class="session-list">
+                    {% for session in cancelled %}
+                        <li style="display: flex; justify-content: space-between; align-items: center;">
+                            <strong>{{ session.topic }}</strong>
+                            <span style="font-size: 0.9em; color: #555;"><strong>{{ session.conducted_by.first_name }}</strong></span>
+                        </li>
+                        <li style="margin-bottom: 10px;">
+                            📅 {{ session.date|date:"M d, Y" }}
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>No cancelled sessions found.</p>
+            {% endif %}
         </div>        
 
     {% else %}
