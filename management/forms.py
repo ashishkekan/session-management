@@ -20,9 +20,6 @@ class SessionTopicForm(forms.ModelForm):
         self.fields["conducted_by"].label_from_instance = lambda obj: f"{obj.first_name} {obj.last_name} ({obj.username})"
         self.fields["date"].input_formats = ["%Y-%m-%dT%H:%M"]
 
-        if not (user and user.is_staff):
-            self.fields.pop("cancelled_reason")
-
 
 class UserCreationForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput)
