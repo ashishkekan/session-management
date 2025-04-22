@@ -9,16 +9,17 @@ from .models import ExternalTopic, SessionTopic
 class SessionTopicForm(forms.ModelForm):
     class Meta:
         model = SessionTopic
-        fields = ["topic", "conducted_by", "date", "status"]
+        fields = ["topic", "conducted_by", "date", "status", "cancelled_reason"]
         widgets = {
             "date": DateTimeInput(attrs={"type": "datetime-local"}, format="%Y-%m-%dT%H:%M")
         }
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, user=None, **kwargs):
         super(SessionTopicForm, self).__init__(*args, **kwargs)
         self.fields["conducted_by"].queryset = User.objects.exclude(is_staff=True)
         self.fields["conducted_by"].label_from_instance = lambda obj: f"{obj.first_name} {obj.last_name} ({obj.username})"
         self.fields["date"].input_formats = ["%Y-%m-%dT%H:%M"]
+
 
 class UserCreationForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput)
@@ -58,4 +59,4 @@ class CustomPasswordChangeForm(PasswordChangeForm):
 class ExternalTopicForm(forms.ModelForm):
     class Meta:
         model = ExternalTopic
-        fields = ["coming_soon"]
+        fields = ["coming_soon", "url"]
