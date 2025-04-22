@@ -157,6 +157,7 @@
                         <li style="margin-bottom: 10px;">
                             📅 {{ session.date|date:"M d, Y" }}
                         </li>
+                        <li><p><strong>Cancelled Reason: </strong>{{ session.cancelled_reason }}</p></li>
                     {% endfor %}
                 </ul>
             {% else %}
