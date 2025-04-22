@@ -32,10 +32,10 @@ def create_topic(request):
 @login_required
 def home(request):
     user = request.user
-    latest_topic = ExternalTopic.objects.order_by("-created_at").first()
+    latest_topics = ExternalTopic.objects.order_by("-created_at")[:3]
 
     context = {
-        "learning_topic": latest_topic,
+        "learning_topics": latest_topics,
     }
 
     if user.is_staff:
