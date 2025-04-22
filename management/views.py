@@ -20,12 +20,12 @@ from .models import ExternalTopic, SessionTopic
 @login_required
 def create_topic(request):
     if request.method == "POST":
-        form = SessionTopicForm(request.POST)
+        form = SessionTopicForm(request.POST or None, user=request.user)
         if form.is_valid():
             form.save()
             return redirect("session_list")
     else:
-        form = SessionTopicForm()
+        form = SessionTopicForm(user=request.user)
     return render(request, "session/create_topic.html", {"form": form})
 
 
