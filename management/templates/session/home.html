@@ -61,8 +61,15 @@
 
     <div class="card">
         <h3>Coming Soon...</h3>
-        <p><strong>{{ learning_topic.coming_soon }}</strong></p>
-    </div>
+        {% for topic in learning_topics %}
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                <p style="margin: 0;"><strong>{{ topic.coming_soon }}</strong></p>
+                <a href="{{ topic.url }}" target="_blank" style="text-decoration: none; color: #007bff;">
+                    View
+                </a>
+            </div>
+        {% endfor %}
+    </div>    
 
     {% if is_admin %}
         <a href="{% url 'user_list' %}" class="card-link">
