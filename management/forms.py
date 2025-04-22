@@ -58,4 +58,4 @@ class CustomPasswordChangeForm(PasswordChangeForm):
 class ExternalTopicForm(forms.ModelForm):
     class Meta:
         model = ExternalTopic
-        fields = ["coming_soon"]
+        fields = ["coming_soon", "url"]
