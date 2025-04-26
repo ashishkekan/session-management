@@ -37,15 +37,16 @@ def home(request):
     context = {
         "learning_topics": latest_topics,
     }
+    top_sessions = (
+        SessionTopic.objects.filter(
+            date__gt=now(),
+        )
+        .exclude(status="Completed")
+        .order_by("date")[:3]
+    )
 
     if user.is_staff:
-        top_sessions = (
-            SessionTopic.objects.filter(
-                date__gt=now(),
-            )
-            .exclude(status="Completed")
-            .order_by("date")[:3]
-        )
+
         completed = SessionTopic.objects.filter(status="Completed").order_by("date")[:3]
         pending = SessionTopic.objects.filter(status="Pending").order_by("date")[:3]
         cancelled = SessionTopic.objects.filter(status="Cancelled").order_by("date")[:3]
@@ -73,6 +74,7 @@ def home(request):
                 "is_admin": False,
                 "total_sessions": sessions.count(),
                 "upcoming_sessions": upcoming_sessions,
+                "top_sessions": top_sessions,
             }
         )
 
@@ -264,7 +266,9 @@ def edit_learning(request, learning_id):
     else:
         form = ExternalTopicForm(instance=learning)
 
-    return render(request, "session/edit_learning.html", {"form": form, "learning": learning})
+    return render(
+        request, "session/edit_learning.html", {"form": form, "learning": learning}
+    )
 
 
 @login_required
