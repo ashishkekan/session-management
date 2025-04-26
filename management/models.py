@@ -34,3 +34,4 @@ class ExternalTopic(models.Model):
     )
 
     created_at = models.DateField(auto_now_add=True, null=True, blank=True)
+    is_active = models.BooleanField(default=True, null=True, blank=True)

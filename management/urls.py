@@ -6,7 +6,9 @@ from .views import (
     change_password,
     create_external_topic,
     create_topic,
+    delete_learning,
     delete_session_view,
+    edit_learning,
     edit_session_view,
     edit_user,
     home,
@@ -32,5 +34,6 @@ urlpatterns = [
     path("create-topic/", create_topic, name="create-topic"),
     path("create-learning-topic/", create_external_topic, name="create-learning-topic"),
     path("learning-view/", learning_view, name="learning-view"),
-    
+    path("learning-view/<int:learning_id>/edit/", edit_learning, name="edit-learning"),
+    path("learning-view/<int:learning_id>/delete/", delete_learning, name="delete-learning")
 ]
