@@ -70,7 +70,24 @@
             </div>
         {% endfor %}
     </div>    
-
+    <div class="card">
+        <h3>Top 3 Upcoming Sessions</h3>
+        {% if top_sessions %}
+            <ul class="session-list">
+                {% for session in top_sessions %}
+                    <li style="display: flex; justify-content: space-between; align-items: center;">
+                        <strong>{{ session.topic }}</strong>
+                        <span style="font-size: 0.9em; color: #555;"><strong>{{ session.conducted_by.first_name }}</strong></span>
+                    </li>
+                    <li style="margin-bottom: 10px;">
+                        📅 {{ session.date|date:"M d, Y" }}
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No upcoming sessions found.</p>
+        {% endif %}
+    </div>  
     {% if is_admin %}
         <a href="{% url 'user_list' %}" class="card-link">
             <div class="card">
@@ -86,26 +103,7 @@
                 <p class="count">{{ total_sessions }}</p>
                 <p class="card-footer">View All Sessions →</p>
             </div>
-        </a>
-
-        <div class="card">
-            <h3>Top 3 Upcoming Sessions</h3>
-            {% if top_sessions %}
-                <ul class="session-list">
-                    {% for session in top_sessions %}
-                        <li style="display: flex; justify-content: space-between; align-items: center;">
-                            <strong>{{ session.topic }}</strong>
-                            <span style="font-size: 0.9em; color: #555;"><strong>{{ session.conducted_by.first_name }}</strong></span>
-                        </li>
-                        <li style="margin-bottom: 10px;">
-                            📅 {{ session.date|date:"M d, Y" }}
-                        </li>
-                    {% endfor %}
-                </ul>
-            {% else %}
-                <p>No upcoming sessions found.</p>
-            {% endif %}
-        </div>        
+        </a>  
 
         <div class="card">
             <h3>Completed Sessions</h3>
@@ -166,13 +164,13 @@
         </div>        
 
     {% else %}
-        <div class="card">
+        <!-- <div class="card">
             <h3>Total Sessions Assigned</h3>
             <p class="count">{{ total_sessions }}</p>
-        </div>
+        </div> -->
 
         <div class="card">
-            <h3>Upcoming Sessions</h3>
+            <h3>Upcoming Sessions( For self )</h3>
             {% if upcoming_sessions %}
                 <ul class="session-list">
                     {% for session in upcoming_sessions %}
