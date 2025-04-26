@@ -249,3 +249,27 @@ def learning_view(request):
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
     return render(request, "session/learning-topic-list.html", {"sessions": page_obj})
+
+
+@login_required
+def edit_learning(request, learning_id):
+    learning = get_object_or_404(ExternalTopic, id=learning_id)
+
+    if request.method == "POST":
+        form = ExternalTopicForm(request.POST, instance=learning)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Learning updated successfully.")
+            return redirect("session_list")
+    else:
+        form = ExternalTopicForm(instance=learning)
+
+    return render(request, "session/edit_learning.html", {"form": form, "learning": learning})
+
+
+@login_required
+def delete_learning(request, learning_id):
+    learning = get_object_or_404(ExternalTopic, id=learning_id)
+    learning.delete()
+    messages.success(request, "Learning deleted successfully.")
+    return redirect("learning-view")
