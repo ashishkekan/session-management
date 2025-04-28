@@ -76,11 +76,38 @@
         color: white;
         font-weight: bold;
     }
+
+    .btn-create {
+        background-color: #28a745;
+        color: white;
+        padding: 8px 14px;
+        border-radius: 6px;
+        text-decoration: none;
+        font-weight: bold;
+        font-size: 14px;
+        transition: background-color 0.3s ease;
+    }
+
+    .btn-create:hover {
+        background-color: #218838;
+    }
+
+    .card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+    }
 </style>
 
 <div class="user-table-container">
     <div class="user-table-card">
-        <h3>👥 Registered Users</h3>
+        {% if request.user.is_staff %}
+        <div class="card-header">
+            <h3>Registered Users</h3>
+            <a href="{% url 'add_user' %}" class="btn-create">+</a>
+        </div>
+        {% endif %}
         <table class="table">
             <thead>
                 <tr>
