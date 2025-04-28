@@ -125,8 +125,9 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-# Define where collected static files will be stored
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'management/static'),
+]
 
 
 # Default primary key field type

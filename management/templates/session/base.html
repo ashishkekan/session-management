@@ -1,69 +1,11 @@
+{% load static %}
 <!DOCTYPE html>
 <html>
 <head>
     <title>{% block title %}Session Management{% endblock %}</title>
-    <style>
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background-color: #f7f7f7;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-        }
-
-        header {
-            background-color: #87CEFA;
-            color: #fff;
-            padding: 15px 30px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-        }
-
-        header h1 {
-            margin: 0;
-            font-size: 24px;
-        }
-
-        nav {
-            display: flex;
-            gap: 6px;
-            flex-wrap: wrap;
-        }
-
-        nav a {
-            color: #fff;
-            padding: 6px 10px;
-            font-weight: bold;
-            text-decoration: none;
-            font-size: 14px;
-            transition: background-color 0.3s ease;
-        }
-
-        nav a:hover {
-            background-color: #0056b3;
-        }
-
-        .container {
-            padding: 20px 30px;
-        }
-
-        .content {
-            flex: 1;
-            padding: 30px;
-        }
-
-        footer {
-            text-align: center;
-            padding: 20px;
-            background-color: #87CEFA;
-            color: white;
-            font-size: 14px;
-        }
-    </style>
+    <link rel="stylesheet" href="{% static 'management/style.css' %}">
 </head>
+
 <body>
     <header>
         <h1>Session Management</h1>
