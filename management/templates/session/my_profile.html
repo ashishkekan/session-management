@@ -3,11 +3,84 @@
 {% block title %}My Profile{% endblock %}
 
 {% block content %}
+<style>
+    .profile-container {
+        background-color: white;
+        padding: 35px;
+        max-width: 650px;
+        margin: 40px auto;
+        border-radius: 16px;
+        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+        border-top: 5px solid #007bff;
+    }
 
-{% load static %}
+    .profile-container h2 {
+        text-align: center;
+        margin-bottom: 30px;
+        font-size: 28px;
+        color: #007bff;
+    }
 
-<!-- Link to the CSS file -->
-<link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+    .form-group {
+        margin-bottom: 22px;
+    }
+
+    .form-group label {
+        display: block;
+        font-weight: bold;
+        margin-bottom: 6px;
+        color: #333;
+        font-size: 15px;
+    }
+
+    .form-group input {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        font-size: 15px;
+        transition: border-color 0.3s;
+    }
+
+    .form-group input:focus {
+        border-color: #007bff;
+        outline: none;
+    }
+
+    .form-actions {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 25px;
+    }
+
+    .update-btn,
+    .change-password-btn {
+        padding: 10px 24px;
+        border-radius: 6px;
+        font-size: 15px;
+        transition: background-color 0.3s ease;
+        text-decoration: none;
+        color: white;
+        border: none;
+        cursor: pointer;
+    }
+
+    .update-btn {
+        background-color: #007bff;
+    }
+
+    .update-btn:hover {
+        background-color: #0056b3;
+    }
+
+    .change-password-btn {
+        background-color: #6c757d;
+    }
+
+    .change-password-btn:hover {
+        background-color: #5a6268;
+    }
+</style>
 
 <div class="profile-container">
     <h2>👤 My Profile</h2>
