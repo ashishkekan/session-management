@@ -19,6 +19,9 @@ from .models import ExternalTopic, SessionTopic
 
 @login_required
 def create_topic(request):
+    """
+    Handles the creation of a new session topic. Only accessible to logged-in users.
+    """
     if request.method == "POST":
         form = SessionTopicForm(request.POST or None, user=request.user)
         if form.is_valid():
@@ -31,6 +34,10 @@ def create_topic(request):
 
 @login_required
 def home(request):
+    """
+    Displays the home page with the latest learning topics and sessions.
+    If the user is an admin, additional session and user statistics are included.
+    """
     user = request.user
     latest_topics = ExternalTopic.objects.order_by("-created_at")[:5]
 
@@ -46,7 +53,6 @@ def home(request):
     )
 
     if user.is_staff:
-
         completed = SessionTopic.objects.filter(status="Completed").order_by("date")[:3]
         pending = SessionTopic.objects.filter(status="Pending").order_by("date")[:3]
         cancelled = SessionTopic.objects.filter(status="Cancelled").order_by("date")[:3]
@@ -82,6 +88,9 @@ def home(request):
 
 
 def user_login(request):
+    """
+    Handles user login. If credentials are correct, the user is authenticated and redirected to the home page.
+    """
     if request.method == "POST":
         username = request.POST["username"]
         password = request.POST["password"]
@@ -98,17 +107,26 @@ def user_login(request):
 
 
 def user_logout(request):
+    """
+    Logs the user out and redirects to the login page.
+    """
     logout(request)
     return redirect("login")
 
 
 def is_admin(user):
+    """
+    Helper function to check if the user is an admin (staff).
+    """
     return user.is_staff
 
 
 @login_required
 @user_passes_test(is_admin)
 def add_user(request):
+    """
+    Allows admins to add new users to the system.
+    """
     if request.method == "POST":
         form = UserCreationForm(request.POST or None)
         if form.is_valid():
@@ -127,6 +145,9 @@ def add_user(request):
 @login_required
 @user_passes_test(is_admin)
 def edit_user(request, user_id):
+    """
+    Allows admins to edit the details of an existing user.
+    """
     user = User.objects.get(id=user_id)
 
     if request.method == "POST":
@@ -145,6 +166,9 @@ def edit_user(request, user_id):
 
 @login_required
 def my_profile(request):
+    """
+    Allows users to view and edit their own profile information.
+    """
     employee = request.user
 
     if request.method == "POST":
@@ -164,6 +188,9 @@ def my_profile(request):
 @login_required
 @user_passes_test(lambda u: u.is_staff)
 def user_list(request):
+    """
+    Displays a list of all users. Only accessible to admins.
+    """
     users = User.objects.all().order_by("username")
     paginator = Paginator(users, 10)  # Show 10 users per page
     page_number = request.GET.get("page")
@@ -174,6 +201,9 @@ def user_list(request):
 
 @login_required
 def all_sessions_view(request):
+    """
+    Displays all sessions. If the user is an admin, all sessions are shown; otherwise, only the user's own sessions.
+    """
     if request.user.is_staff:
         sessions = SessionTopic.objects.select_related("conducted_by").order_by("date")
     else:
@@ -191,6 +221,9 @@ def all_sessions_view(request):
 
 @login_required
 def edit_session_view(request, session_id):
+    """
+    Allows the user to edit an existing session topic.
+    """
     session = get_object_or_404(SessionTopic, id=session_id)
 
     if request.method == "POST":
@@ -209,6 +242,9 @@ def edit_session_view(request, session_id):
 
 @login_required
 def delete_session_view(request, session_id):
+    """
+    Allows the user to delete a session topic.
+    """
     session = get_object_or_404(SessionTopic, id=session_id)
     session.delete()
     messages.success(request, "Session deleted successfully.")
@@ -217,6 +253,9 @@ def delete_session_view(request, session_id):
 
 @login_required
 def change_password(request):
+    """
+    Allows the user to change their password.
+    """
     if request.method == "POST":
         form = CustomPasswordChangeForm(user=request.user, data=request.POST)
         if form.is_valid():
@@ -233,11 +272,14 @@ def change_password(request):
 
 @login_required
 def create_external_topic(request):
+    """
+    Allows the user to create a new external learning topic.
+    """
     if request.method == "POST":
         form = ExternalTopicForm(request.POST)
-        if form.is_valid:
+        if form.is_valid():
             form.save()
-            messages.success(request, "New topic create succussfully.")
+            messages.success(request, "New topic created successfully.")
     else:
         form = ExternalTopicForm()
 
@@ -246,6 +288,9 @@ def create_external_topic(request):
 
 @login_required
 def learning_view(request):
+    """
+    Displays all external learning topics in a paginated list.
+    """
     sessions = ExternalTopic.objects.all()
     paginator = Paginator(sessions, 10)
     page_number = request.GET.get("page")
@@ -255,6 +300,9 @@ def learning_view(request):
 
 @login_required
 def edit_learning(request, learning_id):
+    """
+    Allows the user to edit an existing external learning topic.
+    """
     learning = get_object_or_404(ExternalTopic, id=learning_id)
 
     if request.method == "POST":
@@ -273,6 +321,9 @@ def edit_learning(request, learning_id):
 
 @login_required
 def delete_learning(request, learning_id):
+    """
+    Allows the user to delete an existing external learning topic.
+    """
     learning = get_object_or_404(ExternalTopic, id=learning_id)
     learning.delete()
     messages.success(request, "Learning deleted successfully.")
