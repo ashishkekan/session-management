@@ -20,6 +20,9 @@ class SessionTopic(models.Model):
     )
     cancelled_reason = models.CharField(max_length=255, null=True, blank=True, verbose_name="Cancelled Reason")
 
+    def __str__(self):
+        return f"{self.topic} ' - ' {self.status}"
+
 
 class ExternalTopic(models.Model):
     coming_soon = models.CharField(
