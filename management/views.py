@@ -165,6 +165,23 @@ def edit_user(request, user_id):
 
 
 @login_required
+@user_passes_test(is_admin)
+def delete_user(request, user_id):
+    """
+    Allows admins to delete a user.
+    """
+    user = get_object_or_404(User, id=user_id)
+    
+    if user.is_staff:
+        messages.error(request, "You cannot delete a superuser.")
+        return redirect("user_list")
+
+    user.delete()
+    messages.success(request, "User deleted successfully.")
+    return redirect("user_list")
+
+
+@login_required
 def my_profile(request):
     """
     Allows users to view and edit their own profile information.

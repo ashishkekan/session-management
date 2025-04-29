@@ -10,6 +10,7 @@ urlpatterns = [
     path("my-profile/", views.my_profile, name="my_profile"),  # User profile page
     path("users/", views.user_list, name="user_list"),  # List of users
     path("users/edit/<int:user_id>/", views.edit_user, name="edit_user"),  # Edit user details
+    path('users/delete/<int:user_id>/', views.delete_user, name='delete_user'), # Delete user details
     path('change-password/', views.change_password, name='change_password'),  # Change user password
     
     # Home page
