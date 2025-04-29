@@ -4,6 +4,7 @@ from . import views
 
 urlpatterns = [
     # User authentication routes
+    path("home/", views.home, name="home"), # Home
     path("login/", views.user_login, name="login"),  # Log in page
     path("logout/", views.user_logout, name="logout"),  # Log out page
     path("add-user/", views.add_user, name="add_user"),  # Add new user

@@ -32,7 +32,6 @@ def create_topic(request):
     return render(request, "session/create_topic.html", {"form": form})
 
 
-@login_required
 def home(request):
     """
     Displays the home page with the latest learning topics and sessions.
@@ -69,7 +68,7 @@ def home(request):
                 "cancelled": cancelled,
             }
         )
-    else:
+    elif user.is_authenticated:
         sessions = SessionTopic.objects.filter(conducted_by=user)
         upcoming_sessions = sessions.filter(status="Pending", date__gte=now()).order_by(
             "date"
