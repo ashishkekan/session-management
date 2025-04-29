@@ -373,20 +373,20 @@ th {
 
 .actions {
     display: flex;
-    justify-content: space-between;
-    gap: 20px;
+    gap: 10px;
+    align-items: center;
 }
 
 .btn-action {
-    padding: 5px 10px;
-    font-size: 14px;
+    padding: 4px 6px;
+    font-size: 10px;
     border-radius: 6px;
     text-decoration: none;
     color: white;
 }
 
 .btn-edit {
-    background-color: green;
+    background-color: #218838;
 }
 
 .btn-delete {
