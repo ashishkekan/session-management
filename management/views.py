@@ -4,7 +4,6 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.models import User
 from django.core.paginator import Paginator
 from django.shortcuts import get_object_or_404, redirect, render
-from django.utils import timezone
 from django.utils.timezone import now
 
 from .forms import (
@@ -191,10 +190,8 @@ def my_profile(request):
         form.save()
         messages.success(request, "Profile updated successfully.")
         return redirect("my_profile")
-            
-    else:
-        form = UserEditForm(instance=employee)
 
+    form = UserEditForm(instance=employee)
     return render(request, "session/my_profile.html", {"form": form})
 
 
