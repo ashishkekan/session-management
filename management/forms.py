@@ -14,7 +14,7 @@ class SessionTopicForm(forms.ModelForm):
     """
     class Meta:
         model = SessionTopic
-        fields = ["topic", "conducted_by", "date", "status", "cancelled_reason"]
+        fields = ["topic", "conducted_by", "date", "status", "place", "cancelled_reason"]
         widgets = {
             "date": DateTimeInput(attrs={"type": "datetime-local"}, format="%Y-%m-%dT%H:%M")
         }

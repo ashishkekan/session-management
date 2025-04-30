@@ -8,6 +8,11 @@ STATUSES = [
     ("Cancelled", "Cancelled"),
 ]
 
+PLACE_CHOICES = [
+    ("--- Select Place ---", "--- Select Place ---"),
+    ("Customer Lounge", "Customer Lounge"),
+    ("Auditorium", "Auditorium"),
+]
 
 class SessionTopic(models.Model):
     """
@@ -27,6 +32,11 @@ class SessionTopic(models.Model):
         max_length=50,
         choices=STATUSES,
         default="Pending",
+    )
+    place = models.CharField(
+        max_length=50,
+        choices=PLACE_CHOICES,
+        default="--- Select Place ---",
     )
     cancelled_reason = models.CharField(max_length=255, null=True, blank=True, verbose_name="Cancelled Reason")
 
