@@ -143,6 +143,10 @@
                                 <strong>{{ session.topic }}</strong><br>
                                 📅 {{ session.date|date:"M d, Y, l" }}
                             </li>
+                            <li>
+                                <strong>Place: </strong><br>
+                                📍 {{ session.place }}
+                            </li>
                         {% endfor %}
                     </ul>
                 {% else %}
