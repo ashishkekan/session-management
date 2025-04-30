@@ -96,11 +96,11 @@ def user_login(request):
 
         user = authenticate(request, username=username, password=password)
 
-        if user:
-            login(request, user)
-            return redirect("home")
-        else:
+        if not user:
             messages.error(request, "Invalid username or password.")
+
+        login(request, user)
+        return redirect("home")
 
     return render(request, "session/login.html")
 
@@ -134,8 +134,6 @@ def add_user(request):
             user.save()
             messages.success(request, f"User '{user.username}' created successfully.")
             return redirect("home")
-        else:
-            messages.error(request, "Please correct the errors below.")
     else:
         form = UserCreationForm()
     return render(request, "session/add_user.html", {"form": form})
@@ -155,8 +153,6 @@ def edit_user(request, user_id):
             form.save()
             messages.success(request, "User updated successfully.")
             return redirect("user_list")
-        else:
-            messages.error(request, "Please correct the errors below.")
     else:
         form = UserEditForm(instance=user)
 
@@ -170,7 +166,7 @@ def delete_user(request, user_id):
     Allows admins to delete a user.
     """
     user = get_object_or_404(User, id=user_id)
-    
+
     if user.is_staff:
         messages.error(request, "You cannot delete a superuser.")
         return redirect("user_list")
@@ -189,12 +185,13 @@ def my_profile(request):
 
     if request.method == "POST":
         form = UserEditForm(request.POST, instance=employee)
-        if form.is_valid():
-            form.save()
-            messages.success(request, "Profile updated successfully.")
-            return redirect("my_profile")
-        else:
+        if not form.is_valid():
             messages.error(request, "There was an error updating your profile.")
+
+        form.save()
+        messages.success(request, "Profile updated successfully.")
+        return redirect("my_profile")
+            
     else:
         form = UserEditForm(instance=employee)
 
