@@ -28,7 +28,8 @@ class SessionTopicForm(forms.ModelForm):
         Args:
             user (optional): The user associated with the session (not used directly here).
         """
-        super(SessionTopicForm, self).__init__(*args, **kwargs)
+        self.user = user
+        super().__init__(*args, **kwargs)
         self.fields["conducted_by"].queryset = User.objects.exclude(is_staff=True)
         self.fields["conducted_by"].label_from_instance = lambda obj: f"{obj.first_name} {obj.last_name} ({obj.username})"
         self.fields["date"].input_formats = ["%Y-%m-%dT%H:%M"]

@@ -13,7 +13,7 @@ urlpatterns = [
     path("users/edit/<int:user_id>/", views.edit_user, name="edit_user"),  # Edit user details
     path('users/delete/<int:user_id>/', views.delete_user, name='delete_user'), # Delete user details
     path('change-password/', views.change_password, name='change_password'),  # Change user password
-    
+
     # Home page
     path("", views.home, name="home"),  # Home page
 
@@ -21,7 +21,7 @@ urlpatterns = [
     path("sessions/", views.all_sessions_view, name="session_list"),  # List all sessions
     path("sessions/<int:session_id>/edit/", views.edit_session_view, name="edit_session"),  # Edit session details
     path("sessions/<int:session_id>/delete/", views.delete_session_view, name="delete_session"),  # Delete a session
-    
+
     # Topic management routes
     path("create-topic/", views.create_topic, name="create-topic"),  # Create a new session topic
     path("create-learning-topic/", views.create_external_topic, name="create-learning-topic"),  # Create an external learning topic
