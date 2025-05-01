@@ -301,7 +301,7 @@ def learning_view(request):
     """
     Displays all external learning topics in a paginated list.
     """
-    sessions = ExternalTopic.objects.all()
+    sessions = ExternalTopic.objects.all().order_by('-created_at')
     paginator = Paginator(sessions, 10)
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
