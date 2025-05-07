@@ -97,6 +97,7 @@ def user_login(request):
 
         if not user:
             messages.error(request, "Invalid username or password.")
+            return redirect("login")
 
         login(request, user)
         return redirect("home")
