@@ -37,7 +37,7 @@ def home(request):
     If the user is an admin, additional session and user statistics are included.
     """
     user = request.user
-    latest_topics = ExternalTopic.objects.order_by("-created_at")[:5]
+    latest_topics = ExternalTopic.objects.order_by("-created_at")
 
     context = {
         "learning_topics": latest_topics,
