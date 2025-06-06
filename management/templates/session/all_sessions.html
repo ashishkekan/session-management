@@ -29,7 +29,17 @@
                         <tr>
                             <td>{{ session.topic }}</td>
                             <td>{{ session.date|date:"M d, Y, l" }}</td>
-                            <td>{{ session.status }}</td>
+                            <td>
+                                <span
+                                  {% if session.status == "Completed" %}
+                                    style="background-color: #28a745; color: white; padding: 4px 10px; border-radius: 5px;"
+                                  {% elif session.status == "Cancelled" %}
+                                    style="background-color: #dc3545; color: white; padding: 4px 10px; border-radius: 5px;"
+                                  {% endif %}
+                                >
+                                  {{ session.status|capfirst }}
+                                </span>
+                            </td>
                             {% if request.user.is_staff %}
                                 <td>{{ session.conducted_by.get_full_name|default:session.conducted_by.username }}</td>
                                 <td>
