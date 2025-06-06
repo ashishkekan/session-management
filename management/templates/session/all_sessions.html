@@ -62,23 +62,7 @@
             <p>No sessions available.</p>
         {% endif %}
         <!-- Pagination -->
-        <div class="pagination">
-            {% if sessions.has_previous %}
-                <a href="?page={{ sessions.previous_page_number }}">« Previous</a>
-            {% endif %}
-
-            {% for num in sessions.paginator.page_range %}
-                {% if sessions.number == num %}
-                    <span class="current">{{ num }}</span>
-                {% elif num > sessions.number|add:'-3' and num < sessions.number|add:'3' %}
-                    <a href="?page={{ num }}">{{ num }}</a>
-                {% endif %}
-            {% endfor %}
-
-            {% if sessions.has_next %}
-                <a href="?page={{ sessions.next_page_number }}">Next »</a>
-            {% endif %}
-        </div>
+        {% include "session/partial/pagination.html" with page_obj=sessions %}
     </div>
 </div>
 {% endblock %}
