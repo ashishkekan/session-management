@@ -129,7 +129,9 @@
                         <span class="absolute -top-1 -right-1 bg-red-500 text-xs text-white rounded-full h-4 w-4 flex items-center justify-center">0</span>
                     </div>
                     <div class="flex items-center space-x-2">
-                        <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Profile" class="w-8 h-8 rounded-full border-2 border-white">
+                        <div class="w-8 h-8 rounded-full border-2 border-white bg-gray-300 flex items-center justify-center">
+                            <i class="fas fa-user text-white text-sm"></i>
+                        </div>
                         <span class="font-medium">{{ user.username|default:user.username }}</span>
                     </div>
                 </div>
