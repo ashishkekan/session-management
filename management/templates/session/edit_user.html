@@ -1,32 +1,34 @@
 {% extends 'session/base.html' %}
 {% block title %}Edit User{% endblock %}
+{% block header_title %}Edit User{% endblock %}
 
 {% block content %}
-
-<div class="user-table-container">
-    <div class="user-table-card">
-        <h3>✏️ Edit User - {{ user_obj.username }}</h3>
+<div class="container mx-auto p-4">
+    <div class="bg-white rounded-lg shadow-md p-6 transition duration-300 card-hover">
+        <h2 class="text-2xl font-semibold mb-6">Edit User</h2>
         <form method="post">
             {% csrf_token %}
-            <div class="form-group">
-                <label for="{{ form.first_name.id_for_label }}">{{ form.first_name.label }}</label>
-                {{ form.first_name }}
-            </div>
-            <div class="form-group">
-                <label for="{{ form.last_name.id_for_label }}">{{ form.last_name.label }}</label>
-                {{ form.last_name }}
-            </div>
-            <div class="form-group">
-                <label for="{{ form.username.id_for_label }}">{{ form.username.label }}</label>
-                {{ form.username }}
-            </div>
-            <div class="form-group">
-                <label for="{{ form.email.id_for_label }}">{{ form.email.label }}</label>
-                {{ form.email }}
-            </div>
-            <div class="form-footer">
-                <a href="{% url 'user_list' %}" class="back-btn">← Back</a>
-                <button type="submit" class="save-btn">Update</button>
+            {% for field in form %}
+                <div class="mb-4">
+                    <label class="block text-gray-700 font-medium mb-2" for="{{ field.id_for_label }}">
+                        {{ field.label }}
+                    </label>
+                    {{ field }}
+                    {% if field.errors %}
+                        <div class="text-red-600 text-sm mt-1">
+                            {{ field.errors }}
+                        </div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+
+            <div class="flex justify-between items-center mt-6">
+                <a href="{% url 'user_list' %}" class="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600 transition flex items-center">
+                    <i class="fas fa-times mr-2"></i> Cancel
+                </a>
+                <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition flex items-center">
+                    <i class="fas fa-save mr-2"></i> Update
+                </button>
             </div>
         </form>
     </div>
