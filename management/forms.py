@@ -41,11 +41,10 @@ class UserCreationForm(forms.ModelForm):
     and selecting if the user should be an admin (staff).
     """
     password = forms.CharField(widget=forms.PasswordInput)
-    is_staff = forms.BooleanField(required=False, label="Is Admin?")
 
     class Meta:
         model = User
-        fields = ["username", "first_name", "last_name", "email", "password", "is_staff"]
+        fields = ["username", "first_name", "last_name", "email", "password"]
 
 
 class UserEditForm(forms.ModelForm):
