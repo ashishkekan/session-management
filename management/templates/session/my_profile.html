@@ -1,27 +1,36 @@
 {% extends 'session/base.html' %}
-
-{% load static %}
-
 {% block title %}My Profile{% endblock %}
+{% block header_title %}My Profile{% endblock %}
 
 {% block content %}
-<div class="profile-container">
-    <h2>👤 My Profile</h2>
-    <form method="post" novalidate>
-        {% csrf_token %}
-        {% for field in form %}
-            <div class="form-group">
-                <label for="{{ field.id_for_label }}">{{ field.label }}:</label>
-                {{ field }}
-                {% if field.errors %}
-                    <small style="color: red;">{{ field.errors|striptags }}</small>
-                {% endif %}
+<div class="container mx-auto p-4">
+    <div class="bg-white rounded-lg shadow-md p-6 transition duration-300 card-hover">
+        <h2 class="text-2xl font-semibold mb-6">My Profile</h2>
+        <form method="post">
+            {% csrf_token %}
+            {% for field in form %}
+                <div class="mb-4">
+                    <label class="block text-gray-700 font-medium mb-2" for="{{ field.id_for_label }}">
+                        {{ field.label }}
+                    </label>
+                    {{ field }}
+                    {% if field.errors %}
+                        <div class="text-red-600 text-sm mt-1">
+                            {{ field.errors }}
+                        </div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+
+            <div class="flex justify-between items-center mt-6">
+                <a href="{% url 'change_password' %}" class="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600 transition flex items-center">
+                    <i class="fas fa-times mr-2"></i> Cancel
+                </a>
+                <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition flex items-center">
+                    <i class="fas fa-save mr-2"></i> Update
+                </button>
             </div>
-        {% endfor %}
-        <div class="form-actions">
-            <a href="{% url 'change_password' %}" class="change-password-btn">Change Password</a>
-            <button type="submit" class="update-btn">Update Profile</button>
-        </div>
-    </form>
+        </form>
+    </div>
 </div>
 {% endblock %}
