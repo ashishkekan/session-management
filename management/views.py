@@ -46,7 +46,8 @@ def home(request):
         SessionTopic.objects.filter(
             date__gt=now(),
         )
-        .exclude(status="Completed")
+        .exclude(status__in=["Completed", "Cancelled"])
+        .select_related("conducted_by")
         .order_by("date")[:3]
     )
 
