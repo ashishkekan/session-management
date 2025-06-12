@@ -20,7 +20,7 @@ body {
 header {
     background-color: #2c3e50; /* Primary */
     color: #ffffff; /* White */
-    padding: 15px 30px; /* Adjusted padding */
+    padding: 15px 30px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -30,12 +30,12 @@ header {
 
 header h1 {
     margin: 0;
-    font-size: 26px; /* Slightly adjusted */
+    font-size: 26px;
 }
 
 nav {
     display: flex;
-    gap: 8px; /* Slightly reduced gap for nav items */
+    gap: 8px;
     flex-wrap: wrap;
     align-items: center;
 }
@@ -43,119 +43,108 @@ nav {
 nav a {
     color: #ffffff;
     padding: 8px 12px;
-    font-weight: 600; /* Slightly bolder */
+    font-weight: 600;
     text-decoration: none;
-    font-size: 15px; /* Slightly adjusted */
-    transition: background-color 0.3s ease, color 0.3s ease;
-    border-radius: 6px; /* Consistent radius */
+    font-size: 15px;
+    transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease; /* Added color and transform */
+    border-radius: 6px;
 }
 
 nav a:hover {
-    background-color: #3498db; /* Secondary */
+    background-color: #3498db;
     color: #ffffff;
+    transform: translateY(-1px); /* Subtle lift on hover */
 }
-nav a.btn-danger { /* For logout button */
+nav a.btn-danger {
     background-color: #e74c3c;
 }
 nav a.btn-danger:hover {
     background-color: #c0392b;
+    transform: translateY(-1px);
 }
 
 
-.container { /* General container for page content */
-    max-width: 1100px; /* Slightly increased */
-    margin: 20px auto; /* Consistent margin */
-    padding: 0 20px; /* Horizontal padding */
+.container {
+    max-width: 1100px;
+    margin: 20px auto;
+    padding: 0 20px;
     width: 100%;
 }
 
-.content { /* General content area, e.g. within base.html */
+.content {
     flex: 1;
-    padding: 20px 0; /* Padding top/bottom, horizontal handled by .container */
+    padding: 20px 0;
     width: 100%;
 }
 
-/* General Card Styling (used for forms, tables, dashboard items) */
 .card {
     background-color: #ffffff;
-    border-radius: 12px; /* Standardized card radius */
-    box-shadow: 0 6px 18px rgba(0,0,0,0.07); /* Standardized shadow */
-    padding: 25px 30px; /* Standardized padding */
-    margin-bottom: 25px; /* Standardized bottom margin */
-    border-top: 4px solid #3498db; /* Secondary color accent */
+    border-radius: 12px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.07);
+    padding: 25px 30px;
+    margin-bottom: 25px;
+    border-top: 4px solid #3498db;
 }
-.card.form-layout-card, /* Specific form cards might have different accent */
+.card.form-layout-card,
 .card.profile-container,
-.card.login-container { /* Login container uses .card now if extends base */
-    border-top-color: #2c3e50; /* Primary color accent for forms/login */
+.card.login-container {
+    border-top-color: #2c3e50;
 }
 
 
 footer {
     text-align: center;
-    padding: 25px 20px; /* Increased padding */
+    padding: 25px 20px;
     background-color: #34495e;
     color: #ecf0f1;
     font-size: 14px;
-    margin-top: auto; /* Push footer to bottom */
+    margin-top: auto;
 }
 
-/* Alert/Message Styles */
 .alert {
-    padding: 15px 20px; /* Adjusted padding */
+    padding: 15px 20px;
     margin-bottom: 20px;
     border: 1px solid transparent;
-    border-radius: 8px; /* Consistent radius */
+    border-radius: 8px;
     font-weight: 500;
 }
-.alert ul { /* For error lists in alerts */
-    margin: 0;
-    padding-left: 20px;
-}
-
-.alert-success {
-    color: #155724;
-    background-color: #d4edda;
-    border-color: #c3e6cb;
-}
-
-.alert-error, .alert-danger { /* Combining .alert-danger for Django messages */
-    color: #721c24;
-    background-color: #f8d7da;
-    border-color: #f5c6cb;
-}
-
-.alert-info {
-    color: #0c5460;
-    background-color: #d1ecf1;
-    border-color: #bee5eb;
-}
+.alert ul { margin: 0; padding-left: 20px; }
+.alert-success { color: #155724; background-color: #d4edda; border-color: #c3e6cb; }
+.alert-error, .alert-danger { color: #721c24; background-color: #f8d7da; border-color: #f5c6cb; }
+.alert-info { color: #0c5460; background-color: #d1ecf1; border-color: #bee5eb; }
 
 /* ==== Form Styling ==== */
-.form-layout-card, /* Includes .profile-container, .add-user-container, .form-container if they use this class or are styled identically */
+.form-layout-card,
 .profile-container,
 .add-user-container,
 .form-container {
-    /* Base styles inherited from .card, specific overrides below if needed */
     max-width: 700px;
-    margin: 30px auto; /* Consistent margin for form cards */
+    margin: 30px auto;
+    padding: 35px 45px; /* Slightly more padding for forms */
 }
 
 .form-layout-card h2,
 .profile-container h2,
 .add-user-container h2,
-.form-container h2 {
+.form-container h2,
+.form-layout-card h3 {
     color: #2c3e50;
-    font-size: 26px; /* Adjusted form title size */
+    font-size: 24px;
     text-align: center;
-    margin-top: 0; /* Remove top margin if padding is on card */
+    margin-top: 0;
     margin-bottom: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    font-weight: 600;
+}
+.form-layout-card h3 .material-icons {
+    font-size: 1.1em; /* Slightly larger icon relative to text */
+    vertical-align: middle;
 }
 
-.form-group {
-    margin-bottom: 20px; /* Consistent spacing */
-}
-
+.form-group { margin-bottom: 22px; } /* Consistent spacing */
 .form-group label {
     font-weight: 600;
     color: #34495e;
@@ -172,13 +161,13 @@ footer {
 .form-group input[type='url'],
 .form-group select,
 .form-group textarea,
-input.form-control { /* Catching .form-control if used */
+input.form-control {
     width: 100%;
-    padding: 10px 14px; /* Adjusted padding */
-    border: 1px solid #bdc3c7;
-    border-radius: 6px; /* Slightly smaller radius for inputs */
+    padding: 12px 16px; /* Consistent padding */
+    border: 1px solid #ced4da; /* Slightly darker border */
+    border-radius: 8px; /* Consistent radius for inputs */
     font-family: 'Roboto', sans-serif;
-    font-size: 15px;
+    font-size: 16px; /* Slightly larger font for input text */
     background-color: #fdfdfe;
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
     box-sizing: border-box;
@@ -189,67 +178,34 @@ input.form-control { /* Catching .form-control if used */
 .form-group select:focus,
 .form-group textarea:focus,
 input.form-control:focus {
-    border-color: #3498db;
-    box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+    border-color: #3498db !important;
+    box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25) !important;
     outline: none;
 }
 
-.form-group textarea {
-    min-height: 100px; /* Reduced min-height slightly */
-    resize: vertical;
-}
-
+.form-group textarea { min-height: 120px; resize: vertical; }
 .form-group select {
-    appearance: none;
-    -webkit-appearance: none;
-    -moz-appearance: none;
+    appearance: none; -webkit-appearance: none; -moz-appearance: none;
     background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2334495e' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
     background-repeat: no-repeat;
-    background-position: right 12px center; /* Adjusted arrow position */
-    background-size: 0.9em; /* Adjusted arrow size */
-    padding-right: 35px;
+    background-position: right 16px center; /* Adjusted arrow position */
+    background-size: 1em; /* Adjusted arrow size */
+    padding-right: 40px;
 }
 .form-group select::-ms-expand { display: none; }
 
-.checkbox-group {
-    display: flex;
-    align-items: center;
-    margin-top: 10px;
-    margin-bottom: 20px;
-}
+.checkbox-group { display: flex; align-items: center; margin-top: 10px; margin-bottom: 20px; }
+.checkbox-group input[type='checkbox'] { margin-right: 10px; height: 17px; width: 17px; accent-color: #3498db; }
+.checkbox-group label { margin-bottom: 0; font-weight: 500; font-size: 15px; }
 
-.checkbox-group input[type='checkbox'] {
-    margin-right: 10px;
-    height: 16px;
-    width: 16px;
-    accent-color: #3498db;
-}
-
-.checkbox-group label { /* Label next to checkbox */
-    margin-bottom: 0;
-    font-weight: 500; /* Normal weight */
-    font-size: 14px; /* Slightly smaller */
-}
-
-.form-group .error, /* For field-specific errors */
-.errorlist { /* For Django's non-field errors */
-    color: #e74c3c;
-    font-size: 0.88em; /* Adjusted */
-    margin-top: 5px;
-    display: block;
-}
-.errorlist {
-    list-style: none;
-    padding: 0;
-    margin: 10px 0 15px 0;
-}
-.errorlist li { padding: 3px 0; }
-
+.form-group .error, .errorlist { color: #e74c3c; font-size: 14px; margin-top: 6px; display: block; }
+.errorlist { list-style: none; padding: 0; margin: 10px 0 15px 0; }
+.errorlist li { padding: 4px 0; }
 
 .form-actions, .form-footer, .form-actions-1 {
     display: flex;
     justify-content: flex-end;
-    gap: 12px; /* Adjusted gap */
+    gap: 15px; /* Standardized gap */
     margin-top: 30px;
     flex-wrap: wrap;
 }
@@ -257,15 +213,15 @@ input.form-control:focus {
 .form-actions button, .form-actions .btn, .form-actions a,
 .form-footer button, .form-footer .btn, .form-footer a,
 .form-actions-1 button, .form-actions-1 .btn, .form-actions-1 a,
-.update-btn, .change-password-btn { /* Add specific buttons to inherit base style */
-    padding: 10px 20px; /* Adjusted padding */
-    border-radius: 6px; /* Consistent radius */
+.update-btn, .change-password-btn {
+    padding: 12px 25px; /* Standardized padding */
+    border-radius: 8px; /* Standardized radius */
     font-weight: 600;
-    font-size: 15px; /* Adjusted font size */
+    font-size: 16px;
     text-decoration: none;
     border: none;
     cursor: pointer;
-    transition: background-color 0.2s ease, box-shadow 0.2s ease, transform 0.1s ease;
+    transition: all 0.3s ease; /* Uniform transition */
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -274,8 +230,8 @@ input.form-control:focus {
 .form-footer button:hover, .form-footer .btn:hover, .form-footer a:hover,
 .form-actions-1 button:hover, .form-actions-1 .btn:hover, .form-actions-1 a:hover,
 .update-btn:hover, .change-password-btn:hover {
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    transform: translateY(-2px);
 }
 
 .form-actions .submit-btn, .form-actions .save-btn, .update-btn,
@@ -283,6 +239,7 @@ input.form-control:focus {
 .form-actions-1 .submit-btn, .form-actions-1 .save-btn {
     background-color: #3498db;
     color: white;
+    border: none;
 }
 .form-actions .submit-btn:hover, .form-actions .save-btn:hover, .update-btn:hover,
 .form-footer .submit-btn:hover, .form-footer .save-btn:hover,
@@ -290,313 +247,194 @@ input.form-control:focus {
     background-color: #2980b9;
 }
 
-.form-actions .back-btn, .profile-container .change-password-btn, /* Grouping all secondary-style buttons */
+.form-actions .back-btn, .profile-container .change-password-btn,
 .form-footer .back-btn,
 .form-actions-1 .back-btn {
-    background-color: #bdc3c7;
-    color: #2c3e50;
-    flex-grow: 0; /* Ensure it doesn't always grow */
+    background-color: #e9ecef;
+    color: #495057;
+    border: 1px solid #ced4da;
+    flex-grow: 0;
 }
 .form-actions .back-btn:hover, .profile-container .change-password-btn:hover,
 .form-footer .back-btn:hover,
 .form-actions-1 .back-btn:hover {
-    background-color: #95a5a6;
+    background-color: #d3d9df;
+    border-color: #adb5bd;
 }
 
 .form-actions.space-between { justify-content: space-between; }
 .form-actions.space-between .back-btn { margin-right: auto; }
-
 
 /* Enhanced Table View Styles */
 .status-yes { color: #27ae60; font-weight: bold; }
 .status-no { color: #e74c3c; font-weight: bold; }
 
 .card > .card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-bottom: 15px;
-    padding-bottom: 15px;
-    border-bottom: 1px solid #e0e0e0; /* Lighter border */
+    display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;
+    gap: 10px; margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px solid #e0e0e0;
 }
-
-.card > .card-header h3 {
-    margin: 0;
-    font-size: 20px; /* Slightly smaller for table card headers */
-    color: #2c3e50;
+.card > .card-header h3 { margin: 0; font-size: 20px; color: #2c3e50; font-weight: 600;} /* Ensured h3 weight */
+.card table { width: 100%; border-collapse: collapse; font-family: 'Roboto', sans-serif; margin-bottom: 0; }
+.card table th, .card table td {
+    padding: 10px 12px; text-align: left; border-bottom: 1px solid #e9ecef; vertical-align: middle;
 }
-
-.card table {
-    width: 100%;
-    border-collapse: collapse;
-    font-family: 'Roboto', sans-serif;
-    margin-bottom: 0;
-}
-
-.card table th,
-.card table td {
-    padding: 10px 12px; /* Adjusted padding */
-    text-align: left;
-    border-bottom: 1px solid #e9ecef; /* Lighter row separator */
-    vertical-align: middle;
-}
-.card table tr:last-child td { /* Remove border for last row */
-    border-bottom: none;
-}
-
+.card table tr:last-child td { border-bottom: none; }
 .card table th {
-    background-color: #f9fafb; /* Very light, almost white */
-    color: #34495e; /* Darker text for contrast */
-    font-weight: 600; /* Slightly less bold than 700 */
-    font-size: 14px; /* Adjusted */
-    text-transform: uppercase; /* Optional: for a more formal look */
-    letter-spacing: 0.5px; /* Optional */
+    background-color: #f9fafb; color: #34495e; font-weight: 600;
+    font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px;
 }
-
-.card table tbody tr:hover {
-    background-color: #f0f4f8; /* Softer hover */
-}
-
-.card table .actions {
-    justify-content: flex-start;
-    padding: 6px 8px; /* Reduced padding */
-    gap: 6px; /* Reduced gap */
-}
-
+.card table tbody tr:hover { background-color: #f0f4f8; }
+.card table .actions { justify-content: flex-start; padding: 6px 8px; gap: 6px; }
 .card table .actions .btn-action {
-    padding: 6px; /* Smaller padding for icon buttons */
-    background-color: transparent;
-    border: none;
-    border-radius: 50%;
-    color: #3498db;
-    transition: background-color 0.2s ease, color 0.2s ease;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
+    padding: 6px; background-color: transparent; border: none; border-radius: 50%;
+    color: #3498db; transition: background-color 0.2s ease, color 0.2s ease;
+    display: inline-flex; align-items: center; justify-content: center;
 }
-.card table .actions .btn-action .material-icons { font-size: 18px; } /* Smaller icons */
-.card table .actions .btn-action:hover {
-    background-color: #e9f3ff; /* Light blueish hover */
-    color: #2980b9;
-}
-/* Specific action button colors if needed (e.g., delete) */
-.card table .actions .btn-delete:hover {
-    background-color: #f8d7da; /* Light red hover for delete */
-    color: #721c24;
-}
+.card table .actions .btn-action .material-icons { font-size: 18px; }
+.card table .actions .btn-action:hover { background-color: #e9f3ff; color: #2980b9; }
+.card table .actions .btn-delete:hover { background-color: #f8d7da; color: #721c24; }
 
-
-.card > .card-header .btn-create { /* Create button in table card headers */
-    background-color: #3498db;
-    color: white;
-    padding: 8px 12px; /* Adjusted */
-    font-size: 14px;
-    font-weight: 500; /* Standard weight */
+.card > .card-header .btn-create {
+    background-color: #3498db; color: white; padding: 8px 12px;
+    font-size: 14px; font-weight: 600; /* Harmonized weight */
 }
 .card > .card-header .btn-create:hover { background-color: #2980b9; }
 .card > .card-header .btn-create .material-icons { font-size: 1.1em; vertical-align: text-bottom;}
 
-
 .status-badge {
-    padding: 5px 12px; /* Adjusted */
-    border-radius: 12px; /* Softer radius */
-    color: white;
-    font-size: 0.8em; /* Adjusted */
-    font-weight: 600;
-    text-transform: capitalize;
-    display: inline-block;
-    line-height: 1.2;
-    text-align: center;
-    min-width: 85px; /* Adjusted */
-    vertical-align: middle;
+    padding: 5px 12px; border-radius: 12px; color: white; font-size: 13px; /* Increased base size slightly */
+    font-weight: 600; text-transform: capitalize; display: inline-block;
+    line-height: 1.3; text-align: center; min-width: 85px; vertical-align: middle;
 }
 .status-completed { background-color: #27ae60 !important; }
 .status-cancelled { background-color: #e74c3c !important; }
 .status-pending { background-color: #f39c12 !important; }
 .status-default { background-color: #7f8c8d !important; }
 
+.table-responsive-wrapper { display: block; width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
 
-.table-responsive-wrapper {
-    display: block;
-    width: 100%;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
+/* Pagination Controls */
+.pagination {
+    display: flex; justify-content: center; align-items: center;
+    flex-wrap: wrap; margin-top: 30px; margin-bottom: 30px; padding: 10px 0;
+}
+.pagination a, .pagination span { /* Includes .current and ellipsis spans */
+    padding: 10px 15px; margin: 0 5px 5px 5px; text-decoration: none;
+    border: 1px solid #bdc3c7; border-radius: 8px;
+    font-family: 'Roboto', sans-serif; font-size: 15px;
+    transition: all 0.2s ease-in-out; display: inline-block;
+    line-height: 1.2; /* Ensure text is centered well */
+}
+.pagination a { background-color: #ffffff; color: #34495e; }
+.pagination a:hover {
+    background-color: #ecf0f1; border-color: #95a5a6; color: #2c3e50;
+    transform: translateY(-1px); box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+.pagination span.current {
+    background-color: #3498db; color: #ffffff; border-color: #3498db;
+    font-weight: 700; cursor: default;
+}
+.pagination span:not(.current) { /* For ellipsis or disabled states if any */
+    color: #7f8c8d; background-color: #f8f9fa; border-color: #dee2e6; cursor: default;
 }
 
 
 /* ------- Login Page Specific Styles -------- */
-.login-container { /* Assumes login.html extends base.html and .login-container is within .content */
-    background: #fff;
-    padding: 30px 35px;
-    border-radius: 12px; /* Consistent with .card */
-    box-shadow: 0 8px 24px rgba(0,0,0,0.1);
-    width: 100%;
-    max-width: 400px; /* Slightly adjusted */
-    border-top: 4px solid #2c3e50; /* Consistent with form cards */
-    margin: 30px auto;
+.login-container {
+    background: #fff; padding: 30px 35px; border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.1); width: 100%;
+    max-width: 400px; border-top: 4px solid #2c3e50; margin: 30px auto;
 }
-
 .login-container h2 {
-    color: #2c3e50;
-    font-size: 24px; /* Adjusted */
-    text-align: center;
-    margin-top: 0;
-    margin-bottom: 25px;
+    color: #2c3e50; font-size: 24px; text-align: center;
+    margin-top: 0; margin-bottom: 25px;
 }
 .login-container .form-group { margin-bottom: 18px; }
-.login-container .form-actions { justify-content: center; margin-top: 20px;}
+.login-container .form-actions { justify-content: center; margin-top: 25px;} /* Increased margin */
 .login-container .form-actions button[type='submit'] { width: 100%; }
 .login-container .alert { margin-bottom: 18px; }
 
 
 /* Home / Dashboard Specific Styles */
 .dashboard-container {
-    max-width: 1200px;
-    margin: 20px auto;
-    padding: 0 15px;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 20px; /* Slightly reduced gap */
+    max-width: 1200px; margin: 20px auto; padding: 0 15px;
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
 }
-
-.dashboard-container .card { /* Styles for cards specifically in dashboard */
-    /* Base styles from .card are inherited */
-    padding: 20px;
-    margin-bottom: 0; /* Grid gap handles spacing */
-    display: flex;
-    flex-direction: column;
-    transition: transform 0.2s ease, box-shadow 0.2s ease; /* Faster transition */
+.dashboard-container .card {
+    padding: 20px; margin-bottom: 0; display: flex;
+    flex-direction: column; transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
-
 .dashboard-container .card:hover {
-    transform: translateY(-5px); /* Slightly less lift */
-    box-shadow: 0 10px 20px rgba(0,0,0,0.1); /* Adjusted shadow */
+    transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.1);
 }
-
-.dashboard-container .card h2, /* e.g. login prompt card */
-.dashboard-container .card h3 { /* Dashboard card titles */
-    margin-top: 0;
-    margin-bottom: 15px;
-    color: #2c3e50;
-    font-size: 18px; /* Adjusted for dashboard cards */
-    display: flex;
-    align-items: center;
+.dashboard-container .card h2,
+.dashboard-container .card h3 {
+    margin-top: 0; margin-bottom: 15px; color: #2c3e50;
+    font-size: 18px; display: flex; align-items: center;
 }
 .dashboard-container .card h3 .material-icons {
-    margin-right: 8px; /* Reduced margin */
-    color: #3498db;
-    font-size: 20px; /* Adjusted */
+    margin-right: 8px; color: #3498db; font-size: 20px;
 }
-
 .dashboard-container .card p,
 .dashboard-container .card ul {
-    font-size: 14px;
-    line-height: 1.5; /* Adjusted */
-    margin-bottom: 10px; /* Reduced */
-    color: #34495e;
+    font-size: 14px; line-height: 1.5; margin-bottom: 10px; color: #34495e;
 }
 .dashboard-container .card ul { padding-left: 20px; }
-
-.welcome-message { /* Specific card on dashboard */
-    grid-column: 1 / -1;
-    margin-bottom: 0; /* Grid gap handles spacing */
-    font-size: 24px;
-    font-weight: 600; /* Less bold */
-    color: #2c3e50;
-    padding: 20px;
-    background-color: #ffffff;
-    border-radius: 12px; /* Consistent with .card */
+.welcome-message {
+    grid-column: 1 / -1; margin-bottom: 0; font-size: 24px;
+    font-weight: 600; color: #2c3e50; padding: 20px;
+    background-color: #ffffff; border-radius: 12px;
     box-shadow: 0 6px 18px rgba(0,0,0,0.07);
-    border-top: 4px solid #2c3e50; /* Primary accent for welcome */
+    border-top: 4px solid #2c3e50;
 }
-
 .session-list { list-style: none; padding: 0; }
 .session-list li {
-    padding: 8px 0; /* Reduced */
-    border-bottom: 1px solid #ecf0f1;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 4px; /* Reduced */
-    color: #34495e;
-    line-height: 1.4;
+    padding: 8px 0; border-bottom: 1px solid #ecf0f1;
+    display: flex; flex-direction: column; align-items: flex-start;
+    gap: 4px; color: #34495e; line-height: 1.4;
 }
 .session-list li:last-child { border-bottom: none; }
-.session-list li > div:first-child {
-    display: flex;
-    align-items: center;
-    font-weight: 500;
-}
-.session-list li .material-icons {
-    margin-right: 8px;
-    color: #3498db;
-    font-size: 16px; /* Adjusted */
-}
+.session-list li > div:first-child { display: flex; align-items: center; font-weight: 500; }
+.session-list li .material-icons { margin-right: 8px; color: #3498db; font-size: 16px; }
 .session-list strong { color: #2c3e50; }
 .session-list .session-meta {
-    font-size: 0.8em; /* Adjusted */
-    color: #7f8c8d;
-    text-align: left;
-    padding-left: 24px; /* Adjusted indent (16px icon + 8px margin) */
+    font-size: 0.8em; color: #7f8c8d; text-align: left;
+    padding-left: 24px;
 }
 .session-list .session-meta .material-icons { font-size: 13px; vertical-align: middle; }
 
-
 .count {
-    font-size: 38px; /* Adjusted */
-    font-weight: 700;
-    color: #3498db;
-    margin-top: 5px;
-    margin-bottom: 5px;
-    text-align: center;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    font-size: 38px; font-weight: 700; color: #3498db;
+    margin-top: 5px; margin-bottom: 5px; text-align: center;
+    display: flex; align-items: center; justify-content: center;
 }
 .count .material-icons { font-size: 32px; margin-right: 8px; }
-
 .card-link { text-decoration: none; color: inherit; display: flex; flex-direction: column; height: 100%;}
 .card-footer {
-    margin-top: auto;
-    padding-top: 10px; /* Reduced */
-    text-align: right;
-    font-size: 13px; /* Adjusted */
-    font-weight: 600; /* Bolder */
-    color: #3498db;
-    transition: color 0.2s ease;
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
+    margin-top: auto; padding-top: 10px; text-align: right;
+    font-size: 13px; font-weight: 600; color: #3498db;
+    transition: color 0.2s ease; display: flex;
+    align-items: center; justify-content: flex-end;
 }
 .card-footer .material-icons { margin-left: 4px; font-size: 16px; }
 .card-footer:hover { color: #e74c3c; }
 
 .coming-soon-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 6px 0; /* Adjusted */
-    border-bottom: 1px solid #ecf0f1;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 6px 0; border-bottom: 1px solid #ecf0f1;
 }
 .coming-soon-item:last-child { border-bottom: none; }
 .coming-soon-item p { margin: 0; display: flex; align-items: center; font-size: 14px; }
 .coming-soon-item .material-icons { margin-right: 8px; color: #3498db; font-size: 16px; }
 .coming-soon-item a.view-link {
-    background-color: #3498db;
-    color: #ffffff;
-    padding: 5px 10px; /* Adjusted */
-    border-radius: 5px; /* Consistent radius */
-    text-decoration: none;
-    font-size: 12px; /* Adjusted */
-    font-weight: 600;
-    transition: background-color 0.2s ease;
-    white-space: nowrap;
+    background-color: #3498db; color: #ffffff; padding: 5px 10px;
+    border-radius: 5px; text-decoration: none; font-size: 12px;
+    font-weight: 600; transition: background-color 0.2s ease; white-space: nowrap;
 }
 .coming-soon-item a.view-link:hover { background-color: #2980b9; }
 
-.login-prompt-card h2 { font-size: 20px; } /* Match dashboard card title */
+.login-prompt-card h2 { font-size: 20px; }
 .login-prompt-card ul { margin-bottom: 15px; padding-left: 20px; }
 .login-prompt-card ul li { margin-bottom: 6px; display: flex; align-items: center; font-size: 14px;}
 .login-prompt-card ul li .material-icons { margin-right: 8px; color: #3498db; font-size: 18px;}
@@ -604,22 +442,15 @@ input.form-control:focus {
 .login-prompt-card p strong a:hover { text-decoration: underline; }
 
 .admin-stats-row {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: 20px; /* Reduced gap */
-    grid-column: 1 / -1;
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 20px; grid-column: 1 / -1;
 }
 .admin-stats-row .card { text-align: center; }
 
-/* Message Styles from Django (if applicable) */
 .messages { list-style: none; padding: 0; margin: 0 0 20px 0; }
 .messages li {
-    padding: 12px 18px; /* Adjusted */
-    margin-bottom: 10px;
-    border-radius: 6px; /* Consistent radius */
-    font-weight: 500; /* Standard weight */
-    display: flex;
-    align-items: center;
+    padding: 12px 18px; margin-bottom: 10px; border-radius: 6px;
+    font-weight: 500; display: flex; align-items: center;
 }
 .messages li .material-icons { margin-right: 10px; font-size: 1.2em; }
 .messages li.success { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
@@ -628,20 +459,23 @@ input.form-control:focus {
 .messages li.warning { background-color: #fff3cd; color: #856404; border: 1px solid #ffeeba; }
 
 /* Responsive Adjustments */
-@media (max-width: 768px) { /* Tablets and large phones */
-    body { font-size: 15px; } /* Slightly smaller base for tablets */
+@media (max-width: 768px) {
+    body { font-size: 15px; }
     header { padding: 15px 20px; }
     header h1 { font-size: 22px; }
-    nav { gap: 5px; } /* Reduce nav gap */
+    nav { gap: 5px; }
     nav a { padding: 8px 10px; font-size: 14px; }
 
     .container { padding: 0 15px; }
     .content { padding: 15px 0; }
-    .card { padding: 20px 25px; } /* Adjust card padding */
-    .card > .card-header h3 { font-size: 18px; }
-    .form-layout-card h2, .profile-container h2, .add-user-container h2, .form-container h2, .login-container h2 {
-        font-size: 22px;
-        margin-bottom: 25px;
+    .card { padding: 20px; } /* Adjusted card padding for tablets */
+    .card > .card-header h3 { font-size: 19px; } /* Slightly larger for tablet card headers */
+    .form-layout-card, .profile-container, .add-user-container, .form-container, .login-container {
+        padding: 25px 30px; /* More padding for form cards on tablet */
+    }
+    .form-layout-card h2, .profile-container h2, .add-user-container h2, .form-container h2,
+    .login-container h2, .form-layout-card h3 {
+        font-size: 22px; margin-bottom: 25px;
     }
 
     .dashboard-container { grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; }
@@ -657,15 +491,14 @@ input.form-control:focus {
     .form-group input[type='text'], .form-group input[type='email'], .form-group input[type='password'],
     .form-group input[type='number'], .form-group input[type='date'], .form-group input[type='url'],
     .form-group select, .form-group textarea, input.form-control {
-        padding: 10px 12px; font-size: 14px;
+        padding: 10px 12px; font-size: 15px; /* Inputs slightly larger on tablet */
     }
-    .form-actions button, .form-actions .btn, .form-actions a { padding: 10px 18px; font-size: 14px; }
+    .form-actions button, .form-actions .btn, .form-actions a { padding: 10px 18px; font-size: 15px; }
 
-    .card table th, .card table td { padding: 8px 10px; font-size: 14px; }
-    .status-badge { padding: 4px 10px; font-size: 0.75em; min-width: 75px; }
-    .pagination a, .pagination span { padding: 6px 10px; font-size: 14px; }
+    .card table th, .card table td { padding: 10px; font-size: 14px; } /* Table cells slightly more padding */
+    .status-badge { padding: 5px 10px; font-size: 0.8em; min-width: 80px; } /* Badges slightly larger */
+    .pagination a, .pagination span { padding: 8px 12px; font-size: 14px; margin: 0 4px 5px 4px;} /* Pagination items larger */
 
-    /* Stacked header nav */
     header { flex-direction: column; align-items: flex-start; }
     header h1 { margin-bottom: 10px; }
     nav { flex-direction: column; align-items: stretch; width: 100%; }
@@ -673,37 +506,38 @@ input.form-control:focus {
     nav a:last-child { border-bottom: none; }
 }
 
-@media (max-width: 480px) { /* Small phones */
+@media (max-width: 480px) {
     body { font-size: 14px; }
     header { padding: 10px 15px; }
     header h1 { font-size: 20px; }
-    nav a { font-size: 14px; padding: 10px; } /* Keep tappable */
+    nav a { font-size: 14px; padding: 10px; }
 
     .container { padding: 0 10px; }
     .content { padding: 10px 0; }
-    .card { padding: 15px; border-radius: 8px; } /* Smaller padding and radius */
+    .card { padding: 15px; border-radius: 8px; }
     .card > .card-header { padding-bottom: 10px; margin-bottom: 10px; }
-    .card > .card-header h3 { font-size: 16px; }
+    .card > .card-header h3 { font-size: 18px; }
 
     .dashboard-container { grid-template-columns: 1fr; gap: 10px; }
     .dashboard-container .card { padding: 12px; border-radius: 8px; }
     .welcome-message { font-size: 18px; padding: 12px; border-radius: 8px;}
-    .dashboard-container .card h3 { font-size: 16px; }
-    .dashboard-container .card p, .dashboard-container .card ul { font-size: 13px; }
+    .dashboard-container .card h3 { font-size: 17px; }
+    .dashboard-container .card p, .dashboard-container .card ul { font-size: 14px; } /* Slightly larger for readability */
     .count { font-size: 28px; }
     .count .material-icons { font-size: 24px; }
-    .card-footer { font-size: 12px; }
-    .card-footer .material-icons { font-size: 15px; }
+    .card-footer { font-size: 13px; } /* Increased for readability */
+    .card-footer .material-icons { font-size: 16px; }
 
-    .session-list li { flex-direction: column; align-items: flex-start; gap: 5px;} /* Fully stack */
+    .session-list li { flex-direction: column; align-items: flex-start; gap: 5px;}
     .session-list .session-meta { padding-left: 24px; text-align: left; }
     .coming-soon-item { flex-direction: column; align-items: flex-start; gap: 5px; }
-    .coming-soon-item a.view-link { align-self: flex-start; padding: 4px 8px; font-size: 11px; }
+    .coming-soon-item a.view-link { align-self: flex-start; padding: 5px 10px; font-size: 12px; }
 
     .form-layout-card, .profile-container, .add-user-container, .form-container, .login-container {
         padding: 20px; margin: 15px auto; border-radius: 8px;
     }
-    .form-layout-card h2, .profile-container h2, .add-user-container h2, .form-container h2, .login-container h2 {
+    .form-layout-card h2, .profile-container h2, .add-user-container h2, .form-container h2, .login-container h2,
+    .form-layout-card h3 {
         font-size: 20px; margin-bottom: 20px;
     }
     .form-group { margin-bottom: 15px; }
@@ -711,29 +545,30 @@ input.form-control:focus {
     .form-group input[type='text'], .form-group input[type='email'], .form-group input[type='password'],
     .form-group input[type='number'], .form-group input[type='date'], .form-group input[type='url'],
     .form-group select, .form-group textarea, input.form-control {
-        padding: 8px 10px; font-size: 14px; border-radius: 4px;
+        padding: 10px 12px; font-size: 14px;
+        border-radius: 6px;
     }
     .form-group select { background-position: right 10px center; }
     .form-actions, .form-footer, .form-actions-1 { flex-direction: column; gap: 10px; margin-top: 20px; }
-    .form-actions button, .form-actions .btn, .form-actions a,
-    .form-footer button, .form-footer .btn, .form-footer a,
-    .form-actions-1 button, .form-actions-1 .btn, .form-actions-1 a,
-    .update-btn, .change-password-btn {
-        width: 100%; padding: 10px 15px; font-size: 14px;
+    .form-actions > *, .form-footer > *, .form-actions-1 > * {
+        width: 100%; margin-bottom: 10px;
+    }
+    .form-actions > *:last-child, .form-footer > *:last-child, .form-actions-1 > *:last-child {
+        margin-bottom: 0;
     }
     .form-actions.space-between .back-btn { margin-right: 0; }
 
-    .card table th, .card table td { padding: 6px 8px; font-size: 12px; }
+    .card table th, .card table td { padding: 8px; font-size: 13px; } /* Increased for readability */
     .card table .actions .btn-action { padding: 5px; }
     .card table .actions .btn-action .material-icons { font-size: 16px; }
-    .status-badge { padding: 3px 8px; font-size: 0.7em; min-width: 65px; }
-    .status-yes, .status-no { font-size: 12px; }
+    .status-badge { padding: 4px 8px; font-size: 0.75em; min-width: 70px; } /* Slightly larger */
+    .status-yes, .status-no { font-size: 13px; }
 
-    .pagination { gap: 3px; }
-    .pagination a, .pagination span { padding: 5px 8px; font-size: 12px; }
+    .pagination { gap: 5px; } /* Increased gap for touch */
+    .pagination a, .pagination span { padding: 8px 12px; font-size: 13px; } /* Larger tap targets */
     .alert { padding: 10px 15px; font-size: 13px; }
     .messages li { padding: 10px 15px; }
     .messages li .material-icons { font-size: 1.1em; }
 
-    footer { padding: 10px; font-size: 12px; }
+    footer { padding: 15px 10px; font-size: 13px; } /* Increased padding */
 }

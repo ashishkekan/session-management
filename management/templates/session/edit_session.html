@@ -3,8 +3,8 @@
 
 {% block content %}
 
-<div class="add-user-container">
-    <h2>Edit Session:</h2>
+<div class="form-layout-card"> {# Changed class #}
+    <h3><span class="material-icons" style="vertical-align: middle; margin-right: 8px;">edit_note</span> Edit Session</h3> {# Changed h2 to h3 and added icon #}
     <form method="post">
         {% csrf_token %}
         {% for field in form %}
@@ -17,7 +17,7 @@
             </div>
         {% endfor %}
 
-        <div class="form-actions">
+        <div class="form-actions space-between"> {# Added space-between class #}
             <a href="{% url 'session_list' %}" class="back-btn">Cancel</a>
             <button type="submit" class="submit-btn">Update</button>
         </div>

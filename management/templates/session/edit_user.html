@@ -3,30 +3,34 @@
 
 {% block content %}
 
-<div class="user-table-container">
-    <div class="user-table-card">
-        <h3>✏️ Edit User - {{ user_obj.username }}</h3>
+<div class="container"> {# Changed class #}
+    <div class="form-layout-card"> {# Changed class #}
+        <h3><span class="material-icons" style="vertical-align: middle; margin-right: 8px;">person_edit</span> Edit User - {{ user_obj.username }}</h3> {# Ensured h3 and added icon #}
         <form method="post">
             {% csrf_token %}
             <div class="form-group">
                 <label for="{{ form.first_name.id_for_label }}">{{ form.first_name.label }}</label>
                 {{ form.first_name }}
+                {% if form.first_name.errors %}<div class="error">{{ form.first_name.errors|striptags }}</div>{% endif %}
             </div>
             <div class="form-group">
                 <label for="{{ form.last_name.id_for_label }}">{{ form.last_name.label }}</label>
                 {{ form.last_name }}
+                {% if form.last_name.errors %}<div class="error">{{ form.last_name.errors|striptags }}</div>{% endif %}
             </div>
             <div class="form-group">
                 <label for="{{ form.username.id_for_label }}">{{ form.username.label }}</label>
                 {{ form.username }}
+                {% if form.username.errors %}<div class="error">{{ form.username.errors|striptags }}</div>{% endif %}
             </div>
             <div class="form-group">
                 <label for="{{ form.email.id_for_label }}">{{ form.email.label }}</label>
                 {{ form.email }}
+                {% if form.email.errors %}<div class="error">{{ form.email.errors|striptags }}</div>{% endif %}
             </div>
-            <div class="form-footer">
+            <div class="form-actions space-between"> {# Changed class from form-footer #}
                 <a href="{% url 'user_list' %}" class="back-btn">← Back</a>
-                <button type="submit" class="save-btn">Update</button>
+                <button type="submit" class="submit-btn">Update</button> {# Changed save-btn to submit-btn #}
             </div>
         </form>
     </div>

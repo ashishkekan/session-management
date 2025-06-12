@@ -4,8 +4,8 @@
 
 {% block content %}
 
-<div class="form-container">
-    <h2>Create Session Topic</h2>
+<div class="form-layout-card"> {# Changed class #}
+    <h3><span class="material-icons" style="vertical-align: middle; margin-right: 8px;">event_note</span>Create Session Topic</h3> {# Changed h2 to h3 and added icon #}
     <form method="post">
         {% csrf_token %}
         {% for field in form %}
@@ -18,9 +18,9 @@
             </div>
         {% endfor %}
 
-        <div class="form-actions">
+        <div class="form-actions space-between"> {# Added space-between class #}
             <a href="{% url 'session_list' %}" class="back-btn">← Back</a>
-            <button type="submit" class="save-btn">Save</button>
+            <button type="submit" class="submit-btn">Save</button> {# Changed save-btn to submit-btn #}
         </div>
     </form>
 </div>
