@@ -7,15 +7,15 @@
 <div class="dashboard-container">
 
     {% if not request.user.is_authenticated %}
-        <div class="card">
-            <h2>Welcome to the Learning Session Dashboard</h2>
+        <div class="card login-prompt-card">
+            <h2>Welcome to the Learning Session Dashboard!</h2>
             <p>This platform helps teams manage learning and development efficiently. Key features include:</p>
             <ul>
-                <li>📝 View and manage upcoming learning topics and sessions</li>
-                <li>📊 Track completed, pending, and cancelled sessions</li>
-                <li>👥 Admin controls for managing users and sessions</li>
-                <li>🔗 Easy access to shared resources and materials</li>
-                <li>📅 Personalized session dashboard for each user</li>
+                <li><span class="material-icons">event_note</span> View and manage upcoming learning topics and sessions</li>
+                <li><span class="material-icons">assessment</span> Track completed, pending, and cancelled sessions</li>
+                <li><span class="material-icons">admin_panel_settings</span> Admin controls for managing users and sessions</li>
+                <li><span class="material-icons">folder_shared</span> Easy access to shared resources and materials</li>
+                <li><span class="material-icons">dashboard_customize</span> Personalized session dashboard for each user</li>
             </ul>
             <p><strong>Please <a href="{% url 'login' %}">log in</a> to access your personalized dashboard.</strong></p>
         </div>
@@ -26,131 +26,153 @@
         </div>
 
         <div class="card">
-            <h3>Coming Soon...</h3>
-            {% for topic in learning_topics %}
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-                    <p style="margin: 0;"><strong>{{ topic.coming_soon }}</strong></p>
-                    <a href="{{ topic.url }}" target="_blank" style="text-decoration: none; color: #007bff;">
+            <h3><span class="material-icons">new_releases</span> Coming Soon...</h3>
+            {% if learning_topics %}
+                {% for topic in learning_topics %}
+                <div class="coming-soon-item">
+                    <p><span class="material-icons">topic</span> <strong>{{ topic.coming_soon }}</strong></p>
+                    <a href="{{ topic.url }}" target="_blank" class="view-link">
                         View
                     </a>
                 </div>
-            {% endfor %}
-        </div>    
+                {% endfor %}
+            {% else %}
+                <p>No upcoming learning topics announced yet.</p>
+            {% endif %}
+        </div>
 
         <div class="card">
-            <h3>Top 3 Upcoming Sessions</h3>
+            <h3><span class="material-icons">event</span> Top 3 Upcoming Sessions</h3>
             {% if top_sessions %}
                 <ul class="session-list">
                     {% for session in top_sessions %}
-                        <li style="display: flex; justify-content: space-between; align-items: center;">
-                            <strong>{{ session.topic }}</strong>
-                            <span style="font-size: 0.9em; color: #555;"><strong>{{ session.conducted_by.get_full_name }}</strong></span>
-                        </li>
-                        <li style="margin-bottom: 10px;">
-                            📅 {{ session.date|date:"M d, Y" }}
+                        <li>
+                            <div>
+                                <span class="material-icons">mic</span>
+                                <strong>{{ session.topic }}</strong>
+                            </div>
+                            <div class="session-meta">
+                                <span class="material-icons">person</span> {{ session.conducted_by.get_full_name|default:session.conducted_by.username }} <br>
+                                <span class="material-icons">calendar_today</span> {{ session.date|date:"M d, Y" }}
+                            </div>
                         </li>
                     {% endfor %}
                 </ul>
             {% else %}
-                <p>No upcoming sessions found.</p>
+                <p><span class="material-icons">info</span> No upcoming sessions found.</p>
             {% endif %}
-        </div>  
+        </div>
 
         {% if is_admin %}
-            <a href="{% url 'user_list' %}" class="card-link">
-                <div class="card">
-                    <h3>Total Users</h3>
-                    <p class="count">{{ total_users }}</p>
-                    <p class="card-footer">View All Users →</p>
-                </div>
-            </a>
+            <div class="admin-stats-row">
+                <a href="{% url 'user_list' %}" class="card-link">
+                    <div class="card">
+                        <h3><span class="material-icons">group</span> Total Users</h3>
+                        <p class="count"><span class="material-icons">people</span>{{ total_users }}</p>
+                        <p class="card-footer">View All Users <span class="material-icons">arrow_forward</span></p>
+                    </div>
+                </a>
 
-            <a href="{% url 'session_list' %}" class="card-link">
-                <div class="card">
-                    <h3>Total Sessions</h3>
-                    <p class="count">{{ total_sessions }}</p>
-                    <p class="card-footer">View All Sessions →</p>
-                </div>
-            </a>  
+                <a href="{% url 'session_list' %}" class="card-link">
+                    <div class="card">
+                        <h3><span class="material-icons">event_note</span> Total Sessions</h3>
+                        <p class="count"><span class="material-icons">list_alt</span>{{ total_sessions }}</p>
+                        <p class="card-footer">View All Sessions <span class="material-icons">arrow_forward</span></p>
+                    </div>
+                </a>
+            </div>
 
             <div class="card">
-                <h3>Completed Sessions</h3>
+                <h3><span class="material-icons">check_circle</span> Completed Sessions</h3>
                 {% if completed %}
                     <ul class="session-list">
                         {% for session in completed %}
-                            <li style="display: flex; justify-content: space-between; align-items: center;">
-                                <strong>{{ session.topic }}</strong>
-                                <span style="font-size: 0.9em; color: #555;"><strong>{{ session.conducted_by.get_full_name }}</strong></span>
-                            </li>
-                            <li style="margin-bottom: 10px;">
-                                📅 {{ session.date|date:"M d, Y" }}
+                            <li>
+                                <div>
+                                    <span class="material-icons">topic</span>
+                                    <strong>{{ session.topic }}</strong>
+                                </div>
+                                <div class="session-meta">
+                                   <span class="material-icons">person</span> {{ session.conducted_by.get_full_name|default:session.conducted_by.username }} <br>
+                                   <span class="material-icons">calendar_today</span> {{ session.date|date:"M d, Y" }}
+                                </div>
                             </li>
                         {% endfor %}
                     </ul>
                 {% else %}
-                    <p>No completed sessions found.</p>
+                    <p><span class="material-icons">info</span> No completed sessions found.</p>
                 {% endif %}
             </div>
 
             <div class="card">
-                <h3>Pending Sessions</h3>
+                <h3><span class="material-icons">pending_actions</span> Pending Sessions</h3>
                 {% if pending %}
                     <ul class="session-list">
                         {% for session in pending %}
-                            <li style="display: flex; justify-content: space-between; align-items: center;">
-                                <strong>{{ session.topic }}</strong>
-                                <span style="font-size: 0.9em; color: #555;"><strong>{{ session.conducted_by.get_full_name }}</strong></span>
-                            </li>
-                            <li style="margin-bottom: 10px;">
-                                📅 {{ session.date|date:"M d, Y" }}
+                            <li>
+                                <div>
+                                    <span class="material-icons">topic</span>
+                                    <strong>{{ session.topic }}</strong>
+                                </div>
+                                <div class="session-meta">
+                                    <span class="material-icons">person</span> {{ session.conducted_by.get_full_name|default:session.conducted_by.username }} <br>
+                                    <span class="material-icons">calendar_today</span> {{ session.date|date:"M d, Y" }}
+                                </div>
                             </li>
                         {% endfor %}
                     </ul>
                 {% else %}
-                    <p>No pending sessions found.</p>
+                    <p><span class="material-icons">info</span> No pending sessions found.</p>
                 {% endif %}
             </div>
 
             <div class="card">
-                <h3>Cancelled Sessions</h3>
+                <h3><span class="material-icons">cancel</span> Cancelled Sessions</h3>
                 {% if cancelled %}
                     <ul class="session-list">
                         {% for session in cancelled %}
-                            <li style="display: flex; justify-content: space-between; align-items: center;">
-                                <strong>{{ session.topic }}</strong>
-                                <span style="font-size: 0.9em; color: #555;"><strong>{{ session.conducted_by.get_full_name }}</strong></span>
+                             <li>
+                                <div>
+                                    <span class="material-icons">topic</span>
+                                    <strong>{{ session.topic }}</strong>
+                                    {% if session.cancelled_reason %}
+                                        <br><small style="color: #e74c3c;"><span class="material-icons" style="font-size: 1em; vertical-align: middle;">report_problem</span> Reason: {{ session.cancelled_reason }}</small>
+                                    {% endif %}
+                                </div>
+                                <div class="session-meta">
+                                    <span class="material-icons">person</span> {{ session.conducted_by.get_full_name|default:session.conducted_by.username }} <br>
+                                    <span class="material-icons">calendar_today</span> {{ session.date|date:"M d, Y" }}
+                                </div>
                             </li>
-                            <li style="margin-bottom: 10px;">
-                                📅 {{ session.date|date:"M d, Y" }}
-                            </li>
-                            <li><p><strong>Cancelled Reason: </strong>{{ session.cancelled_reason }}</p></li>
                         {% endfor %}
                     </ul>
                 {% else %}
-                    <p>No cancelled sessions found.</p>
+                    <p><span class="material-icons">info</span> No cancelled sessions found.</p>
                 {% endif %}
-            </div>        
+            </div>
 
-        {% else %}
+        {% else %} {# For non-admin users #}
 
             <div class="card">
-                <h3>Upcoming Sessions (For self)</h3>
+                <h3><span class="material-icons">event_available</span> Upcoming Sessions (For self)</h3>
                 <p><strong>Note:</strong> Minimum 10 slides are required in your PPT.</p>
                 {% if upcoming_sessions %}
                     <ul class="session-list">
                         {% for session in upcoming_sessions %}
                             <li>
-                                <strong>{{ session.topic }}</strong><br>
-                                📅 {{ session.date|date:"M d, Y, l" }}
-                            </li>
-                            <li>
-                                <strong>Place: </strong><br>
-                                📍 {{ session.place }}
+                                <div>
+                                    <span class="material-icons">mic</span>
+                                    <strong>{{ session.topic }}</strong>
+                                </div>
+                                <div class="session-meta">
+                                    <span class="material-icons">calendar_today</span> {{ session.date|date:"M d, Y, l" }} <br>
+                                    <span class="material-icons">location_on</span> {{ session.place }}
+                                </div>
                             </li>
                         {% endfor %}
                     </ul>
                 {% else %}
-                    <p>No upcoming sessions found.</p>
+                    <p><span class="material-icons">info</span> No upcoming sessions assigned to you.</p>
                 {% endif %}
             </div>
         {% endif %}
