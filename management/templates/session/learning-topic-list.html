@@ -12,10 +12,11 @@
         </div>
         {% endif %}
         {% if sessions %}
-            <table>
-                <thead>
-                    <tr>
-                        <th>Topic</th>
+            <div class="table-responsive-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Topic</th>
                         <th>Options</th>
                     </tr>
                 </thead>
@@ -37,6 +38,7 @@
                     {% endfor %}
                 </tbody>
             </table>
+            </div>
         {% else %}
             <p>No sessions available.</p>
         {% endif %}

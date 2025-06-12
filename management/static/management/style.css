@@ -1,4 +1,10 @@
 /* Global Styles */
+html {
+    box-sizing: border-box; /* Apply box-sizing to all elements */
+}
+*, *:before, *:after {
+    box-sizing: inherit;
+}
 body {
     margin: 0;
     font-family: 'Roboto', sans-serif;
@@ -8,70 +14,103 @@ body {
     flex-direction: column;
     min-height: 100vh;
     font-size: 16px; /* Base font size */
+    line-height: 1.6; /* Improved default line height */
 }
 
 header {
     background-color: #2c3e50; /* Primary */
     color: #ffffff; /* White */
-    padding: 20px 40px; /* Improved padding */
+    padding: 15px 30px; /* Adjusted padding */
     display: flex;
     justify-content: space-between;
     align-items: center;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Subtle bottom shadow */
-    flex-wrap: wrap; /* Allow header content to wrap on small screens */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    flex-wrap: wrap;
 }
 
 header h1 {
     margin: 0;
-    font-size: 28px; /* Slightly larger font size */
+    font-size: 26px; /* Slightly adjusted */
 }
 
 nav {
     display: flex;
-    gap: 10px; /* Increased gap */
-    flex-wrap: wrap; /* Allow nav items to wrap */
-    align-items: center; /* Align nav items nicely if they wrap */
+    gap: 8px; /* Slightly reduced gap for nav items */
+    flex-wrap: wrap;
+    align-items: center;
 }
 
 nav a {
-    color: #ffffff; /* White */
-    padding: 8px 12px; /* Improved padding */
-    font-weight: bold;
+    color: #ffffff;
+    padding: 8px 12px;
+    font-weight: 600; /* Slightly bolder */
     text-decoration: none;
-    font-size: 16px; /* Slightly larger font size */
-    transition: background-color 0.3s ease;
-    border-radius: 4px; /* Added border-radius for a softer look */
+    font-size: 15px; /* Slightly adjusted */
+    transition: background-color 0.3s ease, color 0.3s ease;
+    border-radius: 6px; /* Consistent radius */
 }
 
 nav a:hover {
     background-color: #3498db; /* Secondary */
+    color: #ffffff;
+}
+nav a.btn-danger { /* For logout button */
+    background-color: #e74c3c;
+}
+nav a.btn-danger:hover {
+    background-color: #c0392b;
 }
 
-.container { /* General container, not the dashboard */
-    max-width: 1000px;
-    margin: 0 auto; /* Centered container */
-    padding: 20px 30px;
+
+.container { /* General container for page content */
+    max-width: 1100px; /* Slightly increased */
+    margin: 20px auto; /* Consistent margin */
+    padding: 0 20px; /* Horizontal padding */
+    width: 100%;
 }
 
-.content { /* General content area */
+.content { /* General content area, e.g. within base.html */
     flex: 1;
-    padding: 20px; /* Adjusted padding for general content */
+    padding: 20px 0; /* Padding top/bottom, horizontal handled by .container */
+    width: 100%;
 }
+
+/* General Card Styling (used for forms, tables, dashboard items) */
+.card {
+    background-color: #ffffff;
+    border-radius: 12px; /* Standardized card radius */
+    box-shadow: 0 6px 18px rgba(0,0,0,0.07); /* Standardized shadow */
+    padding: 25px 30px; /* Standardized padding */
+    margin-bottom: 25px; /* Standardized bottom margin */
+    border-top: 4px solid #3498db; /* Secondary color accent */
+}
+.card.form-layout-card, /* Specific form cards might have different accent */
+.card.profile-container,
+.card.login-container { /* Login container uses .card now if extends base */
+    border-top-color: #2c3e50; /* Primary color accent for forms/login */
+}
+
 
 footer {
     text-align: center;
-    padding: 20px;
-    background-color: #34495e; /* Dark Gray */
-    color: #ecf0f1; /* Light Gray */
+    padding: 25px 20px; /* Increased padding */
+    background-color: #34495e;
+    color: #ecf0f1;
     font-size: 14px;
+    margin-top: auto; /* Push footer to bottom */
 }
 
 /* Alert/Message Styles */
 .alert {
-    padding: 15px;
+    padding: 15px 20px; /* Adjusted padding */
     margin-bottom: 20px;
     border: 1px solid transparent;
-    border-radius: 4px;
+    border-radius: 8px; /* Consistent radius */
+    font-weight: 500;
+}
+.alert ul { /* For error lists in alerts */
+    margin: 0;
+    padding-left: 20px;
 }
 
 .alert-success {
@@ -80,7 +119,7 @@ footer {
     border-color: #c3e6cb;
 }
 
-.alert-error {
+.alert-error, .alert-danger { /* Combining .alert-danger for Django messages */
     color: #721c24;
     background-color: #f8d7da;
     border-color: #f5c6cb;
@@ -92,898 +131,609 @@ footer {
     border-color: #bee5eb;
 }
 
-
-/* ------- Profile Page Specific Styles -------- */
-.profile-container {
-    background-color: white;
-    padding: 35px;
-    max-width: 650px;
-    margin: 40px auto;
-    border-radius: 16px;
-    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
-    border-top: 5px solid #3498db; /* Secondary */
+/* ==== Form Styling ==== */
+.form-layout-card, /* Includes .profile-container, .add-user-container, .form-container if they use this class or are styled identically */
+.profile-container,
+.add-user-container,
+.form-container {
+    /* Base styles inherited from .card, specific overrides below if needed */
+    max-width: 700px;
+    margin: 30px auto; /* Consistent margin for form cards */
 }
 
-.profile-container h2 {
+.form-layout-card h2,
+.profile-container h2,
+.add-user-container h2,
+.form-container h2 {
+    color: #2c3e50;
+    font-size: 26px; /* Adjusted form title size */
     text-align: center;
+    margin-top: 0; /* Remove top margin if padding is on card */
     margin-bottom: 30px;
-    font-size: 28px;
-    color: #2c3e50; /* Primary */
 }
 
 .form-group {
-    margin-bottom: 22px;
+    margin-bottom: 20px; /* Consistent spacing */
 }
 
 .form-group label {
+    font-weight: 600;
+    color: #34495e;
     display: block;
-    font-weight: bold;
-    margin-bottom: 6px;
-    color: #34495e; /* Dark Gray */
+    margin-bottom: 8px;
     font-size: 15px;
 }
 
-.form-group input {
+.form-group input[type='text'],
+.form-group input[type='email'],
+.form-group input[type='password'],
+.form-group input[type='number'],
+.form-group input[type='date'],
+.form-group input[type='url'],
+.form-group select,
+.form-group textarea,
+input.form-control { /* Catching .form-control if used */
     width: 100%;
-    padding: 12px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
+    padding: 10px 14px; /* Adjusted padding */
+    border: 1px solid #bdc3c7;
+    border-radius: 6px; /* Slightly smaller radius for inputs */
+    font-family: 'Roboto', sans-serif;
     font-size: 15px;
-    transition: border-color 0.3s;
-    box-sizing: border-box; /* Include padding and border in the element's total width and height */
+    background-color: #fdfdfe;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    box-sizing: border-box;
+    color: #34495e;
 }
 
-.form-group input:focus {
-    border-color: #3498db; /* Secondary */
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus,
+input.form-control:focus {
+    border-color: #3498db;
+    box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
     outline: none;
 }
 
-.form-actions {
-    display: flex;
-    justify-content: space-between;
-    align-items: center; /* Align items for better look if they wrap */
-    flex-wrap: wrap; /* Allow actions to wrap on small screens */
-    gap: 10px; /* Add gap for wrapped items */
-    margin-top: 25px;
+.form-group textarea {
+    min-height: 100px; /* Reduced min-height slightly */
+    resize: vertical;
 }
 
-.update-btn,
-.change-password-btn {
-    padding: 10px 24px;
-    border-radius: 6px;
-    font-size: 15px;
-    transition: background-color 0.3s ease;
-    text-decoration: none;
-    color: white;
-    border: none;
-    cursor: pointer;
-    flex-grow: 1; /* Allow buttons to grow if space allows */
-    text-align: center; /* Center text in button */
+.form-group select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2334495e' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 12px center; /* Adjusted arrow position */
+    background-size: 0.9em; /* Adjusted arrow size */
+    padding-right: 35px;
 }
-
-.update-btn {
-    background-color: #3498db; /* Secondary */
-}
-
-.update-btn:hover {
-    background-color: #2980b9; /* Darker Secondary */
-}
-
-.change-password-btn {
-    background-color: #e74c3c; /* Accent */
-}
-
-.change-password-btn:hover {
-    background-color: #c0392b; /* Darker Accent */
-}
-
-/* -------- User List Page Specific Styles -------- */
-.user-table-container-1 { /* Consider renaming for clarity if this is specific */
-    max-width: 960px;
-    margin: 20px auto;
-    padding: 20px;
-    overflow-x: auto; /* Allow table to scroll horizontally on small screens */
-}
-
-.user-table-card-1 {
-    background-color: #ffffff;
-    border-radius: 16px;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-    padding: 20px; /* Adjusted padding */
-}
-
-.user-table-card-1 h3 {
-    margin-bottom: 25px;
-    text-align: center;
-    color: #2c3e50; /* Primary */
-    font-size: 24px; /* Adjusted font size */
-}
-
-.table { /* General table styling */
-    border-collapse: collapse;
-    width: 100%;
-    margin-bottom: 20px; /* Space below table */
-}
-
-.table th,
-.table td {
-    border: 1px solid #dee2e6;
-    font-size: 15px;
-    padding: 10px 12px; /* Adjusted padding */
-    text-align: left; /* More standard alignment for table data */
-    vertical-align: middle; /* Ensure vertical alignment */
-}
-
-.table th {
-    background-color: #f8f9fa; /* Lighter header for tables */
-    font-weight: 600; /* Bolder table headers */
-    color: #495057; /* Darker text for headers */
-}
-
-.table tbody tr:hover {
-    background-color: #e9f3ff; /* Lighter shade of Secondary */
-    cursor: pointer;
-}
-
-.table td:last-child, .table th:last-child {
-    text-align: center; /* Center actions column if it's the last one */
-}
-
-.edit-btn { /* This is a specific button, consider more generic button styles */
-    background-color: #3498db; /* Secondary */
-    border: none;
-    color: white;
-    padding: 6px 12px; /* Adjusted padding */
-    font-size: 14px; /* Adjusted font size */
-    border-radius: 5px;
-    text-decoration: none;
-    display: inline-block; /* Proper display for a link styled as a button */
-}
-
-.edit-btn:hover {
-    background-color: #2980b9; /* Darker Secondary */
-}
-
-.pagination {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap; /* Allow pagination to wrap */
-    gap: 5px; /* Space between pagination items */
-    margin-top: 20px;
-}
-
-.pagination a,
-.pagination span {
-    color: #3498db; /* Secondary */
-    padding: 8px 12px;
-    margin: 0; /* Gap property handles spacing */
-    text-decoration: none;
-    border: 1px solid #dee2e6;
-    border-radius: 5px;
-    transition: background-color 0.3s ease, color 0.3s ease;
-}
-.pagination a:hover {
-    background-color: #3498db;
-    color: #ffffff;
-}
-
-.pagination .current {
-    background-color: #3498db; /* Secondary */
-    color: white;
-    font-weight: bold;
-    border-color: #3498db;
-}
-
-.btn-create { /* Generic "create" button */
-    background-color: #28a745; /* Green for create actions */
-    color: white;
-    padding: 10px 15px; /* Adjusted padding */
-    border-radius: 6px;
-    text-decoration: none;
-    font-weight: bold;
-    font-size: 15px; /* Adjusted font size */
-    transition: background-color 0.3s ease;
-    display: inline-flex; /* Align icon and text if any */
-    align-items: center;
-    gap: 5px;
-}
-
-.btn-create:hover {
-    background-color: #218838; /* Darker green */
-}
-
-.card-header { /* Used in user list, potentially elsewhere */
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap; /* Allow header content to wrap */
-    gap: 10px; /* Space for wrapped items */
-    margin-bottom: 20px;
-}
-
-/* ------- Login Page Specific Styles -------- */
-
-.login-container {
-    background-color: #fff;
-    padding: 30px 40px;
-    max-width: 380px; /* Slightly wider for comfort */
-    width: 90%; /* Use percentage for smaller screens */
-    margin: 80px auto; /* Adjusted margin */
-    border-radius: 10px;
-    box-shadow: 0 0 20px rgba(0,0,0,0.1);
-    text-align: center;
-}
-
-.login-container h2 {
-    color: #2c3e50; /* Primary */
-    margin-bottom: 25px;
-    font-size: 26px; /* Adjusted font size */
-}
-
-.login-container form {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-}
-
-.login-container label {
-    align-self: flex-start;
-    margin-bottom: 5px;
-    color: #34495e; /* Dark Gray */
-    font-weight: 500; /* Slightly bolder labels */
-}
-
-.login-container input[type="text"],
-.login-container input[type="password"] {
-    width: 100%;
-    padding: 12px; /* Increased padding */
-    margin-bottom: 20px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    box-sizing: border-box;
-}
-
-.login-container button { /* Primary action button on login */
-    width: 100%;
-    padding: 12px;
-    background-color: #3498db; /* Secondary */
-    color: white;
-    border: none;
-    border-radius: 6px;
-    font-size: 16px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-.login-container button:hover {
-    background-color: #2980b9; /* Darker Secondary */
-}
-
-.login-container .error {
-    color: #e74c3c; /* Accent */
-    margin-bottom: 15px;
-    font-size: 14px; /* Ensure error is readable */
-}
-
-/* For add user / edit user / create learning (shared styles) */
-.form-layout-card { /* New class for consistent form card styling */
-    background-color: #fff;
-    padding: 30px 35px; /* Adjusted padding */
-    max-width: 650px;
-    margin: 40px auto;
-    border-radius: 16px;
-    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
-    border-top: 5px solid #3498db; /* Secondary */
-}
-
-.form-layout-card h2 {
-    text-align: center;
-    margin-bottom: 30px;
-    font-size: 26px; /* Consistent header size */
-    color: #2c3e50; /* Primary */
-}
-/* .add-user-container, .form-container, .user-table-card can inherit from .form-layout-card or be replaced if identical */
-.add-user-container, .form-container, .user-table-card { /* Apply base styles */
-    background-color: #fff;
-    padding: 30px 35px;
-    max-width: 650px;
-    margin: 40px auto;
-    border-radius: 16px;
-    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
-    border-top: 5px solid #3498db; /* Secondary */
-}
-.add-user-container h2, .form-container h2, .user-table-card h3 { /* user-table-card uses h3 */
-    text-align: center;
-    margin-bottom: 30px;
-    font-size: 26px;
-    color: #2c3e50;
-}
-.user-table-card h3 { /* Specific adjustment if needed */
-    font-size: 24px;
-}
-
+.form-group select::-ms-expand { display: none; }
 
 .checkbox-group {
     display: flex;
     align-items: center;
     margin-top: 10px;
-    margin-bottom: 20px; /* Ensure spacing */
+    margin-bottom: 20px;
 }
 
-.checkbox-group input[type="checkbox"] {
-    margin-right: 8px; /* Space between checkbox and label */
+.checkbox-group input[type='checkbox'] {
+    margin-right: 10px;
+    height: 16px;
+    width: 16px;
+    accent-color: #3498db;
 }
 
-.checkbox-group label {
-    margin-left: 0; /* Reset default if any */
-    font-weight: 500; /* Normal weight for checkbox labels */
-    color: #34495e; /* Dark Gray */
+.checkbox-group label { /* Label next to checkbox */
+    margin-bottom: 0;
+    font-weight: 500; /* Normal weight */
+    font-size: 14px; /* Slightly smaller */
 }
 
-/* .form-actions already defined, ensure consistency */
-/* .submit-btn can be a more generic .btn-primary or .btn-cta */
-.submit-btn, .save-btn { /* Generic save/submit */
-    background-color: #3498db; /* Secondary */
-    color: white;
-    padding: 10px 24px;
-    border: none;
-    border-radius: 6px;
-    font-size: 16px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    text-decoration: none; /* Ensure links styled as buttons don't have underlines */
+.form-group .error, /* For field-specific errors */
+.errorlist { /* For Django's non-field errors */
+    color: #e74c3c;
+    font-size: 0.88em; /* Adjusted */
+    margin-top: 5px;
+    display: block;
 }
-
-.submit-btn:hover, .save-btn:hover {
-    background-color: #2980b9; /* Darker Secondary */
+.errorlist {
+    list-style: none;
+    padding: 0;
+    margin: 10px 0 15px 0;
 }
+.errorlist li { padding: 3px 0; }
 
 
-/*  All session list card */
-/* .card definition is general, already styled. Specific overrides for session list card if needed. */
-
-/* Table styling is now more generic: .table */
-
-.actions { /* For table actions */
-    display: flex;
-    gap: 8px; /* Slightly reduced gap */
-    align-items: center;
-    justify-content: center; /* Center actions in their cell */
-}
-
-.btn-action { /* Base for small action buttons */
-    padding: 5px 8px; /* Adjusted padding */
-    font-size: 13px; /* Adjusted font size */
-    border-radius: 4px; /* Slightly smaller radius */
-    text-decoration: none;
-    color: white;
-    transition: background-color 0.3s ease;
-    border: none; /* Ensure no border for button elements */
-    cursor: pointer; /* Ensure cursor for button elements */
-}
-
-.btn-edit { /* Extends .btn-action */
-    background-color: #28a745; /* Green for edit */
-}
-.btn-edit:hover {
-    background-color: #218838; /* Darker Green */
-}
-
-.btn-delete { /* Extends .btn-action */
-    background-color: #e74c3c; /* Accent/Red for delete */
-}
-.btn-delete:hover {
-    background-color: #c0392b; /* Darker Accent/Red */
-}
-
-/* Change password form */
-.form-actions-1 { /* Specific to change password? Consider merging with .form-actions */
+.form-actions, .form-footer, .form-actions-1 {
     display: flex;
     justify-content: flex-end;
-    margin-top: 25px;
-    gap: 10px;
+    gap: 12px; /* Adjusted gap */
+    margin-top: 30px;
+    flex-wrap: wrap;
 }
 
-.back-btn {
+.form-actions button, .form-actions .btn, .form-actions a,
+.form-footer button, .form-footer .btn, .form-footer a,
+.form-actions-1 button, .form-actions-1 .btn, .form-actions-1 a,
+.update-btn, .change-password-btn { /* Add specific buttons to inherit base style */
+    padding: 10px 20px; /* Adjusted padding */
+    border-radius: 6px; /* Consistent radius */
+    font-weight: 600;
+    font-size: 15px; /* Adjusted font size */
     text-decoration: none;
-    background-color: #7f8c8d; /* Clouds */
-    color: #ffffff; /* White */
-    padding: 10px 18px;
-    border-radius: 6px;
-    font-size: 15px;
-    transition: background-color 0.3s ease;
-    /* margin-right: auto; -- remove if using gap in .form-actions-1 */
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s ease, box-shadow 0.2s ease, transform 0.1s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+.form-actions button:hover, .form-actions .btn:hover, .form-actions a:hover,
+.form-footer button:hover, .form-footer .btn:hover, .form-footer a:hover,
+.form-actions-1 button:hover, .form-actions-1 .btn:hover, .form-actions-1 a:hover,
+.update-btn:hover, .change-password-btn:hover {
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    transform: translateY(-1px);
 }
 
-.back-btn:hover {
-    background-color: #95a5a6; /* Silver */
+.form-actions .submit-btn, .form-actions .save-btn, .update-btn,
+.form-footer .submit-btn, .form-footer .save-btn,
+.form-actions-1 .submit-btn, .form-actions-1 .save-btn {
+    background-color: #3498db;
+    color: white;
+}
+.form-actions .submit-btn:hover, .form-actions .save-btn:hover, .update-btn:hover,
+.form-footer .submit-btn:hover, .form-footer .save-btn:hover,
+.form-actions-1 .submit-btn:hover, .form-actions-1 .save-btn:hover {
+    background-color: #2980b9;
 }
 
-
-.form-group textarea { /* Ensure textarea is also covered in form styling */
-    min-height: 100px; /* Minimum height for textareas */
-    resize: vertical; /* Allow vertical resizing */
+.form-actions .back-btn, .profile-container .change-password-btn, /* Grouping all secondary-style buttons */
+.form-footer .back-btn,
+.form-actions-1 .back-btn {
+    background-color: #bdc3c7;
+    color: #2c3e50;
+    flex-grow: 0; /* Ensure it doesn't always grow */
+}
+.form-actions .back-btn:hover, .profile-container .change-password-btn:hover,
+.form-footer .back-btn:hover,
+.form-actions-1 .back-btn:hover {
+    background-color: #95a5a6;
 }
 
-.error { /* General error message styling for forms */
-    color: #e74c3c; /* Accent */
-    font-size: 14px;
-    margin-top: 5px;
-    display: block; /* Ensure it takes its own line */
-}
+.form-actions.space-between { justify-content: space-between; }
+.form-actions.space-between .back-btn { margin-right: auto; }
 
-input.form-control { /* Bootstrap-like class, ensure consistency or remove if not used widely */
-    width: 100%;
-    padding: 8px 12px;
-    border: 1px solid #ced4da;
-    border-radius: 5px;
-    box-sizing: border-box;
-    color: #34495e; /* Dark Gray */
-}
 
-.form-footer { /* Used in edit user? Merge with .form-actions */
+/* Enhanced Table View Styles */
+.status-yes { color: #27ae60; font-weight: bold; }
+.status-no { color: #e74c3c; font-weight: bold; }
+
+.card > .card-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     flex-wrap: wrap;
     gap: 10px;
-    margin-top: 30px;
+    margin-bottom: 15px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #e0e0e0; /* Lighter border */
+}
+
+.card > .card-header h3 {
+    margin: 0;
+    font-size: 20px; /* Slightly smaller for table card headers */
+    color: #2c3e50;
+}
+
+.card table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: 'Roboto', sans-serif;
+    margin-bottom: 0;
+}
+
+.card table th,
+.card table td {
+    padding: 10px 12px; /* Adjusted padding */
+    text-align: left;
+    border-bottom: 1px solid #e9ecef; /* Lighter row separator */
+    vertical-align: middle;
+}
+.card table tr:last-child td { /* Remove border for last row */
+    border-bottom: none;
+}
+
+.card table th {
+    background-color: #f9fafb; /* Very light, almost white */
+    color: #34495e; /* Darker text for contrast */
+    font-weight: 600; /* Slightly less bold than 700 */
+    font-size: 14px; /* Adjusted */
+    text-transform: uppercase; /* Optional: for a more formal look */
+    letter-spacing: 0.5px; /* Optional */
+}
+
+.card table tbody tr:hover {
+    background-color: #f0f4f8; /* Softer hover */
+}
+
+.card table .actions {
+    justify-content: flex-start;
+    padding: 6px 8px; /* Reduced padding */
+    gap: 6px; /* Reduced gap */
+}
+
+.card table .actions .btn-action {
+    padding: 6px; /* Smaller padding for icon buttons */
+    background-color: transparent;
+    border: none;
+    border-radius: 50%;
+    color: #3498db;
+    transition: background-color 0.2s ease, color 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+.card table .actions .btn-action .material-icons { font-size: 18px; } /* Smaller icons */
+.card table .actions .btn-action:hover {
+    background-color: #e9f3ff; /* Light blueish hover */
+    color: #2980b9;
+}
+/* Specific action button colors if needed (e.g., delete) */
+.card table .actions .btn-delete:hover {
+    background-color: #f8d7da; /* Light red hover for delete */
+    color: #721c24;
 }
 
 
-/* Home / Dashboard Specific Styles */
+.card > .card-header .btn-create { /* Create button in table card headers */
+    background-color: #3498db;
+    color: white;
+    padding: 8px 12px; /* Adjusted */
+    font-size: 14px;
+    font-weight: 500; /* Standard weight */
+}
+.card > .card-header .btn-create:hover { background-color: #2980b9; }
+.card > .card-header .btn-create .material-icons { font-size: 1.1em; vertical-align: text-bottom;}
 
+
+.status-badge {
+    padding: 5px 12px; /* Adjusted */
+    border-radius: 12px; /* Softer radius */
+    color: white;
+    font-size: 0.8em; /* Adjusted */
+    font-weight: 600;
+    text-transform: capitalize;
+    display: inline-block;
+    line-height: 1.2;
+    text-align: center;
+    min-width: 85px; /* Adjusted */
+    vertical-align: middle;
+}
+.status-completed { background-color: #27ae60 !important; }
+.status-cancelled { background-color: #e74c3c !important; }
+.status-pending { background-color: #f39c12 !important; }
+.status-default { background-color: #7f8c8d !important; }
+
+
+.table-responsive-wrapper {
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+
+/* ------- Login Page Specific Styles -------- */
+.login-container { /* Assumes login.html extends base.html and .login-container is within .content */
+    background: #fff;
+    padding: 30px 35px;
+    border-radius: 12px; /* Consistent with .card */
+    box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+    width: 100%;
+    max-width: 400px; /* Slightly adjusted */
+    border-top: 4px solid #2c3e50; /* Consistent with form cards */
+    margin: 30px auto;
+}
+
+.login-container h2 {
+    color: #2c3e50;
+    font-size: 24px; /* Adjusted */
+    text-align: center;
+    margin-top: 0;
+    margin-bottom: 25px;
+}
+.login-container .form-group { margin-bottom: 18px; }
+.login-container .form-actions { justify-content: center; margin-top: 20px;}
+.login-container .form-actions button[type='submit'] { width: 100%; }
+.login-container .alert { margin-bottom: 18px; }
+
+
+/* Home / Dashboard Specific Styles */
 .dashboard-container {
     max-width: 1200px;
     margin: 20px auto;
     padding: 0 15px;
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Adjusted min for better fit */
-    gap: 25px;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px; /* Slightly reduced gap */
 }
 
-.dashboard-container .card {
-    background-color: #ffffff;
-    border-radius: 16px;
-    box-shadow: 0 6px 12px rgba(0,0,0,0.08);
-    padding: 20px; /* Slightly reduced padding for smaller cards */
-    margin-bottom: 0;
+.dashboard-container .card { /* Styles for cards specifically in dashboard */
+    /* Base styles from .card are inherited */
+    padding: 20px;
+    margin-bottom: 0; /* Grid gap handles spacing */
     display: flex;
     flex-direction: column;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    transition: transform 0.2s ease, box-shadow 0.2s ease; /* Faster transition */
 }
 
 .dashboard-container .card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 12px 24px rgba(0,0,0,0.12);
+    transform: translateY(-5px); /* Slightly less lift */
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1); /* Adjusted shadow */
 }
 
-.dashboard-container .card h2,
-.dashboard-container .card h3 {
+.dashboard-container .card h2, /* e.g. login prompt card */
+.dashboard-container .card h3 { /* Dashboard card titles */
     margin-top: 0;
-    margin-bottom: 15px; /* Reduced margin */
+    margin-bottom: 15px;
     color: #2c3e50;
-    font-size: 20px; /* Adjusted for dashboard cards */
+    font-size: 18px; /* Adjusted for dashboard cards */
     display: flex;
     align-items: center;
 }
-
 .dashboard-container .card h3 .material-icons {
-    margin-right: 10px;
+    margin-right: 8px; /* Reduced margin */
     color: #3498db;
-    font-size: 22px; /* Ensure icon size matches h3 */
+    font-size: 20px; /* Adjusted */
 }
 
 .dashboard-container .card p,
 .dashboard-container .card ul {
-    font-size: 14px; /* Slightly smaller for denser info */
-    line-height: 1.6; /* Adjusted line height */
-    margin-bottom: 12px; /* Reduced margin */
+    font-size: 14px;
+    line-height: 1.5; /* Adjusted */
+    margin-bottom: 10px; /* Reduced */
     color: #34495e;
 }
+.dashboard-container .card ul { padding-left: 20px; }
 
-.dashboard-container .card ul {
-    padding-left: 20px;
-}
-
-.welcome-message {
+.welcome-message { /* Specific card on dashboard */
     grid-column: 1 / -1;
-    margin-bottom: 10px;
-    font-size: 26px; /* Adjusted */
-    font-weight: 700;
+    margin-bottom: 0; /* Grid gap handles spacing */
+    font-size: 24px;
+    font-weight: 600; /* Less bold */
     color: #2c3e50;
-    padding: 20px; /* Increased padding */
+    padding: 20px;
     background-color: #ffffff;
-    border-radius: 16px;
-    box-shadow: 0 6px 12px rgba(0,0,0,0.08);
+    border-radius: 12px; /* Consistent with .card */
+    box-shadow: 0 6px 18px rgba(0,0,0,0.07);
+    border-top: 4px solid #2c3e50; /* Primary accent for welcome */
 }
 
-.session-list {
-    list-style: none;
-    padding: 0;
-}
-
+.session-list { list-style: none; padding: 0; }
 .session-list li {
-    padding: 10px 0; /* Reduced padding */
+    padding: 8px 0; /* Reduced */
     border-bottom: 1px solid #ecf0f1;
     display: flex;
-    flex-direction: column; /* Stack vertically on small screens by default */
-    align-items: flex-start; /* Align to start */
-    gap: 5px; /* Reduced gap */
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px; /* Reduced */
     color: #34495e;
-    line-height: 1.5; /* Adjusted */
+    line-height: 1.4;
 }
-
-.session-list li:last-child {
-    border-bottom: none;
-}
-
-.session-list li > div:first-child { /* Target the topic/main info part */
+.session-list li:last-child { border-bottom: none; }
+.session-list li > div:first-child {
     display: flex;
     align-items: center;
-    font-weight: 500; /* Make topic slightly bolder */
+    font-weight: 500;
 }
-
 .session-list li .material-icons {
     margin-right: 8px;
     color: #3498db;
-    font-size: 18px; /* Adjusted icon size */
+    font-size: 16px; /* Adjusted */
 }
-
-.session-list strong { /* Topic text */
-    color: #2c3e50;
-}
-
+.session-list strong { color: #2c3e50; }
 .session-list .session-meta {
-    font-size: 0.85em; /* Slightly smaller */
+    font-size: 0.8em; /* Adjusted */
     color: #7f8c8d;
-    text-align: left; /* Align to start for stacked layout */
-    padding-left: 26px; /* Indent meta info relative to icon above */
+    text-align: left;
+    padding-left: 24px; /* Adjusted indent (16px icon + 8px margin) */
 }
-.session-list .session-meta .material-icons {
-    font-size: 14px; /* Smaller icons for meta */
-    vertical-align: middle;
-}
+.session-list .session-meta .material-icons { font-size: 13px; vertical-align: middle; }
 
 
 .count {
-    font-size: 42px; /* Adjusted */
+    font-size: 38px; /* Adjusted */
     font-weight: 700;
     color: #3498db;
-    margin-top: 8px; /* Adjusted */
-    margin-bottom: 8px; /* Adjusted */
+    margin-top: 5px;
+    margin-bottom: 5px;
     text-align: center;
     display: flex;
     align-items: center;
     justify-content: center;
 }
+.count .material-icons { font-size: 32px; margin-right: 8px; }
 
-.count .material-icons {
-    font-size: 36px; /* Adjusted */
-    margin-right: 10px;
-}
-
-.card-link {
-    text-decoration: none;
-    color: inherit;
-    display: flex;
-    flex-direction: column;
-    height: 100%; /* Make link cards take full height */
-}
-
+.card-link { text-decoration: none; color: inherit; display: flex; flex-direction: column; height: 100%;}
 .card-footer {
     margin-top: auto;
-    padding-top: 15px;
+    padding-top: 10px; /* Reduced */
     text-align: right;
-    font-size: 14px; /* Adjusted */
-    font-weight: bold;
+    font-size: 13px; /* Adjusted */
+    font-weight: 600; /* Bolder */
     color: #3498db;
-    transition: color 0.3s ease;
-    display: flex; /* For icon alignment */
-    align-items: center; /* For icon alignment */
-    justify-content: flex-end; /* For icon alignment */
+    transition: color 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
 }
-.card-footer .material-icons {
-    margin-left: 5px; /* Space between text and icon */
-    font-size: 18px; /* Adjust icon size */
-}
+.card-footer .material-icons { margin-left: 4px; font-size: 16px; }
+.card-footer:hover { color: #e74c3c; }
 
-.card-footer:hover {
-    color: #e74c3c;
-}
-
-/* Specific card sections styling */
 .coming-soon-item {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 8px 0; /* Adjusted */
+    padding: 6px 0; /* Adjusted */
     border-bottom: 1px solid #ecf0f1;
 }
-.coming-soon-item:last-child {
-    border-bottom: none;
-}
-.coming-soon-item p {
-    margin: 0;
-    display: flex;
-    align-items: center;
-    font-size: 14px; /* Match other card text */
-}
-.coming-soon-item .material-icons {
-    margin-right: 8px;
-    color: #3498db;
-    font-size: 18px; /* Match other icons */
-}
+.coming-soon-item:last-child { border-bottom: none; }
+.coming-soon-item p { margin: 0; display: flex; align-items: center; font-size: 14px; }
+.coming-soon-item .material-icons { margin-right: 8px; color: #3498db; font-size: 16px; }
 .coming-soon-item a.view-link {
     background-color: #3498db;
     color: #ffffff;
-    padding: 6px 12px;
-    border-radius: 4px;
+    padding: 5px 10px; /* Adjusted */
+    border-radius: 5px; /* Consistent radius */
     text-decoration: none;
-    font-size: 13px; /* Slightly smaller button */
-    font-weight: bold;
-    transition: background-color 0.3s ease;
-    white-space: nowrap; /* Prevent button text from wrapping */
+    font-size: 12px; /* Adjusted */
+    font-weight: 600;
+    transition: background-color 0.2s ease;
+    white-space: nowrap;
 }
-.coming-soon-item a.view-link:hover {
-    background-color: #2980b9;
-}
+.coming-soon-item a.view-link:hover { background-color: #2980b9; }
 
+.login-prompt-card h2 { font-size: 20px; } /* Match dashboard card title */
+.login-prompt-card ul { margin-bottom: 15px; padding-left: 20px; }
+.login-prompt-card ul li { margin-bottom: 6px; display: flex; align-items: center; font-size: 14px;}
+.login-prompt-card ul li .material-icons { margin-right: 8px; color: #3498db; font-size: 18px;}
+.login-prompt-card p strong a { color: #e74c3c; font-weight: 600; text-decoration: none; }
+.login-prompt-card p strong a:hover { text-decoration: underline; }
 
-.login-prompt-card h2 {
-    color: #2c3e50;
-    font-size: 22px; /* Consistent with other dashboard card headers */
+.admin-stats-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 20px; /* Reduced gap */
+    grid-column: 1 / -1;
 }
-.login-prompt-card ul {
-    margin-bottom: 20px;
-    padding-left: 25px; /* Indent list */
-}
-.login-prompt-card ul li {
-    margin-bottom: 8px; /* Space out list items */
+.admin-stats-row .card { text-align: center; }
+
+/* Message Styles from Django (if applicable) */
+.messages { list-style: none; padding: 0; margin: 0 0 20px 0; }
+.messages li {
+    padding: 12px 18px; /* Adjusted */
+    margin-bottom: 10px;
+    border-radius: 6px; /* Consistent radius */
+    font-weight: 500; /* Standard weight */
     display: flex;
     align-items: center;
 }
-.login-prompt-card ul li .material-icons {
-    margin-right: 10px;
-    color: #3498db;
-}
-.login-prompt-card p strong a {
-    color: #e74c3c;
-    font-weight: bold;
-    text-decoration: none;
-}
-.login-prompt-card p strong a:hover {
-    text-decoration: underline;
-}
-
-/* Admin specific card layout */
-.admin-stats-row {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); /* Min for admin stats */
-    gap: 25px;
-    grid-column: 1 / -1;
-}
-.admin-stats-row .card {
-    text-align: center;
-}
-
-/* Message Styles from Django (if applicable) */
-.messages {
-    list-style: none;
-    padding: 0;
-    margin: 0 0 20px 0;
-}
-
-.messages li {
-    padding: 15px;
-    margin-bottom: 10px;
-    border-radius: 4px;
-    font-weight: bold;
-    display: flex; /* For icon alignment */
-    align-items: center;
-}
-.messages li .material-icons {
-    margin-right: 10px;
-}
-
-.messages li.success {
-    background-color: #d4edda;
-    color: #155724;
-    border: 1px solid #c3e6cb;
-}
-
-.messages li.error {
-    background-color: #f8d7da;
-    color: #721c24;
-    border: 1px solid #f5c6cb;
-}
-
-.messages li.info {
-    background-color: #d1ecf1;
-    color: #0c5460;
-    border: 1px solid #bee5eb;
-}
-
-.messages li.warning {
-    background-color: #fff3cd;
-    color: #856404;
-    border: 1px solid #ffeeba;
-}
+.messages li .material-icons { margin-right: 10px; font-size: 1.2em; }
+.messages li.success { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+.messages li.error { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+.messages li.info { background-color: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; }
+.messages li.warning { background-color: #fff3cd; color: #856404; border: 1px solid #ffeeba; }
 
 /* Responsive Adjustments */
+@media (max-width: 768px) { /* Tablets and large phones */
+    body { font-size: 15px; } /* Slightly smaller base for tablets */
+    header { padding: 15px 20px; }
+    header h1 { font-size: 22px; }
+    nav { gap: 5px; } /* Reduce nav gap */
+    nav a { padding: 8px 10px; font-size: 14px; }
 
-/* Screens up to 768px (tablets and large phones) */
-@media (max-width: 768px) {
-    header {
-        flex-direction: column; /* Stack logo and nav */
-        align-items: flex-start; /* Align items to the start */
-        padding: 15px 20px; /* Adjust padding */
-    }
-    header h1 {
-        font-size: 24px; /* Reduce h1 size */
-        margin-bottom: 10px; /* Space between h1 and nav */
-    }
-    nav {
-        flex-direction: column; /* Stack nav items */
-        align-items: flex-start; /* Align nav items to start */
-        width: 100%; /* Make nav take full width */
-        gap: 0; /* Remove gap, use margin on items */
-    }
-    nav a {
-        padding: 10px 0; /* Adjust padding for vertical items */
-        width: 100%; /* Make links take full width */
-        border-radius: 0; /* Optional: remove border radius for stacked items */
-        border-bottom: 1px solid #34495e; /* Separator for stacked links */
-    }
-    nav a:last-child {
-        border-bottom: none; /* Remove border from last item */
-    }
-    nav a:hover {
-        background-color: #3498db; /* Keep hover consistent */
+    .container { padding: 0 15px; }
+    .content { padding: 15px 0; }
+    .card { padding: 20px 25px; } /* Adjust card padding */
+    .card > .card-header h3 { font-size: 18px; }
+    .form-layout-card h2, .profile-container h2, .add-user-container h2, .form-container h2, .login-container h2 {
+        font-size: 22px;
+        margin-bottom: 25px;
     }
 
-    .dashboard-container {
-        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); /* Adjust minmax for tablets */
-        gap: 20px; /* Reduce gap */
-    }
-    .dashboard-container .card h2,
-    .dashboard-container .card h3 {
-        font-size: 18px; /* Reduce card header size */
-    }
-    .dashboard-container .card p,
-    .dashboard-container .card ul {
-        font-size: 13px; /* Reduce card text size */
-    }
-    .count {
-        font-size: 36px; /* Reduce count size */
-    }
-    .count .material-icons {
-        font-size: 30px;
-    }
-    .welcome-message {
-        font-size: 22px; /* Reduce welcome message size */
-        padding: 15px;
-    }
+    .dashboard-container { grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; }
+    .dashboard-container .card { padding: 15px; }
+    .dashboard-container .card h3 { font-size: 17px; }
+    .welcome-message { font-size: 20px; padding: 15px; }
+    .count { font-size: 32px; }
+    .count .material-icons { font-size: 28px; }
 
-    .session-list li {
-        flex-direction: row; /* Keep horizontal layout for session items if space allows */
-        justify-content: space-between;
-        align-items: center;
-    }
-    .session-list .session-meta {
-        text-align: right; /* Align meta to right */
-        padding-left: 0; /* Reset padding */
-    }
+    .session-list li { flex-direction: row; justify-content: space-between; align-items: center; }
+    .session-list .session-meta { text-align: right; padding-left: 0; }
 
-    .content {
-        padding: 15px; /* Reduce padding for general content area */
+    .form-group input[type='text'], .form-group input[type='email'], .form-group input[type='password'],
+    .form-group input[type='number'], .form-group input[type='date'], .form-group input[type='url'],
+    .form-group select, .form-group textarea, input.form-control {
+        padding: 10px 12px; font-size: 14px;
     }
-    .container {
-        padding: 15px 20px; /* Reduce padding for general container */
-    }
+    .form-actions button, .form-actions .btn, .form-actions a { padding: 10px 18px; font-size: 14px; }
 
-    .form-layout-card, .add-user-container, .form-container, .user-table-card {
-        padding: 20px; /* Reduce padding in form cards */
-        margin: 20px auto;
-    }
-    .form-layout-card h2, .add-user-container h2, .form-container h2, .user-table-card h3 {
-        font-size: 22px; /* Reduce form header size */
-    }
+    .card table th, .card table td { padding: 8px 10px; font-size: 14px; }
+    .status-badge { padding: 4px 10px; font-size: 0.75em; min-width: 75px; }
+    .pagination a, .pagination span { padding: 6px 10px; font-size: 14px; }
+
+    /* Stacked header nav */
+    header { flex-direction: column; align-items: flex-start; }
+    header h1 { margin-bottom: 10px; }
+    nav { flex-direction: column; align-items: stretch; width: 100%; }
+    nav a { width: 100%; text-align: left; padding: 10px; border-bottom: 1px solid #34495e; border-radius: 0;}
+    nav a:last-child { border-bottom: none; }
 }
 
-/* Screens up to 480px (small phones) */
-@media (max-width: 480px) {
-    body {
-        font-size: 14px; /* Reduce base font size further */
-    }
-    header {
-        padding: 15px;
-    }
-    header h1 {
-        font-size: 20px;
-    }
-    nav a {
-        font-size: 14px; /* Reduce nav link font size */
-        padding: 8px 0;
-    }
+@media (max-width: 480px) { /* Small phones */
+    body { font-size: 14px; }
+    header { padding: 10px 15px; }
+    header h1 { font-size: 20px; }
+    nav a { font-size: 14px; padding: 10px; } /* Keep tappable */
 
-    .dashboard-container {
-        grid-template-columns: 1fr; /* Single column for very small screens */
-        gap: 15px;
-    }
-     .dashboard-container .card {
-        padding: 15px;
-    }
-    .welcome-message {
-        font-size: 18px;
-        padding: 10px;
-    }
-    .dashboard-container .card h2,
-    .dashboard-container .card h3 {
-        font-size: 16px;
-    }
-     .dashboard-container .card p,
-    .dashboard-container .card ul {
-        font-size: 12px;
-    }
-    .count {
-        font-size: 30px;
-    }
-    .count .material-icons {
-        font-size: 26px;
-    }
-    .card-footer {
-        font-size: 13px;
-    }
-    .card-footer .material-icons {
-        font-size: 16px;
-    }
+    .container { padding: 0 10px; }
+    .content { padding: 10px 0; }
+    .card { padding: 15px; border-radius: 8px; } /* Smaller padding and radius */
+    .card > .card-header { padding-bottom: 10px; margin-bottom: 10px; }
+    .card > .card-header h3 { font-size: 16px; }
 
-    .session-list li { /* Stack session list items fully */
-        flex-direction: column;
-        align-items: flex-start;
-    }
-    .session-list .session-meta {
-        padding-left: 26px; /* Indent meta again */
-        text-align: left;
-    }
-    .coming-soon-item {
-        flex-direction: column; /* Stack coming soon items */
-        align-items: flex-start;
-        gap: 5px;
-    }
-    .coming-soon-item a.view-link {
-        align-self: flex-start; /* Align button to start */
-    }
+    .dashboard-container { grid-template-columns: 1fr; gap: 10px; }
+    .dashboard-container .card { padding: 12px; border-radius: 8px; }
+    .welcome-message { font-size: 18px; padding: 12px; border-radius: 8px;}
+    .dashboard-container .card h3 { font-size: 16px; }
+    .dashboard-container .card p, .dashboard-container .card ul { font-size: 13px; }
+    .count { font-size: 28px; }
+    .count .material-icons { font-size: 24px; }
+    .card-footer { font-size: 12px; }
+    .card-footer .material-icons { font-size: 15px; }
 
+    .session-list li { flex-direction: column; align-items: flex-start; gap: 5px;} /* Fully stack */
+    .session-list .session-meta { padding-left: 24px; text-align: left; }
+    .coming-soon-item { flex-direction: column; align-items: flex-start; gap: 5px; }
+    .coming-soon-item a.view-link { align-self: flex-start; padding: 4px 8px; font-size: 11px; }
 
-    .form-actions { /* Ensure form actions stack nicely */
-        flex-direction: column;
+    .form-layout-card, .profile-container, .add-user-container, .form-container, .login-container {
+        padding: 20px; margin: 15px auto; border-radius: 8px;
     }
-    .update-btn, .change-password-btn, .submit-btn, .save-btn, .back-btn {
-        width: 100%; /* Make buttons full width */
-        margin-bottom: 10px;
+    .form-layout-card h2, .profile-container h2, .add-user-container h2, .form-container h2, .login-container h2 {
+        font-size: 20px; margin-bottom: 20px;
     }
-    .form-actions-1 { /* For change password, ensure similar stacking */
-        flex-direction: column;
+    .form-group { margin-bottom: 15px; }
+    .form-group label { font-size: 14px; margin-bottom: 5px; }
+    .form-group input[type='text'], .form-group input[type='email'], .form-group input[type='password'],
+    .form-group input[type='number'], .form-group input[type='date'], .form-group input[type='url'],
+    .form-group select, .form-group textarea, input.form-control {
+        padding: 8px 10px; font-size: 14px; border-radius: 4px;
     }
-    .form-actions-1 .back-btn {
-        margin-right: 0; /* Reset margin */
+    .form-group select { background-position: right 10px center; }
+    .form-actions, .form-footer, .form-actions-1 { flex-direction: column; gap: 10px; margin-top: 20px; }
+    .form-actions button, .form-actions .btn, .form-actions a,
+    .form-footer button, .form-footer .btn, .form-footer a,
+    .form-actions-1 button, .form-actions-1 .btn, .form-actions-1 a,
+    .update-btn, .change-password-btn {
+        width: 100%; padding: 10px 15px; font-size: 14px;
     }
+    .form-actions.space-between .back-btn { margin-right: 0; }
 
+    .card table th, .card table td { padding: 6px 8px; font-size: 12px; }
+    .card table .actions .btn-action { padding: 5px; }
+    .card table .actions .btn-action .material-icons { font-size: 16px; }
+    .status-badge { padding: 3px 8px; font-size: 0.7em; min-width: 65px; }
+    .status-yes, .status-no { font-size: 12px; }
 
-    .login-container {
-        padding: 20px;
-        width: 95%;
-        margin: 40px auto;
-    }
-    .login-container h2 {
-        font-size: 22px;
-    }
+    .pagination { gap: 3px; }
+    .pagination a, .pagination span { padding: 5px 8px; font-size: 12px; }
+    .alert { padding: 10px 15px; font-size: 13px; }
+    .messages li { padding: 10px 15px; }
+    .messages li .material-icons { font-size: 1.1em; }
 
-    footer {
-        padding: 15px;
-        font-size: 12px;
-    }
+    footer { padding: 10px; font-size: 12px; }
 }

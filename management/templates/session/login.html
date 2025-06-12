@@ -1,29 +1,48 @@
+{% extends 'session/base.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Login</title>
-    <link rel="stylesheet" type="text/css" href="{% static 'management/style.css' %}">
-</head>
-<body>
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+<div style="display: flex; justify-content: center; align-items: center; padding-top: 30px; padding-bottom: 30px;">
     <div class="login-container">
         <h2>Login</h2>
         {% if messages %}
             {% for message in messages %}
-                <p class="error">{{ message }}</p>
+                {# Assuming messages have tags like 'error', 'success', etc. #}
+                {# For login, typically error messages are most common #}
+                <div class="alert alert-{{ message.tags|default:'error' }}">{{ message }}</div>
             {% endfor %}
         {% endif %}
-        <form method="post">
+        {% if form.non_field_errors %}
+            <div class="alert alert-error">
+                {% for error in form.non_field_errors %}
+                    {{ error }}<br>
+                {% endfor %}
+            </div>
+        {% endif %}
+        <form method="post" action="{% url 'login' %}">
             {% csrf_token %}
-            <label>Username</label>
-            <input type="text" name="username" required>
-
-            <label>Password</label>
-            <input type="password" name="password" required>
-
-            <button type="submit">Login</button>
+            <div class="form-group">
+                <label for="id_username">Username</label>
+                {# Use Django's form rendering if available, or ensure name/id match #}
+                <input type="text" name="username" id="id_username" class="form-control" required
+                       value="{{ form.username.value|default:'' }}">
+                {% if form.username.errors %}
+                    <div class="error">{{ form.username.errors|striptags }}</div>
+                {% endif %}
+            </div>
+            <div class="form-group">
+                <label for="id_password">Password</label>
+                <input type="password" name="password" id="id_password" class="form-control" required>
+                {% if form.password.errors %}
+                    <div class="error">{{ form.password.errors|striptags }}</div>
+                {% endif %}
+            </div>
+            <div class="form-actions">
+                <button type="submit" class="submit-btn" style="width: 100%;">Login</button>
+            </div>
         </form>
     </div>
-</body>
-</html>
+</div>
+{% endblock %}

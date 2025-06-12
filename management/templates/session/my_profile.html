@@ -14,13 +14,13 @@
                 <label for="{{ field.id_for_label }}">{{ field.label }}:</label>
                 {{ field }}
                 {% if field.errors %}
-                    <small style="color: red;">{{ field.errors|striptags }}</small>
+                    <div class="error">{{ field.errors|striptags }}</div>
                 {% endif %}
             </div>
         {% endfor %}
-        <div class="form-actions">
-            <a href="{% url 'change_password' %}" class="change-password-btn">Change Password</a>
-            <button type="submit" class="update-btn">Update Profile</button>
+        <div class="form-actions space-between"> {# Added space-between for button layout #}
+            <a href="{% url 'change_password' %}" class="change-password-btn back-btn">Change Password</a> {# Added back-btn for consistent secondary styling #}
+            <button type="submit" class="submit-btn">Update Profile</button> {# Changed update-btn to submit-btn for consistency #}
         </div>
     </form>
 </div>
