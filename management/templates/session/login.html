@@ -11,17 +11,14 @@
 <body class="login-page">
     <div class="login-card">
         <h2>Login to Your Account</h2>
-
         {% if messages %}
             {% for message in messages %}
                 <p class="error">{{ message }}</p>
             {% endfor %}
         {% endif %}
-
         <form method="post">
             {% csrf_token %}
             {{ form.as_p }}
-
             <button type="submit" class="btn-login">
                 <i class="fas fa-sign-in-alt mr-2"></i> Login
             </button>

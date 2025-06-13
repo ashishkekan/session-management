@@ -8,7 +8,6 @@
     <form method="post" class="space-y-6">
         {% csrf_token %}
         {{ form.as_p }}
-
         <div class="flex justify-between items-center">
             <a href="{% url 'learning-view' %}" class="btn-secondary flex items-center">
                 <i class="fas fa-times mr-2"></i> Cancel

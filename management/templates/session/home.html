@@ -26,9 +26,7 @@
         <div class="welcome-message">
             <h3 class="text-3xl font-bold text-gray-800">👋 Welcome, {{ request.user.username|default:request.user.username }}!</h3>
         </div>
-
         {% if is_admin %}
-        <!-- Admin Stats -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <a href="{% url 'user_list' %}" class="card p-6">
                 <div class="flex justify-between items-center">
@@ -56,8 +54,6 @@
             </a>
         </div>
         {% endif %}
-
-        <!-- Other Cards -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <div class="card p-6">
                 <h3 class="text-xl font-semibold text-gray-800 mb-4">Coming Soon...</h3>
@@ -70,7 +66,6 @@
                     <p class="text-gray-500">No upcoming topics found.</p>
                 {% endfor %}
             </div>
-
             <div class="card p-6">
                 <h3 class="text-xl font-semibold text-gray-800 mb-4">Top 3 Upcoming Sessions</h3>
                 {% if top_sessions %}
@@ -89,7 +84,6 @@
                     <p class="text-gray-500">No upcoming sessions found.</p>
                 {% endif %}
             </div>
-
             {% if is_admin %}
                 <div class="card p-6">
                     <h3 class="text-xl font-semibold text-gray-800 mb-4">Completed Sessions</h3>
@@ -109,7 +103,6 @@
                         <p class="text-gray-500">No completed sessions found.</p>
                     {% endif %}
                 </div>
-
                 <div class="card p-6">
                     <h3 class="text-xl font-semibold text-gray-800 mb-4">Pending Sessions</h3>
                     {% if pending %}
@@ -128,7 +121,6 @@
                         <p class="text-gray-500">No pending sessions found.</p>
                     {% endif %}
                 </div>
-
                 <div class="card p-6">
                     <h3 class="text-xl font-semibold text-gray-800 mb-4">Cancelled Sessions</h3>
                     {% if cancelled %}
