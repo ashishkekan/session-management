@@ -300,39 +300,6 @@ nav a:hover {
     text-align: center;
 }
 
-.form-group {
-    width: 100%;
-    margin-bottom: 20px;
-}
-
-.form-group label {
-    display: block;
-    font-weight: bold;
-    margin-bottom: 6px;
-    color: #333;
-    font-size: 15px;
-}
-
-.form-group input,
-.form-group select,
-.form-group textarea {
-    width: 100%;
-    padding: 12px;
-    border: 1px solid #d1d5db;
-    border-radius: 8px;
-    font-size: 1rem;
-    transition: all 0.3s ease;
-    box-sizing: border-box;
-}
-
-.form-group input:focus,
-.form-group select:focus,
-.form-group textarea:focus {
-    border-color: #3b82f6;
-    outline: none;
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
-}
-
 .checkbox-group {
     display: flex;
     align-items: center;
