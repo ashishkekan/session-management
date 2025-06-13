@@ -7,87 +7,7 @@
     <title>{% block title %}Session Management{% endblock %}</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        html, body {
-            height: 100%; /* Ensure the html and body take up the full height */
-            margin: 0;
-        }
-        body {
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            background: linear-gradient(135deg, #c3cfe2 80%, #c3cfe2 80%);
-        }
-        .navbar {
-            background: linear-gradient(90deg, #1e3a8a 0%, #3b82f6 100%);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        }
-        .navbar-link {
-            transition: all 0.3s ease;
-        }
-        .navbar-link:hover {
-            background-color: rgba(255, 255, 255, 0.1);
-            transform: scale(1.05);
-        }
-        .main-content {
-            flex: 1 0 auto; /* Ensure main-content takes up remaining space */
-            padding-top: 5rem;
-        }
-        .footer {
-            flex-shrink: 0; /* Prevent footer from shrinking */
-            background: linear-gradient(90deg, #1e3a8a 0%, #3b82f6 100%);
-            color: white;
-            padding: 1rem 0;
-            text-align: center;
-        }
-        .card {
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
-        }
-        .btn-primary {
-            background: linear-gradient(90deg, #3b82f6 0%, #60a5fa 100%);
-            color: white;
-            padding: 0.75rem 1.5rem;
-            border-radius: 8px;
-            transition: all 0.3s ease;
-        }
-        .btn-primary:hover {
-            background: linear-gradient(90deg, #2563eb 0%, #3b82f6 100%);
-            transform: scale(1.05);
-        }
-        .btn-secondary {
-            background: linear-gradient(90deg, #6b7280 0%, #9ca3af 100%);
-            color: white;
-            padding: 0.75rem 1.5rem;
-            border-radius: 8px;
-            transition: all 0.3s ease;
-        }
-        .btn-secondary:hover {
-            background: linear-gradient(90deg, #4b5563 0%, #6b7280 100%);
-            transform: scale(1.05);
-        }
-        @media (max-width: 768px) {
-            .navbar-menu {
-                display: none;
-            }
-            .navbar-menu.active {
-                display: flex;
-                flex-direction: column;
-                position: absolute;
-                top: 4rem;
-                left: 0;
-                width: 100%;
-                background: #1e3a8a;
-                padding: 1rem 0;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="{% static 'management/style.css' %}">
 </head>
 <body class="font-sans text-gray-800">
     <!-- Navbar -->
@@ -152,7 +72,7 @@
 
     <!-- Main Content -->
     <div class="main-content">
-        <main class="container mx-auto px-4 py-8">
+        <main class="container mx-auto py-8 px-4">
             {% if messages %}
                 <div class="mb-6 space-y-4">
                     {% for message in messages %}
