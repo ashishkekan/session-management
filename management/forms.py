@@ -46,6 +46,9 @@ class SessionTopicForm(forms.ModelForm):
         )
         self.fields["date"].input_formats = ["%Y-%m-%dT%H:%M"]
 
+        for field in self.fields.values():
+            field.widget.attrs.update({"class": "custom-input"})
+
 
 class UserCreationForm(forms.ModelForm):
     """
@@ -58,6 +61,11 @@ class UserCreationForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ["username", "first_name", "last_name", "email", "password"]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields.values():
+            field.widget.attrs.update({"class": "custom-input"})
 
 
 class UserEditForm(forms.ModelForm):
@@ -75,6 +83,11 @@ class UserEditForm(forms.ModelForm):
             "username": forms.TextInput(attrs={"class": "form-control"}),
             "email": forms.EmailInput(attrs={"class": "form-control"}),
         }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields.values():
+            field.widget.attrs.update({"class": "custom-input"})
 
 
 class CustomPasswordChangeForm(PasswordChangeForm):
@@ -102,6 +115,11 @@ class CustomPasswordChangeForm(PasswordChangeForm):
         ),
     )
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields.values():
+            field.widget.attrs.update({"class": "custom-input"})
+
 
 class ExternalTopicForm(forms.ModelForm):
     """
@@ -112,3 +130,8 @@ class ExternalTopicForm(forms.ModelForm):
     class Meta:
         model = ExternalTopic
         fields = ["coming_soon", "url"]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields.values():
+            field.widget.attrs.update({"class": "custom-input"})

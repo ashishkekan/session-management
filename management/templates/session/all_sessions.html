@@ -41,7 +41,7 @@
                             </td>
                             {% if request.user.is_staff %}
                                 <td class="px-6 py-4 text-gray-600">{{ session.conducted_by.get_full_name|default:session.conducted_by.username }}</td>
-                                <td class="px-6 py-4 flex space-x-2">
+                                <td class="px-6 py-9 flex">
                                     <a href="{% url 'edit_session' session.id %}" class="text-blue-600 hover:text-blue-800" title="Edit">
                                         <i class="fas fa-edit"></i>
                                     </a>
