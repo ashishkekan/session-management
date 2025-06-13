@@ -26,7 +26,7 @@ SECRET_KEY = "django-insecure-vas8_cm_r!%bboqwc+@z6afi#7okkgwjba7sbh(#y&!eg$bd2f
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["172.16.100.113"]
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -66,6 +66,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                "management.context_processors.today_notifications_count",
             ],
         },
     },

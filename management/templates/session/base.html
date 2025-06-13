@@ -1,54 +1,183 @@
 {% load static %}
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Session Management{% endblock %}</title>
-    <link rel="stylesheet" href="{% static 'management/style.css' %}">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        html, body {
+            height: 100%; /* Ensure the html and body take up the full height */
+            margin: 0;
+        }
+        body {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background: linear-gradient(135deg, #c3cfe2 80%, #c3cfe2 80%);
+        }
+        .navbar {
+            background: linear-gradient(90deg, #1e3a8a 0%, #3b82f6 100%);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        .navbar-link {
+            transition: all 0.3s ease;
+        }
+        .navbar-link:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            transform: scale(1.05);
+        }
+        .main-content {
+            flex: 1 0 auto; /* Ensure main-content takes up remaining space */
+            padding-top: 5rem;
+        }
+        .footer {
+            flex-shrink: 0; /* Prevent footer from shrinking */
+            background: linear-gradient(90deg, #1e3a8a 0%, #3b82f6 100%);
+            color: white;
+            padding: 1rem 0;
+            text-align: center;
+        }
+        .card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+        }
+        .btn-primary {
+            background: linear-gradient(90deg, #3b82f6 0%, #60a5fa 100%);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        .btn-primary:hover {
+            background: linear-gradient(90deg, #2563eb 0%, #3b82f6 100%);
+            transform: scale(1.05);
+        }
+        .btn-secondary {
+            background: linear-gradient(90deg, #6b7280 0%, #9ca3af 100%);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        .btn-secondary:hover {
+            background: linear-gradient(90deg, #4b5563 0%, #6b7280 100%);
+            transform: scale(1.05);
+        }
+        @media (max-width: 768px) {
+            .navbar-menu {
+                display: none;
+            }
+            .navbar-menu.active {
+                display: flex;
+                flex-direction: column;
+                position: absolute;
+                top: 4rem;
+                left: 0;
+                width: 100%;
+                background: #1e3a8a;
+                padding: 1rem 0;
+            }
+        }
+    </style>
 </head>
+<body class="font-sans text-gray-800">
+    <!-- Navbar -->
+    <nav class="navbar fixed top-0 left-0 w-full z-50">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <h1 class="text-xl font-bold text-white">
+                    <span class="text-blue-300">Session</span> Management
+                </h1>
+            </div>
 
-<body>
-    <header>
-        <a href="{% url 'home' %}" style="text-decoration: none; color: inherit;">
-            <h1>Session Management</h1>
-        </a>
-        <nav>
-            {% if user.is_authenticated %}
-                <a href="{% url 'home' %}">Dashboard</a>
-                <a href="{% url 'session_list' %}">Sessions</a>
-                {% if user.is_staff %}
-                    <a href="{% url 'learning-view' %}">Learning</a>
-                    <a href="{% url 'user_list' %}">Users</a>
-                {% endif %}
-                {% if not user.is_staff %}
-                    <a href="{% url 'my_profile' %}">My Profile</a>
-                {% endif %}
-                <a href="{% url 'logout' %}" class="btn-danger">Logout</a>
-            {% else %}
-                <a href="{% url 'login' %}">Login</a>
-            {% endif %}
-        </nav>
-    </header>
+            <!-- Hamburger Menu for Mobile -->
+            <div class="md:hidden">
+                <button id="menu-toggle" class="text-white focus:outline-none">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+            </div>
 
-    <div class="container">
-        {% if messages %}
-            {% for message in messages %}
-                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-                    {{ message }}
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+            <!-- Navbar Links -->
+            <div class="navbar-menu md:flex md:items-center md:space-x-4 hidden">
+                {% if user.is_authenticated %}
+                    <a href="{% url 'home' %}" class="navbar-link text-white px-3 py-2 rounded-md flex items-center">
+                        <i class="fas fa-tachometer-alt mr-2"></i> Dashboard
+                    </a>
+                    <a href="{% url 'session_list' %}" class="navbar-link text-white px-3 py-2 rounded-md flex items-center">
+                        <i class="fas fa-calendar-alt mr-2"></i> Sessions
+                    </a>
+                    {% if user.is_staff %}
+                        <a href="{% url 'learning-view' %}" class="navbar-link text-white px-3 py-2 rounded-md flex items-center">
+                            <i class="fas fa-book mr-2"></i> Learning
+                        </a>
+                        <a href="{% url 'user_list' %}" class="navbar-link text-white px-3 py-2 rounded-md flex items-center">
+                            <i class="fas fa-users mr-2"></i> Users
+                        </a>
+                    {% endif %}
+                    {% if not user.is_staff %}
+                        <a href="{% url 'my_profile' %}" class="navbar-link text-white px-3 py-2 rounded-md flex items-center">
+                            <i class="fas fa-user mr-2"></i> My Profile
+                        </a>
+                    {% endif %}
+                    {% if user.is_authenticated %}
+                        <a href="{% url 'recent_activities' %}" class="navbar-link text-white px-3 py-2 rounded-md flex items-center relative">
+                            <i class="fas fa-bell mr-2"></i> Notifications
+                            {% if today_notification_count > 0 %}
+                                <span class="absolute top-0 right-0 bg-red-500 text-xs text-white rounded-full h-5 w-5 flex items-center justify-center">
+                                    {{ today_notification_count }}
+                                </span>
+                            {% endif %}
+                        </a>
+                    {% endif %}
+                    <a href="{% url 'logout' %}" class="navbar-link text-red-300 px-3 py-2 rounded-md flex items-center">
+                        <i class="fas fa-sign-out-alt mr-2"></i> Logout
+                    </a>
+                {% else %}
+                    <a href="{% url 'login' %}" class="navbar-link text-white px-3 py-2 rounded-md flex items-center">
+                        <i class="fas fa-sign-in-alt mr-2"></i> Login
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <main class="container mx-auto px-4 py-8">
+            {% if messages %}
+                <div class="mb-6 space-y-4">
+                    {% for message in messages %}
+                        <div class="bg-{{ message.tags }}-100 border-l-4 border-{{ message.tags }}-500 text-{{ message.tags }}-700 p-4 rounded-lg flex justify-between items-center">
+                            <span>{{ message }}</span>
+                            <button type="button" class="text-{{ message.tags }}-700 hover:text-{{ message.tags }}-900" onclick="this.parentElement.style.display='none'">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    {% endfor %}
                 </div>
-            {% endfor %}
-        {% endif %}
+            {% endif %}
+            {% block content %}{% endblock %}
+        </main>
     </div>
 
-    <div class="content">
-        {% block content %}{% endblock %}
-    </div>
-
-    <footer>
-        Copyright &copy; {% now "Y" %} Session Management. All rights reserved.
+    <!-- Footer -->
+    <footer class="footer">
+        <p>Copyright © {% now "Y" %} Session Management. All rights reserved.</p>
     </footer>
+
+    <script>
+        document.getElementById('menu-toggle').addEventListener('click', function() {
+            document.querySelector('.navbar-menu').classList.toggle('active');
+        });
+    </script>
 </body>
 </html>

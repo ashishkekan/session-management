@@ -14,6 +14,7 @@ PLACE_CHOICES = [
     ("Auditorium", "Auditorium"),
 ]
 
+
 class SessionTopic(models.Model):
     """
     Represents a session topic for a learning event.
@@ -25,6 +26,7 @@ class SessionTopic(models.Model):
         status (CharField): The status of the session (e.g., Pending, Completed, Cancelled).
         cancelled_reason (CharField, optional): The reason for cancellation, if applicable.
     """
+
     topic = models.CharField(max_length=255)
     conducted_by = models.ForeignKey(User, on_delete=models.CASCADE)
     date = models.DateTimeField(default=timezone.now)
@@ -38,7 +40,9 @@ class SessionTopic(models.Model):
         choices=PLACE_CHOICES,
         default="--- Select Place ---",
     )
-    cancelled_reason = models.CharField(max_length=255, null=True, blank=True, verbose_name="Cancelled Reason")
+    cancelled_reason = models.CharField(
+        max_length=255, null=True, blank=True, verbose_name="Cancelled Reason"
+    )
 
     def __str__(self):
         """
@@ -57,16 +61,22 @@ class ExternalTopic(models.Model):
         created_at (DateField): The date when the external topic was created.
         is_active (BooleanField): A flag indicating whether the external topic is active.
     """
+
     coming_soon = models.CharField(
         max_length=255, null=True, blank=True, verbose_name="Learning Topic"
     )
 
-    url = models.URLField(
-        max_length=2000,
-        null=True,
-        blank=True,
-        verbose_name="URL"
-    )
+    url = models.URLField(max_length=2000, null=True, blank=True, verbose_name="URL")
 
     created_at = models.DateField(auto_now_add=True, null=True, blank=True)
     is_active = models.BooleanField(default=True, null=True, blank=True)
+
+
+class RecentActivity(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    description = models.TextField()
+    timestamp = models.DateTimeField(auto_now_add=True)
+    read = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"{self.user.username} - {self.description[:30]}"

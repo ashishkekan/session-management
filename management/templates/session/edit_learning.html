@@ -1,26 +1,50 @@
 {% extends 'session/base.html' %}
 {% block title %}Edit Learning{% endblock %}
+{% block header_title %}Edit Learning{% endblock %}
 
 {% block content %}
-
-<div class="add-user-container">
-    <h2>Edit Learning:</h2>
-    <form method="post">
+<div class="card p-6 max-w-2xl mx-auto">
+    <h2 class="text-2xl font-bold text-gray-800 mb-6">Edit Learning Topic</h2>
+    <form method="post" class="space-y-6">
         {% csrf_token %}
         {% for field in form %}
-            <div class="form-group">
-                {{ field.label_tag }}
+            <div>
+                <label class="block text-gray-700 font-medium mb-2" for="{{ field.id_for_label }}">
+                    {{ field.label }}
+                </label>
                 {{ field }}
                 {% if field.errors %}
-                    <div class="error">{{ field.errors }}</div>
+                    <div class="text-red-600 text-sm mt-1">
+                        {{ field.errors }}
+                    </div>
                 {% endif %}
             </div>
         {% endfor %}
 
-        <div class="form-actions">
-            <a href="{% url 'learning-view' %}" class="back-btn">Cancel</a>
-            <button type="submit" class="submit-btn">Update</button>
+        <div class="flex justify-between items-center">
+            <a href="{% url 'learning-view' %}" class="btn-secondary flex items-center">
+                <i class="fas fa-times mr-2"></i> Cancel
+            </a>
+            <button type="submit" class="btn-primary flex items-center">
+                <i class="fas fa-save mr-2"></i> Update
+            </button>
         </div>
     </form>
 </div>
+
+<style>
+    input, select, textarea {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        border: 1px solid #d1d5db;
+        border-radius: 8px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+    }
+    input:focus, select:focus, textarea:focus {
+        outline: none;
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+    }
+</style>
 {% endblock %}

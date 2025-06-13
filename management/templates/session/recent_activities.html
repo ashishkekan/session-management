@@ -1,0 +1,33 @@
+{% extends "session/base.html" %}
+
+{% block title %}Recent Activities{% endblock %}
+{% block header_title %}Recent Activities{% endblock %}
+
+{% block content %}
+<div class="card p-6 max-w-5xl mx-auto">
+    <h2 class="text-2xl font-bold text-gray-800 mb-6">Recent Activities</h2>
+    {% if activities %}
+        <ul class="space-y-4">
+            {% for activity in activities %}
+                <li class="border-b border-gray-200 pb-4">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <span class="text-blue-600 font-semibold">{{ activity.user.username }}</span>
+                            <p class="{% if not activity.read %}font-semibold text-gray-900{% else %}text-gray-700{% endif %} mt-1">
+                                {{ activity.description }}
+                            </p>
+                        </div>
+                        <span class="text-sm text-gray-400">
+                            {{ activity.timestamp|date:"d M Y, H:i" }}
+                        </span>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p class="text-gray-500">No recent activities found.</p>
+    {% endif %}
+    <!-- Pagination -->
+    {% include "session/partial/pagination.html" with page_obj=activities %}
+</div>
+{% endblock %}
