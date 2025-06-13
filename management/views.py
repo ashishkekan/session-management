@@ -176,7 +176,7 @@ def edit_user(request, user_id):
             form.save()
             log_activity(
                 request.user,
-                description=f"Admin edited your profile.",
+                description="Admin edited your profile.",
                 edited_user=user,
             )
             messages.success(request, "User updated successfully.")
@@ -429,6 +429,9 @@ def delete_learning(request, learning_id):
 
 @login_required
 def recent_activities(request):
+    """
+    Displays the recent activities of the user, marking all unread activities as read.
+    """
     RecentActivity.objects.filter(user=request.user, read=False).update(read=True)
     activities = RecentActivity.objects.filter(user=request.user).order_by(
         "-timestamp"
