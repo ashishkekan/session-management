@@ -125,8 +125,14 @@
                 {% if user.is_authenticated %}
                 <div class="flex items-center space-x-4">
                     <div class="relative">
-                        <i class="fas fa-bell text-white text-xl cursor-pointer"></i>
-                        <span class="absolute -top-1 -right-1 bg-red-500 text-xs text-white rounded-full h-4 w-4 flex items-center justify-center">0</span>
+                        <a href="{% url 'recent_activities' %}" class="relative">
+                            <i class="fas fa-bell text-white text-xl cursor-pointer"></i>
+                            {% if today_notification_count > 0 %}
+                                <span class="absolute -top-1 -right-1 bg-red-500 text-xs text-white rounded-full h-4 w-4 flex items-center justify-center">
+                                    {{ today_notification_count }}
+                                </span>
+                            {% endif %}
+                        </a>
                     </div>
                     <div class="flex items-center space-x-2">
                         <div class="w-8 h-8 rounded-full border-2 border-white bg-gray-300 flex items-center justify-center">

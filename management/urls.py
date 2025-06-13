@@ -11,21 +11,37 @@ urlpatterns = [
     path("my-profile/", views.my_profile, name="my_profile"),
     path("users/", views.user_list, name="user_list"),
     path("users/edit/<int:user_id>/", views.edit_user, name="edit_user"),
-    path('users/delete/<int:user_id>/', views.delete_user, name='delete_user'),
-    path('change-password/', views.change_password, name='change_password'),
-
+    path("users/delete/<int:user_id>/", views.delete_user, name="delete_user"),
+    path("change-password/", views.change_password, name="change_password"),
     # Home page
     path("", views.home, name="home"),
-
     # Session management routes
     path("sessions/", views.all_sessions_view, name="session_list"),
-    path("sessions/<int:session_id>/edit/", views.edit_session_view, name="edit_session"),
-    path("sessions/<int:session_id>/delete/", views.delete_session_view, name="delete_session"),
-
+    path(
+        "sessions/<int:session_id>/edit/", views.edit_session_view, name="edit_session"
+    ),
+    path(
+        "sessions/<int:session_id>/delete/",
+        views.delete_session_view,
+        name="delete_session",
+    ),
     # Topic management routes
     path("create-topic/", views.create_topic, name="create-topic"),
-    path("create-learning-topic/", views.create_external_topic, name="create-learning-topic"),
+    path(
+        "create-learning-topic/",
+        views.create_external_topic,
+        name="create-learning-topic",
+    ),
     path("learning-view/", views.learning_view, name="learning-view"),
-    path("learning-view/<int:learning_id>/edit/", views.edit_learning, name="edit-learning"),
-    path("learning-view/<int:learning_id>/delete/", views.delete_learning, name="delete-learning")
+    path(
+        "learning-view/<int:learning_id>/edit/",
+        views.edit_learning,
+        name="edit-learning",
+    ),
+    path(
+        "learning-view/<int:learning_id>/delete/",
+        views.delete_learning,
+        name="delete-learning",
+    ),
+    path("recent-activities/", views.recent_activities, name="recent_activities"),
 ]

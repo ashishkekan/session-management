@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 from django.core.paginator import Paginator
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.timezone import now
+from management.utils import log_activity
 
 from .forms import (
     CustomPasswordChangeForm,
@@ -13,7 +14,7 @@ from .forms import (
     UserCreationForm,
     UserEditForm,
 )
-from .models import ExternalTopic, SessionTopic
+from .models import ExternalTopic, RecentActivity, SessionTopic
 
 
 @login_required
@@ -24,7 +25,17 @@ def create_topic(request):
     if request.method == "POST":
         form = SessionTopicForm(request.POST or None, user=request.user)
         if form.is_valid():
-            form.save()
+            session = form.save()
+            if request.user.is_staff:
+                normal_users = User.objects.filter(is_staff=False)
+                log_activity(
+                    request.user,
+                    f"Admin created a new session: '{session.topic}'.",
+                    target_users=normal_users,
+                )
+            else:
+                # Normal user action, log_activity will notify admins automatically
+                log_activity(request.user, f"Created a new session: '{session.topic}'.")
             return redirect("session_list")
     else:
         form = SessionTopicForm(user=request.user)
@@ -101,6 +112,7 @@ def user_login(request):
             return redirect("login")
 
         login(request, user)
+        log_activity(request.user, "Logged in successfully.")
         return redirect("home")
 
     return render(request, "session/login.html")
@@ -110,6 +122,9 @@ def user_logout(request):
     """
     Logs the user out and redirects to the login page.
     """
+    # Log the activity before logging out
+    if request.user.is_authenticated:
+        log_activity(request.user, "Logged out.")
     logout(request)
     return redirect("login")
 
@@ -133,6 +148,12 @@ def add_user(request):
             user = form.save(commit=False)
             user.set_password(form.cleaned_data["password"])
             user.save()
+            normal_users = User.objects.filter(is_staff=False)
+            log_activity(
+                request.user,
+                f"Admin added new user '{user.username}'.",
+                target_users=normal_users,
+            )
             messages.success(request, f"User '{user.username}' created successfully.")
             return redirect("home")
     else:
@@ -152,6 +173,11 @@ def edit_user(request, user_id):
         form = UserEditForm(request.POST, instance=user)
         if form.is_valid():
             form.save()
+            log_activity(
+                request.user,
+                description=f"Admin edited your profile.",
+                edited_user=user,
+            )
             messages.success(request, "User updated successfully.")
             return redirect("user_list")
     else:
@@ -173,6 +199,12 @@ def delete_user(request, user_id):
         return redirect("user_list")
 
     user.delete()
+    normal_users = User.objects.filter(is_staff=False)
+    log_activity(
+        request.user,
+        f"Admin deleted user with ID {user_id}.",
+        target_users=normal_users,
+    )
     messages.success(request, "User deleted successfully.")
     return redirect("user_list")
 
@@ -190,6 +222,7 @@ def my_profile(request):
             messages.error(request, "There was an error updating your profile.")
 
         form.save()
+        log_activity(employee, "Updated their profile.")
         messages.success(request, "Profile updated successfully.")
         return redirect("my_profile")
 
@@ -242,6 +275,15 @@ def edit_session_view(request, session_id):
         form = SessionTopicForm(request.POST, instance=session)
         if form.is_valid():
             form.save()
+            if request.user.is_staff:
+                normal_users = User.objects.filter(is_staff=False)
+                log_activity(
+                    request.user,
+                    f"Admin updated session: '{session.topic}'.",
+                    target_users=normal_users,
+                )
+            else:
+                log_activity(request.user, f"Updated session: '{session.topic}'.")
             messages.success(request, "Session updated successfully.")
             return redirect("session_list")
     else:
@@ -258,6 +300,15 @@ def delete_session_view(request, session_id):
     Allows the user to delete a session topic.
     """
     session = get_object_or_404(SessionTopic, id=session_id)
+    if request.user.is_staff:
+        normal_users = User.objects.filter(is_staff=False)
+        log_activity(
+            request.user,
+            f"Admin deleted session: '{session.topic}'.",
+            target_users=normal_users,
+        )
+    else:
+        log_activity(request.user, f"Deleted session: '{session.topic}'.")
     session.delete()
     messages.success(request, "Session deleted successfully.")
     return redirect("session_list")
@@ -275,6 +326,7 @@ def change_password(request):
             update_session_auth_hash(
                 request, user
             )  # Keep the user logged in after password change
+            log_activity(request.user, "Changed their password.")
             messages.success(request, "Your password was successfully updated!")
             return redirect("my_profile")  # Update with your profile page name
     else:
@@ -290,8 +342,20 @@ def create_external_topic(request):
     if request.method == "POST":
         form = ExternalTopicForm(request.POST)
         if form.is_valid():
-            form.save()
+            topic = form.save()
+            if request.user.is_staff:
+                normal_users = User.objects.filter(is_staff=False)
+                log_activity(
+                    request.user,
+                    f"Admin added new learning topic: '{topic.coming_soon}'.",
+                    target_users=normal_users,
+                )
+            else:
+                log_activity(
+                    request.user, f"Added new learning topic: '{topic.coming_soon}'."
+                )
             messages.success(request, "New topic created successfully.")
+            return redirect("learning-view")
     else:
         form = ExternalTopicForm()
 
@@ -303,7 +367,7 @@ def learning_view(request):
     """
     Displays all external learning topics in a paginated list.
     """
-    sessions = ExternalTopic.objects.all().order_by('-created_at')
+    sessions = ExternalTopic.objects.all().order_by("-created_at")
     paginator = Paginator(sessions, 10)
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
@@ -321,8 +385,19 @@ def edit_learning(request, learning_id):
         form = ExternalTopicForm(request.POST, instance=learning)
         if form.is_valid():
             form.save()
+            if request.user.is_staff:
+                normal_users = User.objects.filter(is_staff=False)
+                log_activity(
+                    request.user,
+                    f"Admin updated learning topic: '{learning.coming_soon}'.",
+                    target_users=normal_users,
+                )
+            else:
+                log_activity(
+                    request.user, f"Updated learning topic: '{learning.coming_soon}'."
+                )
             messages.success(request, "Learning updated successfully.")
-            return redirect("session_list")
+            return redirect("learning-view")
     else:
         form = ExternalTopicForm(instance=learning)
 
@@ -337,6 +412,24 @@ def delete_learning(request, learning_id):
     Allows the user to delete an existing external learning topic.
     """
     learning = get_object_or_404(ExternalTopic, id=learning_id)
+    if request.user.is_staff:
+        normal_users = User.objects.filter(is_staff=False)
+        log_activity(
+            request.user,
+            f"Admin deleted learning topic: '{learning.coming_soon}'.",
+            target_users=normal_users,
+        )
+    else:
+        log_activity(request.user, f"Deleted learning topic: '{learning.coming_soon}'.")
     learning.delete()
     messages.success(request, "Learning deleted successfully.")
     return redirect("learning-view")
+
+
+@login_required
+def recent_activities(request):
+    RecentActivity.objects.filter(user=request.user, read=False).update(read=True)
+    activities = RecentActivity.objects.filter(user=request.user).order_by(
+        "-timestamp"
+    )[:20]
+    return render(request, "session/recent_activities.html", {"activities": activities})
