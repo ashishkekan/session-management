@@ -27,5 +27,7 @@
     {% else %}
         <p class="text-gray-500">No recent activities found.</p>
     {% endif %}
+    <!-- Pagination -->
+    {% include "session/partial/pagination.html" with page_obj=activities %}
 </div>
 {% endblock %}

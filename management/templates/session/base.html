@@ -8,11 +8,15 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        html, body {
+            height: 100%; /* Ensure the html and body take up the full height */
+            margin: 0;
+        }
         body {
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            background: linear-gradient(135deg, #c3cfe2 80%, #c3cfe2 80%);
         }
         .navbar {
             background: linear-gradient(90deg, #1e3a8a 0%, #3b82f6 100%);
@@ -26,10 +30,11 @@
             transform: scale(1.05);
         }
         .main-content {
-            flex: 1;
+            flex: 1 0 auto; /* Ensure main-content takes up remaining space */
             padding-top: 5rem;
         }
         .footer {
+            flex-shrink: 0; /* Prevent footer from shrinking */
             background: linear-gradient(90deg, #1e3a8a 0%, #3b82f6 100%);
             color: white;
             padding: 1rem 0;
@@ -162,12 +167,12 @@
             {% endif %}
             {% block content %}{% endblock %}
         </main>
-
-        <!-- Footer -->
-        <footer class="footer">
-            <p>Copyright © {% now "Y" %} Session Management. All rights reserved.</p>
-        </footer>
     </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>Copyright © {% now "Y" %} Session Management. All rights reserved.</p>
+    </footer>
 
     <script>
         document.getElementById('menu-toggle').addEventListener('click', function() {
