@@ -4,63 +4,63 @@
 {% block header_title %}Dashboard Overview{% endblock %}
 
 {% block content %}
-<div class="dashboard-container">
+<div class="dashboard-container space-y-8">
     {% if not request.user.is_authenticated %}
-        <div class="bg-white rounded-lg shadow-md p-6 transition duration-300 card-hover">
-            <h2 class="text-xl font-semibold mb-4">Welcome to the Learning Session Dashboard</h2>
-            <p class="text-gray-600">This platform helps teams manage learning and development efficiently. Key features include:</p>
-            <ul class="list-disc pl-5 mt-2 text-gray-600">
+        <div class="card p-6">
+            <h2 class="text-2xl font-bold text-gray-800 mb-4">Welcome to the Learning Session Dashboard</h2>
+            <p class="text-gray-600 mb-4">This platform helps teams manage learning and development efficiently. Key features include:</p>
+            <ul class="list-disc pl-5 text-gray-600 space-y-2">
                 <li>View and manage upcoming learning topics and sessions</li>
                 <li>Track completed, pending, and cancelled sessions</li>
                 <li>Admin controls for managing users and sessions</li>
                 <li>Easy access to shared resources and materials</li>
                 <li>Personalized session dashboard for each user</li>
             </ul>
-            <p class="mt-4"><strong>Please <a href="{% url 'login' %}" class="text-blue-600 hover:text-blue-800">log in</a> to access your personalized dashboard.</strong></p>
+            <p class="mt-6">
+                <a href="{% url 'login' %}" class="btn-primary inline-flex items-center">
+                    <i class="fas fa-sign-in-alt mr-2"></i> Log In
+                </a>
+            </p>
         </div>
     {% else %}
-        <div class="welcome-message mb-6">
-            <h3 class="text-2xl font-semibold">👋 Welcome, {{ request.user.username|default:request.user.username }}!</h3>
+        <div class="welcome-message">
+            <h3 class="text-3xl font-bold text-gray-800">👋 Welcome, {{ request.user.username|default:request.user.username }}!</h3>
         </div>
 
         {% if is_admin %}
-        <!-- First Row: Total Users and Total Sessions -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-            <a href="{% url 'user_list' %}" class="block">
-                <div class="bg-white rounded-lg shadow-md p-6 transition duration-300 card-hover">
-                    <div class="flex justify-between items-center">
-                        <div>
-                            <p class="text-gray-500">Total Users</p>
-                            <h3 class="text-3xl font-bold text-blue-600">{{ total_users }}</h3>
-                        </div>
-                        <div class="bg-blue-100 p-3 rounded-full">
-                            <i class="fas fa-users text-blue-600 text-xl"></i>
-                        </div>
+        <!-- Admin Stats -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <a href="{% url 'user_list' %}" class="card p-6">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <p class="text-gray-500 text-sm">Total Users</p>
+                        <h3 class="text-3xl font-bold text-blue-600">{{ total_users }}</h3>
                     </div>
-                    <p class="text-sm text-gray-500 mt-2">View All Users →</p>
+                    <div class="bg-blue-100 p-3 rounded-full">
+                        <i class="fas fa-users text-blue-600 text-xl"></i>
+                    </div>
                 </div>
+                <p class="text-sm text-gray-500 mt-2">View All Users →</p>
             </a>
-            <a href="{% url 'session_list' %}" class="block">
-                <div class="bg-white rounded-lg shadow-md p-6 transition duration-300 card-hover">
-                    <div class="flex justify-between items-center">
-                        <div>
-                            <p class="text-gray-500">Total Sessions</p>
-                            <h3 class="text-3xl font-bold text-green-600">{{ total_sessions }}</h3>
-                        </div>
-                        <div class="bg-green-100 p-3 rounded-full">
-                            <i class="fas fa-calendar-check text-green-600 text-xl"></i>
-                        </div>
+            <a href="{% url 'session_list' %}" class="card p-6">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <p class="text-gray-500 text-sm">Total Sessions</p>
+                        <h3 class="text-3xl font-bold text-green-600">{{ total_sessions }}</h3>
                     </div>
-                    <p class="text-sm text-gray-500 mt-2">View All Sessions →</p>
+                    <div class="bg-green-100 p-3 rounded-full">
+                        <i class="fas fa-calendar-check text-green-600 text-xl"></i>
+                    </div>
                 </div>
+                <p class="text-sm text-gray-500 mt-2">View All Sessions →</p>
             </a>
         </div>
         {% endif %}
 
-        <!-- Second Row and Beyond: Other Cards -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-            <div class="bg-white rounded-lg shadow-md p-6 transition duration-300 card-hover">
-                <h3 class="text-xl font-semibold mb-4">Coming Soon...</h3>
+        <!-- Other Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div class="card p-6">
+                <h3 class="text-xl font-semibold text-gray-800 mb-4">Coming Soon...</h3>
                 {% for topic in learning_topics %}
                     <div class="flex justify-between items-center mb-4">
                         <p class="font-medium text-gray-700">{{ topic.coming_soon }}</p>
@@ -71,8 +71,8 @@
                 {% endfor %}
             </div>
 
-            <div class="bg-white rounded-lg shadow-md p-6 transition duration-300 card-hover">
-                <h3 class="text-xl font-semibold mb-4">Top 3 Upcoming Sessions</h3>
+            <div class="card p-6">
+                <h3 class="text-xl font-semibold text-gray-800 mb-4">Top 3 Upcoming Sessions</h3>
                 {% if top_sessions %}
                     <ul class="space-y-4">
                         {% for session in top_sessions %}
@@ -91,8 +91,8 @@
             </div>
 
             {% if is_admin %}
-                <div class="bg-white rounded-lg shadow-md p-6 transition duration-300 card-hover">
-                    <h3 class="text-xl font-semibold mb-4">Completed Sessions</h3>
+                <div class="card p-6">
+                    <h3 class="text-xl font-semibold text-gray-800 mb-4">Completed Sessions</h3>
                     {% if completed %}
                         <ul class="space-y-4">
                             {% for session in completed %}
@@ -110,8 +110,8 @@
                     {% endif %}
                 </div>
 
-                <div class="bg-white rounded-lg shadow-md p-6 transition duration-300 card-hover">
-                    <h3 class="text-xl font-semibold mb-4">Pending Sessions</h3>
+                <div class="card p-6">
+                    <h3 class="text-xl font-semibold text-gray-800 mb-4">Pending Sessions</h3>
                     {% if pending %}
                         <ul class="space-y-4">
                             {% for session in pending %}
@@ -129,8 +129,8 @@
                     {% endif %}
                 </div>
 
-                <div class="bg-white rounded-lg shadow-md p-6 transition duration-300 card-hover">
-                    <h3 class="text-xl font-semibold mb-4">Cancelled Sessions</h3>
+                <div class="card p-6">
+                    <h3 class="text-xl font-semibold text-gray-800 mb-4">Cancelled Sessions</h3>
                     {% if cancelled %}
                         <ul class="space-y-4">
                             {% for session in cancelled %}
@@ -149,8 +149,8 @@
                     {% endif %}
                 </div>
             {% else %}
-                <div class="bg-white rounded-lg shadow-md p-6 transition duration-300 card-hover">
-                    <h3 class="text-xl font-semibold mb-4">Upcoming Sessions (For self)</h3>
+                <div class="card p-6">
+                    <h3 class="text-xl font-semibold text-gray-800 mb-4">Upcoming Sessions (For self)</h3>
                     <p class="text-gray-600 mb-4"><strong>Note:</strong> Minimum 10 slides are required in your PPT.</p>
                     {% if upcoming_sessions %}
                         <ul class="space-y-4">
