@@ -578,3 +578,81 @@ th {
     font-size: 14px;
     margin-top: 5px;
 }
+/* Existing styles from previous context (not repeated here for brevity) */
+
+/* Login Page Specific Styles */
+body.login-page {
+    background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.login-card {
+    background: white;
+    border-radius: 1.25rem; /* rounded-xl */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    padding: 2rem; /* p-8 */
+    width: 100%;
+    max-width: 28rem; /* max-w-md */
+}
+
+.login-card h2 {
+    font-size: 1.5rem; /* text-2xl */
+    font-weight: 700; /* font-bold */
+    color: #1f2937; /* text-gray-800 */
+    text-align: center;
+    margin-bottom: 1.5rem; /* mb-6 */
+}
+
+.login-card .error {
+    color: #dc2626; /* text-red-600 */
+    text-align: center;
+    font-size: 0.875rem; /* text-sm */
+    margin-bottom: 1rem; /* mb-4 */
+}
+
+.login-card form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem; /* space-y-5 */
+}
+
+.login-card form p {
+    margin-bottom: 1rem;
+}
+
+.login-card input {
+    width: 100%;
+    padding: 0.5rem 1rem; /* Increased padding for larger height and width */
+    border: 1px solid #d1d5db; /* border-gray-300 */
+    border-radius: 8px;
+    font-size: 1.2rem; /* Slightly larger font for better readability */
+    transition: all 0.3s ease;
+    box-sizing: border-box;
+}
+
+.login-card input:focus {
+    outline: none;
+    border-color: #3b82f6; /* focus:ring-blue-500 */
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2); /* focus:ring */
+}
+
+.btn-login {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #2563eb; /* bg-blue-600 */
+    color: white;
+    font-weight: 600; /* font-semibold */
+    font-size: 1rem; /* text-base */
+    padding: 0.75rem 1.5rem; /* py-3 */
+    border-radius: 0.375rem; /* rounded-md */
+    transition: all 0.3s ease;
+}
+
+.btn-login:hover {
+    background: #1d4ed8; /* hover:bg-blue-700 */
+}

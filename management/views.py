@@ -1,6 +1,7 @@
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib.auth.decorators import login_required, user_passes_test
+from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import User
 from django.core.paginator import Paginator
 from django.shortcuts import get_object_or_404, redirect, render
@@ -107,17 +108,18 @@ def user_login(request):
     Returns:
         HttpResponse: Login form or redirect on success.
     """
-    if request.method == "POST":
-        username = request.POST["username"]
-        password = request.POST["password"]
-        user = authenticate(request, username=username, password=password)
-        if not user:
+    if request.method == 'POST':
+        form = AuthenticationForm(data=request.POST)
+        if form.is_valid():
+            user = form.get_user()
+            login(request, user)
+            log_activity(request.user, "Logged in successfully.")
+            return redirect('home')
+        else:
             messages.error(request, "Invalid username or password.")
-            return redirect("login")
-        login(request, user)
-        log_activity(request.user, "Logged in successfully.")
-        return redirect("home")
-    return render(request, "session/login.html")
+    else:
+        form = AuthenticationForm()
+    return render(request, "session/login.html", {"form": form})
 
 
 def user_logout(request):

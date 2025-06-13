@@ -8,17 +8,7 @@
     <h2 class="text-2xl font-bold text-gray-800 mb-6">Create Session Topic</h2>
     <form method="post" class="space-y-6">
         {% csrf_token %}
-        {% for field in form %}
-            <div>
-                <label for="{{ field.id_for_label }}" class="block font-medium text-gray-700 mb-2">
-                    {{ field.label }}
-                </label>
-                {{ field }}
-                {% if field.errors %}
-                    <p class="text-red-600 text-sm mt-1">{{ field.errors }}</p>
-                {% endif %}
-            </div>
-        {% endfor %}
+        {{ form.as_p }}
 
         <div class="flex justify-between items-center">
             <a href="{% url 'session_list' %}" class="btn-secondary flex items-center">
