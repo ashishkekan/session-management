@@ -76,7 +76,7 @@
                                     <strong class="text-gray-700">{{ session.topic }}</strong>
                                     <span class="text-sm text-gray-500">{{ session.conducted_by.get_full_name }}</span>
                                 </div>
-                                <p class="text-sm text-gray-500">📅 {{ session.date|date:"M d, Y" }}</p>
+                                <p class="text-sm text-gray-500">📅 {{ session.date|date:"M d, Y – h:i A" }}</p>
                             </li>
                         {% endfor %}
                     </ul>
