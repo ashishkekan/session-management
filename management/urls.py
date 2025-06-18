@@ -1,6 +1,6 @@
 from django.urls import path
 
-from . import views
+from management import views
 
 urlpatterns = [
     # User authentication routes

@@ -3,7 +3,7 @@ from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.models import User
 from django.forms import DateTimeInput
 
-from .models import Department, ExternalTopic, SessionTopic, UserProfile
+from management.models import Department, ExternalTopic, SessionTopic, UserProfile
 
 
 class DepartmentForm(forms.ModelForm):

@@ -8,16 +8,13 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import User
 from django.core.paginator import Paginator
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
-from django.urls import reverse
 from django.utils.timezone import now
 from openpyxl import Workbook, load_workbook
 from openpyxl.utils import get_column_letter
 
-from management.utils import log_activity
-
-from .forms import (
+from management.forms import (
     CustomPasswordChangeForm,
     DepartmentForm,
     ExternalTopicForm,
@@ -26,7 +23,7 @@ from .forms import (
     UserCreationForm,
     UserEditForm,
 )
-from .models import (
+from management.models import (
     PLACE_CHOICES,
     STATUSES,
     Department,
@@ -34,6 +31,7 @@ from .models import (
     RecentActivity,
     SessionTopic,
 )
+from management.utils import log_activity
 
 
 @login_required
