@@ -81,7 +81,7 @@ WSGI_APPLICATION = "session_management.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": "session_management_system",
+        "NAME": "session_management",
         "USER": "postgres",
         "PASSWORD": "Lemon@123",
         "HOST": "localhost",

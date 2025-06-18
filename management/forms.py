@@ -98,7 +98,9 @@ class UserEditForm(forms.ModelForm):
     """
 
     department = forms.ModelChoiceField(
-        queryset=Department.objects.all(), required=True
+        queryset=Department.objects.all(),
+        required=True,
+        empty_label="Select a department",
     )
 
     class Meta:
@@ -107,8 +109,19 @@ class UserEditForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+
+        # If editing an existing user who already has a department
         if self.instance and hasattr(self.instance, "userprofile"):
-            self.fields["department"].initial = self.instance.userprofile.department
+            current_dept = self.instance.userprofile.department
+            if current_dept:
+                # Lock the dropdown to only the current department
+                self.fields["department"].queryset = Department.objects.filter(
+                    id=current_dept.id
+                )
+                self.fields["department"].initial = current_dept
+                self.fields["department"].disabled = True  # makes field non-editable
+
+        # Apply styling
         for field in self.fields.values():
             field.widget.attrs.update({"class": "custom-input"})
 
@@ -116,7 +129,10 @@ class UserEditForm(forms.ModelForm):
         user = super().save(commit=commit)
         if commit:
             profile, _ = UserProfile.objects.get_or_create(user=user)
-            profile.department = self.cleaned_data["department"]
+            # If department field is disabled, use initial (since cleaned_data won't include disabled fields)
+            profile.department = (
+                self.cleaned_data.get("department") or self.fields["department"].initial
+            )
             profile.save()
         return user
 

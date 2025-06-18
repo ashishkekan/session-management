@@ -512,10 +512,10 @@ def department_create(request):
     if request.method == "POST":
         form = DepartmentForm(request.POST)
         if form.is_valid():
-            form.save()
+            department = form.save()
             log_activity(
                 request.user,
-                f"Admin created new department: '{form.name}'.",
+                f"Admin created new department: '{department.name}'.",
                 target_users=User.objects.filter(is_staff=False),
             )
             messages.success(request, "Department created successfully.")
