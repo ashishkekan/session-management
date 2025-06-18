@@ -7,9 +7,14 @@
     {% if request.user.is_staff %}
     <div class="flex justify-between items-center mb-6">
         <h3 class="text-2xl font-bold text-gray-800">All Sessions with Assigned User</h3>
-        <a href="{% url 'create-topic' %}" class="btn-primary flex items-center">
-            <i class="fas fa-plus mr-2"></i> Create
-        </a>
+        <div class="flex space-x-2">
+            <a href="{% url 'export-excel' %}" class="btn-primary flex items-center">
+                <i class="fas fa-download mr-2"></i> Download
+            </a>
+            <a href="{% url 'create-topic' %}" class="btn-primary flex items-center">
+                <i class="fas fa-plus mr-2"></i> Create
+            </a>
+        </div>
     </div>
     {% endif %}
     {% if sessions %}

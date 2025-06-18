@@ -52,4 +52,5 @@ urlpatterns = [
         views.department_delete,
         name="department-delete",
     ),
+    path("export-sessions/", views.export_sessions, name="export-excel"),
 ]

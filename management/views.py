@@ -1,11 +1,16 @@
+import openpyxl
 from django.contrib import messages
-from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
+from django.contrib.admin.views.decorators import staff_member_required
+from django.contrib.auth import login, logout, update_session_auth_hash
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import User
 from django.core.paginator import Paginator
+from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.timezone import now
+from openpyxl import Workbook
+from openpyxl.utils import get_column_letter
 
 from management.utils import log_activity
 
@@ -583,3 +588,69 @@ def department_delete(request, pk):
     )
     messages.success(request, "Department deleted successfully.")
     return redirect("department-list")
+
+
+@staff_member_required
+def export_sessions(request):
+    """
+    Generate and download an Excel file containing all session data.
+    """
+    # Create a new workbook and select the active sheet
+    wb = Workbook()
+    ws = wb.active
+    ws.title = "Sessions"
+
+    # Define headers
+    headers = [
+        "No.",
+        "Topic",
+        "Date",
+        "Status",
+        "Assigned To",
+        "Place",
+        "Cancelled Reason",
+    ]
+
+    # Write headers to the first row
+    for col_num, header in enumerate(headers, 1):
+        col_letter = get_column_letter(col_num)
+        ws[f"{col_letter}1"] = header
+        ws[f"{col_letter}1"].font = openpyxl.styles.Font(bold=True)
+
+    # Fetch all sessions
+    sessions = SessionTopic.objects.filter(status="Pending")
+
+    # Write session data
+    for row_num, session in enumerate(sessions, 2):
+        ws[f"A{row_num}"] = row_num - 1
+        ws[f"B{row_num}"] = session.topic
+        ws[f"C{row_num}"] = session.date.strftime("%Y/%m/%d")
+        ws[f"D{row_num}"] = session.status
+        ws[f"E{row_num}"] = (
+            session.conducted_by.get_full_name() or session.conducted_by.username
+        )
+        ws[f"F{row_num}"] = session.place
+        ws[f"G{row_num}"] = session.cancelled_reason or ""
+
+    # Adjust column widths
+    for col in ws.columns:
+        max_length = 0
+        column = col[0].column_letter
+        for cell in col:
+            try:
+                if len(str(cell.value)) > max_length:
+                    max_length = len(str(cell.value))
+            except:
+                pass
+        adjusted_width = max_length + 2
+        ws.column_dimensions[column].width = adjusted_width
+
+    # Prepare response
+    response = HttpResponse(
+        content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    )
+    response["Content-Disposition"] = 'attachment; filename="sessions.xlsx"'
+
+    # Save workbook to response
+    wb.save(response)
+    return response
