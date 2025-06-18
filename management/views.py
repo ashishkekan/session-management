@@ -263,16 +263,44 @@ def my_profile(request):
 @user_passes_test(is_admin)
 def user_list(request):
     """
-    Show a paginated list of users for admins.
+    Display a paginated list of registered users for admin users.
+
+    Allows filtering users by department via a dropdown selection.
+    If a department is selected (via GET parameter), only users associated
+    with that department will be displayed.
+
+    Context passed to template:
+        - users: Paginated queryset of users.
+        - departments: All departments for the dropdown filter.
+        - selected_department: Currently selected department ID (if any).
+
+    Template:
+        session/user_list.html
 
     Returns:
-        HttpResponse: List of users.
+        HttpResponse: Rendered template showing the list of users.
     """
+    department_id = request.GET.get("department")
+    departments = Department.objects.all()
+
     users = User.objects.all().order_by("username").select_related("userprofile")
+
+    if department_id:
+        users = users.filter(userprofile__department_id=department_id)
+
     paginator = Paginator(users, 10)
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
-    return render(request, "session/user_list.html", {"users": page_obj})
+
+    return render(
+        request,
+        "session/user_list.html",
+        {
+            "users": page_obj,
+            "departments": departments,
+            "selected_department": department_id,
+        },
+    )
 
 
 @login_required

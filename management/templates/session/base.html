@@ -72,9 +72,17 @@
             {% if messages %}
                 <div class="mb-6 space-y-4">
                     {% for message in messages %}
-                        <div class="bg-{{ message.tags }}-100 border-l-4 border-{{ message.tags }}-500 text-{{ message.tags }}-700 p-4 rounded-lg flex justify-between items-center">
+                        {% if message.tags == "success" %}
+                            <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 rounded-lg flex justify-between items-center">
+                        {% elif message.tags == "error" %}
+                            <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded-lg flex justify-between items-center">
+                        {% elif message.tags == "warning" %}
+                            <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 rounded-lg flex justify-between items-center">
+                        {% else %}
+                            <div class="bg-blue-100 border-l-4 border-blue-500 text-blue-700 p-4 rounded-lg flex justify-between items-center">
+                        {% endif %}
                             <span>{{ message }}</span>
-                            <button type="button" class="text-{{ message.tags }}-700 hover:text-{{ message.tags }}-900" onclick="this.parentElement.style.display='none'">
+                            <button type="button" class="hover:opacity-75" onclick="this.parentElement.style.display='none'">
                                 <i class="fas fa-times"></i>
                             </button>
                         </div>
