@@ -44,4 +44,12 @@ urlpatterns = [
         name="delete-learning",
     ),
     path("recent-activities/", views.recent_activities, name="recent_activities"),
+    path("departments/", views.department_list, name="department-list"),
+    path("departments/create/", views.department_create, name="department-create"),
+    path("departments/edit/<int:pk>/", views.department_edit, name="department-edit"),
+    path(
+        "departments/delete/<int:pk>/",
+        views.department_delete,
+        name="department-delete",
+    ),
 ]

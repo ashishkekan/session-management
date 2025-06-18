@@ -4,13 +4,29 @@
 {% block header_title %}Registered Users{% endblock %}
 
 {% block content %}
-<div class="card p-6">
+<div class="card p-8">
     {% if request.user.is_staff %}
     <div class="flex justify-between items-center mb-6">
         <h3 class="text-2xl font-bold text-gray-800">Registered Users</h3>
-        <a href="{% url 'add_user' %}" class="btn-primary flex items-center">
-            <i class="fas fa-plus mr-2"></i> Create
-        </a>
+        <div class="flex justify-end items-center space-x-4 mb-6">
+            <form method="get" class="flex items-center space-x-2">
+                <label for="department" class="text-gray-700 font-medium">Department:</label>
+                <select name="department" id="department"
+                    class="block w-48 px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-150 ease-in-out"
+                    onchange="this.form.submit()">
+                    <option value="">All Departments</option>
+                    {% for dept in departments %}
+                        <option value="{{ dept.id }}" {% if dept.id|stringformat:"s" == selected_department %}selected{% endif %}>
+                            {{ dept.name }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </form>
+            
+            <a href="{% url 'add_user' %}" class="btn-primary flex items-center">
+                <i class="fas fa-plus mr-2"></i> Create
+            </a>
+        </div>
     </div>
     {% endif %}
     <div class="overflow-x-auto">
@@ -19,6 +35,7 @@
                 <tr>
                     <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Name</th>
                     <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Email</th>
+                    <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Department</th>
                     <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Is Staff?</th>
                     {% if request.user.is_staff %}
                         <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Actions</th>
@@ -30,6 +47,7 @@
                     <tr class="hover:bg-gray-50 transition">
                         <td class="px-6 py-4 font-medium text-gray-800">{{ user.first_name }} {{ user.last_name }}</td>
                         <td class="px-6 py-4 font-medium text-gray-800">{{ user.email }}</td>
+                        <td class="px-6 py-4 font-medium text-gray-800">{{ user.userprofile.department.name }}</td>
                         <td class="px-6 py-4 font-medium text-gray-800">
                             {% if user.is_staff %}
                                 <span class="text-green-600">✅ Yes</span>

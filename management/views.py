@@ -11,12 +11,13 @@ from management.utils import log_activity
 
 from .forms import (
     CustomPasswordChangeForm,
+    DepartmentForm,
     ExternalTopicForm,
     SessionTopicForm,
     UserCreationForm,
     UserEditForm,
 )
-from .models import ExternalTopic, RecentActivity, SessionTopic
+from .models import Department, ExternalTopic, RecentActivity, SessionTopic
 
 
 @login_required
@@ -36,7 +37,11 @@ def create_topic(request):
             session = form.save()
             if request.user.is_staff:
                 normal_users = User.objects.filter(is_staff=False)
-                log_activity(request.user, f"Admin created a new session: '{session.topic}'.", target_users=normal_users)
+                log_activity(
+                    request.user,
+                    f"Admin created a new session: '{session.topic}'.",
+                    target_users=normal_users,
+                )
             else:
                 # Normal user action, log_activity will notify admins automatically
                 log_activity(request.user, f"Created a new session: '{session.topic}'.")
@@ -71,30 +76,45 @@ def home(request):
         .order_by("date")[:3]
     )
 
-    top_sessions = SessionTopic.objects.filter(
-        date__gt=now()
-    ).exclude(status__in=["Completed", "Cancelled"]).select_related("conducted_by").order_by("date")[:3]
+    top_sessions = (
+        SessionTopic.objects.filter(date__gt=now())
+        .exclude(status__in=["Completed", "Cancelled"])
+        .select_related("conducted_by")
+        .order_by("date")[:3]
+    )
 
     if user.is_staff:
-        context.update({
-            "is_admin": True,
-            "total_users": User.objects.count(),
-            "total_sessions": SessionTopic.objects.count(),
-            "all_sessions": SessionTopic.objects.order_by("-date"),
-            "top_sessions": top_sessions,
-            "completed": SessionTopic.objects.filter(status="Completed").order_by("date")[:3],
-            "pending": SessionTopic.objects.filter(status="Pending").order_by("date")[:3],
-            "cancelled": SessionTopic.objects.filter(status="Cancelled").order_by("date")[:3],
-        })
+        context.update(
+            {
+                "is_admin": True,
+                "total_users": User.objects.count(),
+                "total_sessions": SessionTopic.objects.count(),
+                "all_sessions": SessionTopic.objects.order_by("-date"),
+                "top_sessions": top_sessions,
+                "completed": SessionTopic.objects.filter(status="Completed").order_by(
+                    "date"
+                )[:3],
+                "pending": SessionTopic.objects.filter(status="Pending").order_by(
+                    "date"
+                )[:3],
+                "cancelled": SessionTopic.objects.filter(status="Cancelled").order_by(
+                    "date"
+                )[:3],
+            }
+        )
     elif user.is_authenticated:
         sessions = SessionTopic.objects.filter(conducted_by=user)
-        upcoming_sessions = sessions.filter(status="Pending", date__gte=now()).order_by("date")
-        context.update({
-            "is_admin": False,
-            "total_sessions": sessions.count(),
-            "upcoming_sessions": upcoming_sessions,
-            "top_sessions": top_sessions,
-        })
+        upcoming_sessions = sessions.filter(status="Pending", date__gte=now()).order_by(
+            "date"
+        )
+        context.update(
+            {
+                "is_admin": False,
+                "total_sessions": sessions.count(),
+                "upcoming_sessions": upcoming_sessions,
+                "top_sessions": top_sessions,
+            }
+        )
 
     return render(request, "session/home.html", context)
 
@@ -108,13 +128,13 @@ def user_login(request):
     Returns:
         HttpResponse: Login form or redirect on success.
     """
-    if request.method == 'POST':
+    if request.method == "POST":
         form = AuthenticationForm(data=request.POST)
         if form.is_valid():
             user = form.get_user()
             login(request, user)
             log_activity(request.user, "Logged in successfully.")
-            return redirect('home')
+            return redirect("home")
         else:
             messages.error(request, "Invalid username or password.")
     else:
@@ -155,7 +175,11 @@ def add_user(request):
             user = form.save(commit=False)
             user.set_password(form.cleaned_data["password"])
             user.save()
-            log_activity(request.user, f"Admin added new user '{user.username}'.", target_users=User.objects.filter(is_staff=False))
+            log_activity(
+                request.user,
+                f"Admin added new user '{user.username}'.",
+                target_users=User.objects.filter(is_staff=False),
+            )
             messages.success(request, f"User '{user.username}' created successfully.")
             return redirect("home")
     else:
@@ -205,7 +229,11 @@ def delete_user(request, user_id):
         messages.error(request, "You cannot delete a superuser.")
         return redirect("user_list")
     user.delete()
-    log_activity(request.user, f"Admin deleted user with ID {user_id}.", target_users=User.objects.filter(is_staff=False))
+    log_activity(
+        request.user,
+        f"Admin deleted user with ID {user_id}.",
+        target_users=User.objects.filter(is_staff=False),
+    )
     messages.success(request, "User deleted successfully.")
     return redirect("user_list")
 
@@ -235,16 +263,44 @@ def my_profile(request):
 @user_passes_test(is_admin)
 def user_list(request):
     """
-    Show a paginated list of users for admins.
+    Display a paginated list of registered users for admin users.
+
+    Allows filtering users by department via a dropdown selection.
+    If a department is selected (via GET parameter), only users associated
+    with that department will be displayed.
+
+    Context passed to template:
+        - users: Paginated queryset of users.
+        - departments: All departments for the dropdown filter.
+        - selected_department: Currently selected department ID (if any).
+
+    Template:
+        session/user_list.html
 
     Returns:
-        HttpResponse: List of users.
+        HttpResponse: Rendered template showing the list of users.
     """
-    users = User.objects.all().order_by("username")
+    department_id = request.GET.get("department")
+    departments = Department.objects.all()
+
+    users = User.objects.all().order_by("username").select_related("userprofile")
+
+    if department_id:
+        users = users.filter(userprofile__department_id=department_id)
+
     paginator = Paginator(users, 10)
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
-    return render(request, "session/user_list.html", {"users": page_obj})
+
+    return render(
+        request,
+        "session/user_list.html",
+        {
+            "users": page_obj,
+            "departments": departments,
+            "selected_department": department_id,
+        },
+    )
 
 
 @login_required
@@ -261,7 +317,11 @@ def all_sessions_view(request):
     if request.user.is_staff:
         sessions = SessionTopic.objects.select_related("conducted_by").order_by("date")
     else:
-        sessions = SessionTopic.objects.select_related("conducted_by").filter(conducted_by=request.user).order_by("date")
+        sessions = (
+            SessionTopic.objects.select_related("conducted_by")
+            .filter(conducted_by=request.user)
+            .order_by("date")
+        )
     paginator = Paginator(sessions, 10)
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
@@ -285,14 +345,20 @@ def edit_session_view(request, session_id):
         if form.is_valid():
             form.save()
             if request.user.is_staff:
-                log_activity(request.user, f"Admin updated session: '{session.topic}'.", target_users=User.objects.filter(is_staff=False))
+                log_activity(
+                    request.user,
+                    f"Admin updated session: '{session.topic}'.",
+                    target_users=User.objects.filter(is_staff=False),
+                )
             else:
                 log_activity(request.user, f"Updated session: '{session.topic}'.")
             messages.success(request, "Session updated successfully.")
             return redirect("session_list")
     else:
         form = SessionTopicForm(instance=session)
-    return render(request, "session/edit_session.html", {"form": form, "session": session})
+    return render(
+        request, "session/edit_session.html", {"form": form, "session": session}
+    )
 
 
 @login_required
@@ -308,7 +374,11 @@ def delete_session_view(request, session_id):
     """
     session = get_object_or_404(SessionTopic, id=session_id)
     if request.user.is_staff:
-        log_activity(request.user, f"Admin deleted session: '{session.topic}'.", target_users=User.objects.filter(is_staff=False))
+        log_activity(
+            request.user,
+            f"Admin deleted session: '{session.topic}'.",
+            target_users=User.objects.filter(is_staff=False),
+        )
     else:
         log_activity(request.user, f"Deleted session: '{session.topic}'.")
     session.delete()
@@ -350,9 +420,15 @@ def create_external_topic(request):
         if form.is_valid():
             topic = form.save()
             if request.user.is_staff:
-                log_activity(request.user, f"Admin added new learning topic: '{topic.coming_soon}'.", target_users=User.objects.filter(is_staff=False))
+                log_activity(
+                    request.user,
+                    f"Admin added new learning topic: '{topic.coming_soon}'.",
+                    target_users=User.objects.filter(is_staff=False),
+                )
             else:
-                log_activity(request.user, f"Added new learning topic: '{topic.coming_soon}'.")
+                log_activity(
+                    request.user, f"Added new learning topic: '{topic.coming_soon}'."
+                )
             messages.success(request, "New topic created successfully.")
             return redirect("learning-view")
     else:
@@ -392,14 +468,22 @@ def edit_learning(request, learning_id):
         if form.is_valid():
             form.save()
             if request.user.is_staff:
-                log_activity(request.user, f"Admin updated learning topic: '{learning.coming_soon}'.", target_users=User.objects.filter(is_staff=False))
+                log_activity(
+                    request.user,
+                    f"Admin updated learning topic: '{learning.coming_soon}'.",
+                    target_users=User.objects.filter(is_staff=False),
+                )
             else:
-                log_activity(request.user, f"Updated learning topic: '{learning.coming_soon}'.")
+                log_activity(
+                    request.user, f"Updated learning topic: '{learning.coming_soon}'."
+                )
             messages.success(request, "Learning updated successfully.")
             return redirect("learning-view")
     else:
         form = ExternalTopicForm(instance=learning)
-    return render(request, "session/edit_learning.html", {"form": form, "learning": learning})
+    return render(
+        request, "session/edit_learning.html", {"form": form, "learning": learning}
+    )
 
 
 @login_required
@@ -415,7 +499,11 @@ def delete_learning(request, learning_id):
     """
     learning = get_object_or_404(ExternalTopic, id=learning_id)
     if request.user.is_staff:
-        log_activity(request.user, f"Admin deleted learning topic: '{learning.coming_soon}'.", target_users=User.objects.filter(is_staff=False))
+        log_activity(
+            request.user,
+            f"Admin deleted learning topic: '{learning.coming_soon}'.",
+            target_users=User.objects.filter(is_staff=False),
+        )
     else:
         log_activity(request.user, f"Deleted learning topic: '{learning.coming_soon}'.")
     learning.delete()
@@ -432,8 +520,66 @@ def recent_activities(request):
         HttpResponse: List of recent activity logs.
     """
     RecentActivity.objects.filter(user=request.user, read=False).update(read=True)
-    activities = RecentActivity.objects.filter(user=request.user).order_by("-timestamp")[:20]
+    activities = RecentActivity.objects.filter(user=request.user).order_by(
+        "-timestamp"
+    )[:20]
     paginator = Paginator(activities, 10)
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
     return render(request, "session/recent_activities.html", {"activities": page_obj})
+
+
+@login_required
+def department_list(request):
+    departments = Department.objects.all().order_by("-created_at")
+    return render(request, "session/department_list.html", {"departments": departments})
+
+
+@login_required
+def department_create(request):
+    if request.method == "POST":
+        form = DepartmentForm(request.POST)
+        if form.is_valid():
+            department = form.save()
+            log_activity(
+                request.user,
+                f"Admin created new department: '{department.name}'.",
+                target_users=User.objects.filter(is_staff=False),
+            )
+            messages.success(request, "Department created successfully.")
+            return redirect("department-list")
+    else:
+        form = DepartmentForm()
+    return render(request, "session/department_form.html", {"form": form})
+
+
+@login_required
+def department_edit(request, pk):
+    department = get_object_or_404(Department, pk=pk)
+    if request.method == "POST":
+        form = DepartmentForm(request.POST, instance=department)
+        if form.is_valid():
+            form.save()
+            log_activity(
+                request.user,
+                f"Admin edited department: '{department.name}'.",
+                target_users=User.objects.filter(is_staff=False),
+            )
+            messages.success(request, "Department updated successfully.")
+            return redirect("department-list")
+    else:
+        form = DepartmentForm(instance=department)
+    return render(request, "session/department_form.html", {"form": form})
+
+
+@login_required
+def department_delete(request, pk):
+    department = get_object_or_404(Department, pk=pk)
+    department.delete()
+    log_activity(
+        request.user,
+        f"Admin deleted department: '{department.name}'.",
+        target_users=User.objects.filter(is_staff=False),
+    )
+    messages.success(request, "Department deleted successfully.")
+    return redirect("department-list")

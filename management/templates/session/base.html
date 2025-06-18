@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Session Management{% endblock %}</title>
+    <title>{% block title %}SessionXpert{% endblock %}</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="{% static 'management/style.css' %}">
@@ -14,7 +14,7 @@
         <div class="container mx-auto px-4 py-3 flex justify-between items-center">
             <div class="flex items-center space-x-3">
                 <h1 class="text-xl font-bold text-white">
-                    <span class="text-blue-300">Session</span> Management
+                    <span class="text-blue-300">Session</span>Xpert
                 </h1>
             </div>
             <div class="md:hidden">
@@ -36,6 +36,9 @@
                         </a>
                         <a href="{% url 'user_list' %}" class="navbar-link text-white px-3 py-2 rounded-md flex items-center">
                             <i class="fas fa-users mr-2"></i> Users
+                        </a>
+                        <a href="{% url 'department-list' %}" class="navbar-link text-white px-3 py-2 rounded-md flex items-center">
+                            <i class="fas fa-building mr-2"></i> Departments
                         </a>
                     {% endif %}
                     {% if not user.is_staff %}
@@ -69,9 +72,17 @@
             {% if messages %}
                 <div class="mb-6 space-y-4">
                     {% for message in messages %}
-                        <div class="bg-{{ message.tags }}-100 border-l-4 border-{{ message.tags }}-500 text-{{ message.tags }}-700 p-4 rounded-lg flex justify-between items-center">
+                        {% if message.tags == "success" %}
+                            <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 rounded-lg flex justify-between items-center">
+                        {% elif message.tags == "error" %}
+                            <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded-lg flex justify-between items-center">
+                        {% elif message.tags == "warning" %}
+                            <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 rounded-lg flex justify-between items-center">
+                        {% else %}
+                            <div class="bg-blue-100 border-l-4 border-blue-500 text-blue-700 p-4 rounded-lg flex justify-between items-center">
+                        {% endif %}
                             <span>{{ message }}</span>
-                            <button type="button" class="text-{{ message.tags }}-700 hover:text-{{ message.tags }}-900" onclick="this.parentElement.style.display='none'">
+                            <button type="button" class="hover:opacity-75" onclick="this.parentElement.style.display='none'">
                                 <i class="fas fa-times"></i>
                             </button>
                         </div>
@@ -82,7 +93,7 @@
         </main>
     </div>
     <footer class="footer">
-        <p>Copyright © {% now "Y" %} Session Management. All rights reserved.</p>
+        <p>Copyright © {% now "Y" %} SessionXpert. All rights reserved.</p>
     </footer>
     <script>
         document.getElementById('menu-toggle').addEventListener('click', function() {
