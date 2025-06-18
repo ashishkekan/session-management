@@ -22,7 +22,7 @@
                     <i class="fas fa-bars text-xl"></i>
                 </button>
             </div>
-            <div class="navbar-menu md:flex md:items-center md:space-x-4 hidden">
+            <div class="navbar-menu md:flex md:items-center md:space-x-2 hidden">
                 {% if user.is_authenticated %}
                     <a href="{% url 'home' %}" class="navbar-link text-white px-3 py-2 rounded-md flex items-center">
                         <i class="fas fa-tachometer-alt mr-2"></i> Dashboard
