@@ -182,3 +182,11 @@ class ExternalTopicForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         for field in self.fields.values():
             field.widget.attrs.update({"class": "custom-input"})
+
+
+class SessionUploadForm(forms.Form):
+    excel_file = forms.FileField(
+        label="Upload Excel File",
+        help_text="Upload an Excel file (.xlsx) containing session data.",
+        widget=forms.FileInput(attrs={"accept": ".xlsx"}),
+    )

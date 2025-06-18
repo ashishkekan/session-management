@@ -1,3 +1,5 @@
+from datetime import datetime
+
 import openpyxl
 from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
@@ -6,10 +8,11 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import User
 from django.core.paginator import Paginator
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse
 from django.utils.timezone import now
-from openpyxl import Workbook
+from openpyxl import Workbook, load_workbook
 from openpyxl.utils import get_column_letter
 
 from management.utils import log_activity
@@ -19,10 +22,18 @@ from .forms import (
     DepartmentForm,
     ExternalTopicForm,
     SessionTopicForm,
+    SessionUploadForm,
     UserCreationForm,
     UserEditForm,
 )
-from .models import Department, ExternalTopic, RecentActivity, SessionTopic
+from .models import (
+    PLACE_CHOICES,
+    STATUSES,
+    Department,
+    ExternalTopic,
+    RecentActivity,
+    SessionTopic,
+)
 
 
 @login_required
@@ -654,3 +665,131 @@ def export_sessions(request):
     # Save workbook to response
     wb.save(response)
     return response
+
+
+@staff_member_required
+def upload_sessions_excel(request):
+    """
+    Handle Excel file upload to create or update SessionTopic records.
+    Updates existing topics for the same user; creates new ones if no match.
+    """
+    if request.method == "POST":
+        form = SessionUploadForm(request.POST, request.FILES)
+        if form.is_valid():
+            excel_file = request.FILES["excel_file"]
+            try:
+                wb = load_workbook(excel_file)
+                ws = wb.active
+
+                # Check headers
+                expected_headers = [
+                    "No.",
+                    "Topic",
+                    "Date",
+                    "Status",
+                    "Assigned To",
+                    "Place",
+                    "Cancelled Reason",
+                ]
+                headers = [cell.value for cell in ws[1]]
+                if headers != expected_headers:
+                    messages.error(
+                        request,
+                        "Invalid Excel file format. Expected headers: "
+                        + ", ".join(expected_headers),
+                    )
+                    return redirect("session_list")
+
+                # Process rows (skip header)
+                for row in ws.iter_rows(min_row=2, values_only=True):
+                    (
+                        no,
+                        topic,
+                        date_str,
+                        status,
+                        assigned_to,
+                        place,
+                        cancelled_reason,
+                    ) = row
+
+                    # Skip empty rows
+                    if not topic or not assigned_to:
+                        continue
+
+                    # Parse date
+                    try:
+                        date = datetime.strptime(date_str, "%Y/%m/%d").date()
+                    except (ValueError, TypeError):
+                        messages.error(
+                            request,
+                            f"Invalid date format for topic '{topic}'. Expected YYYY/MM/DD.",
+                        )
+                        continue
+
+                    # Find user by full name
+                    try:
+                        first_name, last_name = assigned_to.split(" ", 1)
+                        user = User.objects.get(
+                            first_name=first_name, last_name=last_name
+                        )
+                    except (ValueError, User.DoesNotExist):
+                        messages.error(
+                            request,
+                            f"User '{assigned_to}' not found for topic '{topic}'.",
+                        )
+                        continue
+
+                    # Validate status and place
+                    valid_statuses = [choice[0] for choice in STATUSES]
+                    valid_places = [choice[0] for choice in PLACE_CHOICES]
+                    if status not in valid_statuses:
+                        messages.error(
+                            request, f"Invalid status '{status}' for topic '{topic}'."
+                        )
+                        continue
+                    if place not in valid_places:
+                        messages.error(
+                            request, f"Invalid place '{place}' for topic '{topic}'."
+                        )
+                        continue
+
+                    # Check for existing session by topic and user
+                    session, created = SessionTopic.objects.get_or_create(
+                        topic=topic,
+                        conducted_by=user,
+                        defaults={
+                            "date": date,
+                            "status": status,
+                            "place": place,
+                            "cancelled_reason": cancelled_reason or None,
+                        },
+                    )
+
+                    if not created:
+                        # Update existing session
+                        session.date = date
+                        session.status = status
+                        session.place = place
+                        session.cancelled_reason = cancelled_reason or None
+                        session.save()
+                        messages.info(
+                            request, f"Updated session: {topic} for {assigned_to}"
+                        )
+
+                    else:
+                        messages.success(
+                            request, f"Created session: {topic} for {assigned_to}"
+                        )
+
+                messages.success(request, "Excel file processed successfully.")
+                return redirect("session_list")
+
+            except Exception as e:
+                messages.error(request, f"Error processing Excel file: {str(e)}")
+                return redirect("session_list")
+
+        else:
+            messages.error(request, "Invalid file upload.")
+            return redirect("session_list")
+
+    return redirect("session_list")

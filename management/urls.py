@@ -53,4 +53,5 @@ urlpatterns = [
         name="department-delete",
     ),
     path("export-sessions/", views.export_sessions, name="export-excel"),
+    path("import-sessions/", views.upload_sessions_excel, name="import-sessions"),
 ]
