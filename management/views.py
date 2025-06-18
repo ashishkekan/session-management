@@ -1,6 +1,7 @@
 from datetime import datetime
 
 import openpyxl
+import pandas as pd
 from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth import login, logout, update_session_auth_hash
@@ -602,57 +603,59 @@ def department_delete(request, pk):
 @staff_member_required
 def export_sessions(request):
     """
-    Generate and download an Excel file containing all session data.
+    Generate and download an Excel file containing all 'Pending' session data, sorted by date.
     """
-    # Create a new workbook and select the active sheet
+    # Fetch all pending sessions and convert to list of dicts
+    sessions = SessionTopic.objects.filter(status="Pending").select_related(
+        "conducted_by"
+    )
+
+    session_data = []
+    for i, s in enumerate(sessions, 1):
+        session_data.append(
+            {
+                "No.": i,
+                "Date": s.date,
+                "Topic": s.topic,
+                "Status": s.status,
+                "Assigned To": s.conducted_by.get_full_name()
+                or s.conducted_by.username,
+                "Place": s.place,
+            }
+        )
+
+    # Create DataFrame and sort by Date
+    df = pd.DataFrame(session_data)
+    df.sort_values(by="Date", inplace=True)
+
+    # Create Excel workbook
     wb = Workbook()
     ws = wb.active
     ws.title = "Sessions"
 
-    # Define headers
-    headers = [
-        "No.",
-        "Topic",
-        "Date",
-        "Status",
-        "Assigned To",
-        "Place",
-        "Cancelled Reason",
-    ]
-
-    # Write headers to the first row
-    for col_num, header in enumerate(headers, 1):
+    # Write headers
+    for col_num, column in enumerate(df.columns, 1):
         col_letter = get_column_letter(col_num)
-        ws[f"{col_letter}1"] = header
+        ws[f"{col_letter}1"] = column
         ws[f"{col_letter}1"].font = openpyxl.styles.Font(bold=True)
 
-    # Fetch all sessions
-    sessions = SessionTopic.objects.filter(status="Pending")
+    # Write data rows
+    for row_num, row in enumerate(df.itertuples(index=False), start=2):
+        for col_num, value in enumerate(row, start=1):
+            ws.cell(
+                row=row_num,
+                column=col_num,
+                value=(
+                    value.strftime("%Y/%m/%d")
+                    if isinstance(value, pd.Timestamp)
+                    else value
+                ),
+            )
 
-    # Write session data
-    for row_num, session in enumerate(sessions, 2):
-        ws[f"A{row_num}"] = row_num - 1
-        ws[f"B{row_num}"] = session.topic
-        ws[f"C{row_num}"] = session.date.strftime("%Y/%m/%d")
-        ws[f"D{row_num}"] = session.status
-        ws[f"E{row_num}"] = (
-            session.conducted_by.get_full_name() or session.conducted_by.username
-        )
-        ws[f"F{row_num}"] = session.place
-        ws[f"G{row_num}"] = session.cancelled_reason or ""
-
-    # Adjust column widths
+    # Auto-adjust column widths
     for col in ws.columns:
-        max_length = 0
-        column = col[0].column_letter
-        for cell in col:
-            try:
-                if len(str(cell.value)) > max_length:
-                    max_length = len(str(cell.value))
-            except:
-                pass
-        adjusted_width = max_length + 2
-        ws.column_dimensions[column].width = adjusted_width
+        max_length = max(len(str(cell.value)) if cell.value else 0 for cell in col)
+        ws.column_dimensions[col[0].column_letter].width = max_length + 2
 
     # Prepare response
     response = HttpResponse(
