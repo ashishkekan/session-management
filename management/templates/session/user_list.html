@@ -19,6 +19,7 @@
                 <tr>
                     <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Name</th>
                     <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Email</th>
+                    <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Department</th>
                     <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Is Staff?</th>
                     {% if request.user.is_staff %}
                         <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Actions</th>
@@ -30,6 +31,7 @@
                     <tr class="hover:bg-gray-50 transition">
                         <td class="px-6 py-4 font-medium text-gray-800">{{ user.first_name }} {{ user.last_name }}</td>
                         <td class="px-6 py-4 font-medium text-gray-800">{{ user.email }}</td>
+                        <td class="px-6 py-4 font-medium text-gray-800">{{ user.userprofile.department.name }}</td>
                         <td class="px-6 py-4 font-medium text-gray-800">
                             {% if user.is_staff %}
                                 <span class="text-green-600">✅ Yes</span>

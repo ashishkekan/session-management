@@ -81,7 +81,7 @@ WSGI_APPLICATION = "session_management.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": "session_management",
+        "NAME": "session_management_system",
         "USER": "postgres",
         "PASSWORD": "Lemon@123",
         "HOST": "localhost",
@@ -124,10 +124,10 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = '/static/'
+STATIC_URL = "/static/"
 
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'management/static'),
+    os.path.join(BASE_DIR, "management/static"),
 ]
 
 

@@ -3,7 +3,26 @@ from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.models import User
 from django.forms import DateTimeInput
 
-from .models import ExternalTopic, SessionTopic
+from .models import Department, ExternalTopic, SessionTopic, UserProfile
+
+
+class DepartmentForm(forms.ModelForm):
+    """
+    Form for creating and editing Department instances.
+    """
+
+    class Meta:
+        model = Department
+        fields = ["name", "description"]
+        widgets = {
+            "name": forms.TextInput(attrs={"class": "form-control"}),
+            "description": forms.Textarea(attrs={"class": "form-control", "rows": 4}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields.values():
+            field.widget.attrs.update({"class": "custom-input"})
 
 
 class SessionTopicForm(forms.ModelForm):
@@ -30,14 +49,6 @@ class SessionTopicForm(forms.ModelForm):
         }
 
     def __init__(self, *args, user=None, **kwargs):
-        """
-        Initializes the SessionTopicForm, modifies the queryset of the
-        conducted_by field to exclude staff users, and customizes the label
-        for conducted_by.
-
-        Args:
-            user (optional): The user associated with the session (not used directly here).
-        """
         self.user = user
         super().__init__(*args, **kwargs)
         self.fields["conducted_by"].queryset = User.objects.exclude(is_staff=True)
@@ -53,10 +64,13 @@ class SessionTopicForm(forms.ModelForm):
 class UserCreationForm(forms.ModelForm):
     """
     Form for creating a new User, including fields for setting a password
-    and selecting if the user should be an admin (staff).
+    and selecting a department.
     """
 
     password = forms.CharField(widget=forms.PasswordInput)
+    department = forms.ModelChoiceField(
+        queryset=Department.objects.all(), required=True
+    )
 
     class Meta:
         model = User
@@ -67,27 +81,44 @@ class UserCreationForm(forms.ModelForm):
         for field in self.fields.values():
             field.widget.attrs.update({"class": "custom-input"})
 
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.set_password(self.cleaned_data["password"])
+        if commit:
+            user.save()
+            UserProfile.objects.create(
+                user=user, department=self.cleaned_data["department"]
+            )
+        return user
+
 
 class UserEditForm(forms.ModelForm):
     """
-    Form for editing an existing User, including first name, last name, username,
-    and email fields with custom styling.
+    Form for editing an existing User, including department field with custom styling.
     """
+
+    department = forms.ModelChoiceField(
+        queryset=Department.objects.all(), required=True
+    )
 
     class Meta:
         model = User
         fields = ["first_name", "last_name", "username", "email"]
-        widgets = {
-            "first_name": forms.TextInput(attrs={"class": "form-control"}),
-            "last_name": forms.TextInput(attrs={"class": "form-control"}),
-            "username": forms.TextInput(attrs={"class": "form-control"}),
-            "email": forms.EmailInput(attrs={"class": "form-control"}),
-        }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        if self.instance and hasattr(self.instance, "userprofile"):
+            self.fields["department"].initial = self.instance.userprofile.department
         for field in self.fields.values():
             field.widget.attrs.update({"class": "custom-input"})
+
+    def save(self, commit=True):
+        user = super().save(commit=commit)
+        if commit:
+            profile, _ = UserProfile.objects.get_or_create(user=user)
+            profile.department = self.cleaned_data["department"]
+            profile.save()
+        return user
 
 
 class CustomPasswordChangeForm(PasswordChangeForm):

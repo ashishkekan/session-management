@@ -37,6 +37,9 @@
                         <a href="{% url 'user_list' %}" class="navbar-link text-white px-3 py-2 rounded-md flex items-center">
                             <i class="fas fa-users mr-2"></i> Users
                         </a>
+                        <a href="{% url 'department-list' %}" class="navbar-link text-white px-3 py-2 rounded-md flex items-center">
+                            <i class="fas fa-building mr-2"></i> Departments
+                        </a>
                     {% endif %}
                     {% if not user.is_staff %}
                         <a href="{% url 'my_profile' %}" class="navbar-link text-white px-3 py-2 rounded-md flex items-center">
