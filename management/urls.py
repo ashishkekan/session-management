@@ -54,4 +54,9 @@ urlpatterns = [
     ),
     path("export-sessions/", views.export_sessions, name="export-excel"),
     path("import-sessions/", views.upload_sessions_excel, name="import-sessions"),
+    path('company-profile/', views.company_profile, name='company_profile'),
+    path('invite-admin/', views.invite_admin, name='invite_admin'),
+    path('export-sessions-pdf/', views.export_sessions_pdf, name='export_sessions_pdf'),
+    path('faq/', views.faq, name='faq'),
+    path('support/', views.support, name='support'),
 ]

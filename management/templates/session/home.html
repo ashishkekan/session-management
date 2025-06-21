@@ -22,6 +22,15 @@
                 </a>
             </p>
         </div>
+        <!-- session/home.html -->
+        <div class="card p-6">
+            <h3 class="text-xl font-semibold text-gray-800 mb-4">Getting Started</h3>
+            <video controls width="100%" class="rounded-lg">
+                <source src="" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+            <p class="text-gray-600 mt-4">Watch this tutorial to learn how to use SessionXpert.</p>
+        </div>
     {% else %}
         <div class="welcome-message">
             <h3 class="text-3xl font-bold text-gray-800">👋 Welcome, {{ request.user.username|default:request.user.username }}!</h3>
@@ -52,6 +61,18 @@
                 </div>
                 <p class="text-sm text-gray-500 mt-2">View All Sessions →</p>
             </a>
+        </div>
+        <!-- session/home.html -->
+        <div class="card p-6">
+            <h3 class="text-xl font-semibold text-gray-800 mb-4">Setup Checklist</h3>
+            <ul class="space-y-2">
+                {% for item in checklist %}
+                    <li class="flex items-center">
+                        <i class="fas {% if item.completed %}fa-check-circle text-green-600{% else %}fa-circle text-gray-400{% endif %} mr-2"></i>
+                        <span class="{% if item.completed %}text-gray-600 line-through{% else %}text-gray-800{% endif %}">{{ item.task }}</span>
+                    </li>
+                {% endfor %}
+            </ul>
         </div>
         {% endif %}
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -84,6 +105,37 @@
                     <p class="text-gray-500">No upcoming sessions found.</p>
                 {% endif %}
             </div>
+            {% if role == 'HR' %}
+                <div class="card p-6">
+                    <h3 class="text-xl font-semibold text-gray-800 mb-4">HR Tasks</h3>
+                    <p class="text-gray-600">Manage employee onboarding and training schedules.</p>
+                    <a href="{% url 'user_list' %}" class="text-blue-600 hover:text-blue-800 mt-2 inline-block">View Users</a>
+                </div>
+            {% elif role == 'Manager' %}
+                <div class="card p-6">
+                    <h3 class="text-xl font-semibold text-gray-800 mb-4">Manager Tasks</h3>
+                    <p class="text-gray-600">Review team sessions and progress.</p>
+                    <a href="{% url 'session_list' %}" class="text-blue-600 hover:text-blue-800 mt-2 inline-block">View Sessions</a>
+                </div>
+            {% elif role == 'Employee' %}
+                <div class="card p-6">
+                    <h3 class="text-xl font-semibold text-gray-800 mb-4">Upcoming Sessions (For self)</h3>
+                    <p class="text-gray-600 mb-4"><strong>Note:</strong> Minimum 10 slides are required in your PPT.</p>
+                    {% if upcoming_sessions %}
+                        <ul class="space-y-4">
+                            {% for session in upcoming_sessions %}
+                                <li>
+                                    <strong class="text-gray-700">{{ session.topic }}</strong>
+                                    <p class="text-sm text-gray-500">📅 {{ session.date|date:"M d, Y, l" }}</p>
+                                    <p class="text-sm text-gray-500"><strong>Place: </strong>📍 {{ session.place }}</p>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p class="text-gray-500">No upcoming sessions found.</p>
+                    {% endif %}
+                </div>
+            {% endif %}
             {% if is_admin %}
                 <div class="card p-6">
                     <h3 class="text-xl font-semibold text-gray-800 mb-4">Completed Sessions</h3>

@@ -1,35 +1,50 @@
 from django.contrib.auth.models import User
-
 from management.models import RecentActivity
 
-
-def log_activity(user, description, target_users=None, edited_user=None):
-    """
-    Log a new activity to RecentActivity model.
-
-    Parameters:
-    - user: The user performing the action.
-    - description: The activity description.
-    - target_users: List of users to notify (default: None, meaning only the user themselves).
-    - edited_user: Specific user to notify in case of edit actions (default: None).
-    """
-    # If edited_user is provided (e.g., admin editing a user), notify only that user
+def log_activity(user, action_type, description, target_users=None, edited_user=None, details=None):
+    # Case: log activity for a user being edited directly
     if edited_user:
-        RecentActivity.objects.create(user=edited_user, description=description)
+        RecentActivity.objects.create(
+            user=edited_user,
+            action_type=action_type,
+            description=description,
+            details=details
+        )
         return
 
-    # If target_users is None, default to the user performing the action
+    # If user is None (e.g., from a signal), treat it as a system-level action
+    if user is None:
+        # Log activity for all admins
+        admins = User.objects.filter(is_staff=True)
+        for admin in admins:
+            RecentActivity.objects.create(
+                user=admin,
+                action_type=action_type,
+                description=f"[SYSTEM] {description}",
+                details=details
+            )
+        return
+
+    # If no target users specified, default to the acting user
     if target_users is None:
         target_users = [user]
 
-    # If the user is not staff (normal user), notify the admins
+    # If user is a normal user, notify admins
     if not user.is_staff:
         admins = User.objects.filter(is_staff=True)
         for admin in admins:
             RecentActivity.objects.create(
-                user=admin, description=f"{user.username} - {description}"
+                user=admin,
+                action_type=action_type,
+                description=f"{user.username} - {description}",
+                details=details
             )
     else:
-        # If the user is an admin, notify the specified target users
+        # User is staff → notify target users (usually non-staff)
         for u in target_users:
-            RecentActivity.objects.create(user=u, description=description)
+            RecentActivity.objects.create(
+                user=u,
+                action_type=action_type,
+                description=description,
+                details=details
+            )
