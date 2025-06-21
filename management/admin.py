@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from management.models import ExternalTopic, SessionTopic
+from management.models import CompanyProfile, ExternalTopic, SessionTopic
 
 
 @admin.register(SessionTopic)
@@ -42,3 +42,5 @@ class ExternalTopicAdmin(admin.ModelAdmin):
     list_filter = ("created_at",)
     search_fields = ("coming_soon",)
     ordering = ("-created_at",)
+
+admin.site.register(CompanyProfile)

@@ -1016,7 +1016,7 @@ def company_profile(request):
         form = CompanyProfileForm(request.POST, request.FILES, instance=profile)
         if form.is_valid():
             form.save()
-            log_activity(request.user, description=f"Updated company profile: {profile.name}")
+            log_activity(request.user, description=f"Updated company profile: {profile.name}", action_type="Edit Company")
             messages.success(request, "Company profile updated successfully.")
             return redirect('company_profile')
     else:

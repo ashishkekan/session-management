@@ -15,10 +15,11 @@
             <div class="flex items-center space-x-3">
                 {% if company_profile.logo %}
                     <img src="{{ company_profile.logo.url }}" alt="Company Logo" class="h-8">
+                {% else %}
+                    <h1 class="text-xl font-bold text-white">
+                        <span class="text-blue-300">SessionXpert</span>
+                    </h1>
                 {% endif %}
-                <h1 class="text-xl font-bold text-white">
-                    <span class="text-blue-300">{% if company_profile %}{{ company_profile.name }}{% else %}SessionXpert{% endif %}</span>
-                </h1>
             </div>
             <div class="md:hidden">
                 <button id="menu-toggle" class="text-white focus:outline-none">
