@@ -1,0 +1,83 @@
+{% extends 'session/base.html' %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="max-w-6xl mx-auto py-16 px-4">
+    <h2 class="text-2xl font-bold text-gray-800 mb-6">Welcome, {{ request.user.username|default:request.user.username }}!</h2>
+    {% if is_admin %}
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
+            <a href="{% url 'user_list' %}" class="card p-6 bg-white rounded-lg shadow">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <p class="text-gray-500 text-sm">Total Users</p>
+                        <h3 class="text-3xl font-bold text-blue-600">{{ total_users }}</h3>
+                    </div>
+                    <i class="fas fa-users text-blue-600 text-2xl"></i>
+                </div>
+            </a>
+            <a href="{% url 'session_list' %}" class="card p-6 bg-white rounded-lg shadow">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <p class="text-gray-500 text-sm">Total Sessions</p>
+                        <h3 class="text-3xl font-bold text-green-600">{{ total_sessions }}</h3>
+                    </div>
+                    <i class="fas fa-calendar-check text-green-600 text-2xl"></i>
+                </div>
+            </a>
+        </div>
+    {% endif %}
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="card p-6 bg-white rounded-lg shadow">
+            <h3 class="text-xl font-semibold text-gray-800 mb-4">Top 3 Upcoming Sessions</h3>
+            {% if top_sessions %}
+                <ul class="space-y-4">
+                    {% for session in top_sessions %}
+                        <li>
+                            <div class="flex justify-between items-center">
+                                <strong class="text-gray-700">{{ session.topic }}</strong>
+                                <span class="text-sm text-gray-500">{{ session.conducted_by.get_full_name }}</span>
+                            </div>
+                            <p class="text-sm text-gray-500">📅 {{ session.date|date:"M d, Y – h:i A" }}</p>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p class="text-gray-500">No upcoming sessions found.</p>
+            {% endif %}
+        </div>
+
+        {% if role == 'HR' %}
+        <div class="card p-6 bg-white rounded-lg shadow">
+            <h3 class="text-xl font-semibold text-gray-800 mb-4">HR Tasks</h3>
+            <p class="text-gray-600">Manage employee onboarding and training schedules.</p>
+            <a href="{% url 'user_list' %}" class="text-blue-600 hover:text-blue-800 mt-2 inline-block">View Users</a>
+        </div>
+        {% elif role == 'Manager' %}
+        <div class="card p-6 bg-white rounded-lg shadow">
+            <h3 class="text-xl font-semibold text-gray-800 mb-4">Manager Tasks</h3>
+            <p class="text-gray-600">Review team sessions and progress.</p>
+            <a href="{% url 'session_list' %}" class="text-blue-600 hover:text-blue-800 mt-2 inline-block">View Sessions</a>
+        </div>
+        {% elif role == 'Employee' %}
+        <div class="card p-6 bg-white rounded-lg shadow">
+            <h3 class="text-xl font-semibold text-gray-800 mb-4">Upcoming Sessions (For self)</h3>
+            {% if upcoming_sessions %}
+                <ul class="space-y-4">
+                    {% for session in upcoming_sessions %}
+                        <li>
+                            <strong class="text-gray-700">{{ session.topic }}</strong>
+                            <p class="text-sm text-gray-500">📅 {{ session.date|date:"M d, Y, l" }}</p>
+                            <p class="text-sm text-gray-500">📍 {{ session.place }}</p>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p class="text-gray-500">No upcoming sessions found.</p>
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

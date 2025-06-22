@@ -4,7 +4,8 @@ from management import views
 
 urlpatterns = [
     # User authentication routes
-    path("home/", views.home, name="home"),
+    path("", views.home, name="home"),
+    path("dashboard/", views.dashboard, name="dashboard"),
     path("login/", views.user_login, name="login"),
     path("logout/", views.user_logout, name="logout"),
     path("add-user/", views.add_user, name="add_user"),
@@ -55,6 +56,7 @@ urlpatterns = [
     path("export-sessions/", views.export_sessions, name="export-excel"),
     path("import-sessions/", views.upload_sessions_excel, name="import-sessions"),
     path('company-profile/', views.company_profile, name='company_profile'),
+    path("conmpany", views.company_list, name="company-list"),
     path('invite-admin/', views.invite_admin, name='invite_admin'),
     path('export-sessions-pdf/', views.export_sessions_pdf, name='export_sessions_pdf'),
     path('faq/', views.faq, name='faq'),

@@ -133,10 +133,15 @@ def create_topic(request):
 
 # management/views.py
 from django.utils import timezone
+from django.template.response import TemplateResponse
 
+
+def home(request):
+    """this is the home page"""
+    return TemplateResponse(request, "session/home.html")
 
 # management/views.py
-def home(request):
+def dashboard(request):
     """
     Display the dashboard for authenticated and unauthenticated users.
 
@@ -190,9 +195,9 @@ def home(request):
             'upcoming_sessions': upcoming_sessions,
             'checklist': checklist,
         }
-        return render(request, 'session/home.html', context)
+        return render(request, 'session/dashboard.html', context)
     else:
-        return render(request, 'session/home.html', {'company_profile': company_profile})
+        return render(request, 'session/dashboard.html', {'company_profile': company_profile})
 
 
 def user_login(request):
@@ -1022,6 +1027,15 @@ def company_profile(request):
     else:
         form = CompanyProfileForm(instance=profile)
     return render(request, 'session/company_profile.html', {'form': form})
+
+@login_required
+def company_list(request):
+    """Display the list of companies"""
+    companies = CompanyProfile.objects.all()
+    paginator = Paginator(companies, 10)
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
+    return render(request, "session/company-list.html", {"companies": page_obj})
 
 
 @login_required
