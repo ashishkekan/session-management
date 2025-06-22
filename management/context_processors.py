@@ -5,11 +5,11 @@ from management.models import CompanyProfile, RecentActivity
 
 def today_notifications_count(request):
     """
-    Context processor to count today's unread notifications for the authenticated user.
-    Returns a dictionary with the count of unread notifications.
+    Returns count of today's unread notifications for non-admin users only.
+    Admins don't get highlighted notification badges.
     """
     user = request.user
-    if user.is_authenticated:
+    if user.is_authenticated and not user.is_staff:
         count = RecentActivity.objects.filter(
             user=user, read=False, timestamp__date=date.today()
         ).count()

@@ -56,12 +56,10 @@
                     {% endif %}
                     <a href="{% url 'recent_activities' %}" class="navbar-link text-white px-3 py-2 rounded-md flex items-center relative">
                         <i class="fas fa-bell mr-2"></i> Notifications
-                        {% if not user.is_staff %}
-                            {% if today_notification_count > 0 %}
-                                <span class="absolute top-0 right-0 bg-red-500 text-xs text-white rounded-full h-5 w-5 flex items-center justify-center">
-                                    {{ today_notification_count }}
-                                </span>
-                            {% endif %}
+                        {% if today_notification_count > 0 %}
+                            <span class="absolute top-0 right-0 bg-red-500 text-xs text-white rounded-full h-5 w-5 flex items-center justify-center">
+                                {{ today_notification_count }}
+                            </span>
                         {% endif %}
                     </a>
                     <a href="{% url 'logout' %}" class="navbar-link text-red-300 px-3 py-2 rounded-md flex items-center">

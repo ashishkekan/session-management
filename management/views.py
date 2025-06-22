@@ -367,7 +367,7 @@ def my_profile(request):
         if not form.is_valid():
             messages.error(request, "There was an error updating your profile.")
         form.save()
-        log_activity(employee, "Updated their profile.")
+        log_activity(employee, description="Updated their profile.", action_type="UPDATE PROFILE")
         messages.success(request, "Profile updated successfully.")
         return redirect("my_profile")
     form = UserEditForm(instance=employee)
