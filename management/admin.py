@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from management.models import CompanyProfile, ExternalTopic, SessionTopic
+from management.models import CompanyProfile, ExternalTopic, SessionTopic, UserProfile
 
 
 @admin.register(SessionTopic)
@@ -45,3 +45,4 @@ class ExternalTopicAdmin(admin.ModelAdmin):
 
 
 admin.site.register(CompanyProfile)
+admin.site.register(UserProfile)

@@ -19,6 +19,7 @@ ROLES = [
     ("Employee", "Employee"),
     ("HR", "HR"),
     ("Manager", "Manager"),
+    ("Admin", "Admin"),
 ]
 
 
