@@ -1,0 +1,48 @@
+{% extends "session/base.html" %}
+
+{% block title %}Companies{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Companies</h2>
+    <a href="{% url 'company_create' %}" class="btn btn-primary mb-3">Add New Company</a>
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+    <table class="table table-striped table-bordered">
+        <thead class="thead-dark">
+            <tr>
+                <th>Name</th>
+                <th>Logo</th>
+                <th>Created At</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for company in companies %}
+            <tr>
+                <td><a href="{% url 'company_detail' company.pk %}">{{ company.name }}</a></td>
+                <td>
+                    {% if company.logo %}
+                        <img src="{{ company.logo.url }}" alt="{{ company.name }} Logo" style="max-height: 50px; max-width: 100px;">
+                    {% else %}
+                        No Logo
+                    {% endif %}
+                </td>
+                <td>{{ company.created_at|date:"Y-m-d H:i" }}</td>
+                <td>
+                    <a href="{% url 'company_edit' company.pk %}" class="btn btn-sm btn-info">Edit</a>
+                    <a href="{% url 'company_delete' company.pk %}" class="btn btn-sm btn-danger">Delete</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4" class="text-center">No companies found.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

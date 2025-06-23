@@ -1,0 +1,17 @@
+{% extends "session/base.html" %}
+
+{% block title %}Confirm Delete Company{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Confirm Delete: {{ company.name }}</h2>
+    <p>Are you sure you want to delete the company "<strong>{{ company.name }}</strong>"?</p>
+    <p class="text-danger">This action cannot be undone. Deleting a company might affect associated users and data.</p>
+
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Yes, Delete</button>
+        <a href="{% url 'company_detail' company.pk %}" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+{% endblock %}

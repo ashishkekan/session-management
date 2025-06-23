@@ -1,6 +1,41 @@
 from django.contrib import admin
 
-from management.models import ExternalTopic, SessionTopic
+from management.models import (
+    Company,
+    Department,
+    ExternalTopic,
+    SessionTopic,
+    UserProfile,
+)
+
+
+@admin.register(Company)
+class CompanyAdmin(admin.ModelAdmin):
+    """Admin configuration for Company model."""
+
+    list_display = ("name", "created_at")
+    search_fields = ("name",)
+    ordering = ("-created_at",)
+
+
+@admin.register(UserProfile)
+class UserProfileAdmin(admin.ModelAdmin):
+    """Admin configuration for UserProfile model."""
+
+    list_display = ("user", "company", "department")
+    list_filter = ("company", "department")
+    search_fields = ("user__username", "company__name", "department__name")
+    ordering = ("user__username",)
+
+
+@admin.register(Department)
+class DepartmentAdmin(admin.ModelAdmin):
+    """Admin configuration for Department model."""
+
+    list_display = ("name", "company", "created_at") # Assuming company will be added to Department
+    list_filter = ("company",)
+    search_fields = ("name", "company__name")
+    ordering = ("-created_at",)
 
 
 @admin.register(SessionTopic)

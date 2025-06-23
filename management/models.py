@@ -2,6 +2,25 @@ from django.contrib.auth.models import User
 from django.db import models
 from django.utils import timezone
 
+
+class Company(models.Model):
+    """
+    Represents a company in the system.
+
+    Fields:
+        name (CharField): The name of the company.
+        logo (ImageField): The company's logo.
+        created_at (DateTimeField): The date and time when the company was created.
+    """
+
+    name = models.CharField(max_length=255, unique=True)
+    logo = models.ImageField(upload_to="company_logos/", null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.name
+
+
 STATUSES = [
     ("Pending", "Pending"),
     ("Completed", "Completed"),
@@ -25,15 +44,20 @@ class Department(models.Model):
         created_at (DateTimeField): The date and time when the department was created.
     """
 
-    name = models.CharField(max_length=100, unique=True)
+    name = models.CharField(max_length=100)
     description = models.TextField(null=True, blank=True)
+    # Making company non-nullable for Department
+    company = models.ForeignKey(Company, on_delete=models.CASCADE, related_name='departments')
     created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('name', 'company') # Department name should be unique within a company
 
     def __str__(self):
         """
-        String representation of the department, showing the department name.
+        String representation of the department, showing the department name and company.
         """
-        return self.name
+        return f"{self.name} ({self.company.name})"
 
 
 class UserProfile(models.Model):
@@ -45,14 +69,25 @@ class UserProfile(models.Model):
         department (ForeignKey): The department the user belongs to.
     """
 
+    USER_ROLE_CHOICES = [
+        ('ADMIN', 'Company Admin'),
+        ('MANAGER', 'Manager'),
+        ('EMPLOYEE', 'Employee'),
+    ]
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    department = models.ForeignKey(Department, on_delete=models.SET_NULL, null=True)
+    department = models.ForeignKey(Department, on_delete=models.SET_NULL, null=True, blank=True)
+    company = models.ForeignKey(Company, on_delete=models.SET_NULL, null=True, blank=True)
+    role = models.CharField(max_length=50, choices=USER_ROLE_CHOICES, null=True, blank=True)
+
 
     def __str__(self):
         """
         String representation of the user profile, showing the username and department.
         """
-        return f"{self.user.username} - {self.department.name if self.department else 'No Department'}"
+        company_name = self.company.name if self.company else "No Company"
+        department_name = self.department.name if self.department else "No Department"
+        role_display = self.get_role_display() if self.role else "No Role"
+        return f"{self.user.username} - {company_name} - {department_name} ({role_display})"
 
 
 class SessionTopic(models.Model):
@@ -70,6 +105,7 @@ class SessionTopic(models.Model):
 
     topic = models.CharField(max_length=255)
     conducted_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    company = models.ForeignKey(Company, on_delete=models.CASCADE, related_name='sessions') # Making non-nullable
     date = models.DateTimeField(default=timezone.now)
     status = models.CharField(
         max_length=50,
@@ -107,6 +143,7 @@ class ExternalTopic(models.Model):
         max_length=255, null=True, blank=True, verbose_name="Learning Topic"
     )
     url = models.URLField(max_length=2000, null=True, blank=True, verbose_name="URL")
+    company = models.ForeignKey(Company, on_delete=models.CASCADE, related_name='external_topics') # Making non-nullable
     created_at = models.DateField(auto_now_add=True, null=True, blank=True)
     is_active = models.BooleanField(default=True, null=True, blank=True)
 
@@ -132,6 +169,7 @@ class RecentActivity(models.Model):
     description = models.TextField()
     timestamp = models.DateTimeField(auto_now_add=True)
     read = models.BooleanField(default=False)
+    company = models.ForeignKey(Company, on_delete=models.CASCADE, related_name='activities', null=True) # Allow null temporarily
 
     def __str__(self):
         """

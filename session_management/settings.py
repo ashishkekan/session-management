@@ -67,6 +67,7 @@ TEMPLATES = [
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
                 "management.context_processors.today_notifications_count",
+                "management.context_processors.company_logo_processor", # Added company logo processor
             ],
         },
     },
@@ -129,6 +130,10 @@ STATIC_URL = "/static/"
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "management/static"),
 ]
+
+# Media files (Uploads)
+MEDIA_URL = "/media/"
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 
 # Default primary key field type
