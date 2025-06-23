@@ -1,0 +1,56 @@
+{% extends 'session/base.html' %}
+{% block title %}Companies{% endblock %}
+{% block header_title %}Companies{% endblock %}
+
+{% block content %}
+<div class="card p-6">
+    {% if request.user.is_staff %}
+    <div class="flex justify-between items-center mb-6">
+        <h3 class="text-2xl font-bold text-gray-800">All Companies</h3>
+        <a href="{% url 'company_profile' %}" class="btn-primary flex items-center">
+            <i class="fas fa-plus mr-2"></i> Create
+        </a>
+    </div>
+    {% endif %}
+    {% if sessions %}
+        <div class="overflow-x-auto">
+            <table class="min-w-full">
+                <thead class="bg-blue-50">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">No.</th>
+                        <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Name</th>
+                        <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Logo</th>
+                        <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Email</th>
+                        <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Created Date</th>
+                        <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for company in companies %}
+                        <tr class="hover:bg-gray-50 transition">
+                            <td class="px-6 py-4 font-medium text-gray-800">{{ forloop.counter }}</td>
+                            <td class="px-6 py-4 font-medium text-gray-800">{{ company.name }}</td>
+                            <td class="px-6 py-4 text-gray-600">{{ company.logo }}</td>
+                            <td class="px-6 py-4">{{ company.contact_email|capfirst }}</td>
+                            <td class="px-6 py-4 text-gray-600">{{ company.created_at }}</td>
+                            <td class="px-6 py-9 flex">
+                                <a href="" class="text-blue-600 hover:text-blue-800" title="Edit">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <a href="" class="text-red-600 hover:text-red-800" title="Delete"
+                                    onclick="return confirm('Are you sure you want to delete this company?');">
+                                    <i class="fas fa-trash"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <p class="text-gray-500">No Companies available.</p>
+    {% endif %}
+    <!-- Pagination -->
+    {% include "session/partial/pagination.html" with page_obj=sessions %}
+</div>
+{% endblock %}

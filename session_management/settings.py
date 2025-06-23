@@ -80,12 +80,8 @@ WSGI_APPLICATION = "session_management.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": "session_management",
-        "USER": "postgres",
-        "PASSWORD": "Lemon@123",
-        "HOST": "localhost",
-        "PORT": "5432",
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": BASE_DIR / "db.sqlite3",
     }
 }
 

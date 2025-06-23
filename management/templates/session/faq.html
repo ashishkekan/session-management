@@ -1,0 +1,37 @@
+<!-- session/faq.html -->
+{% extends 'session/base.html' %}
+{% block title %}FAQ{% endblock %}
+{% block header_title %}Frequently Asked Questions{% endblock %}
+
+{% block content %}
+<div class="card p-6 max-w-4xl mx-auto">
+    <h2 class="text-2xl font-bold text-gray-800 mb-6">Frequently Asked Questions</h2>
+    <div class="space-y-6">
+        <div>
+            <h3 class="text-lg font-semibold text-gray-700">How do I create a new session?</h3>
+            <p class="text-gray-600">Admins can navigate to the "Sessions" page and click "Create" to add a new session topic.</p>
+        </div>
+        <div>
+            <h3 class="text-lg font-semibold text-gray-700">How can I change my password?</h3>
+            <p class="text-gray-600">Go to "My Profile" and click "Change Password" to update your password.</p>
+        </div>
+        <div>
+            <h3 class="text-lg font-semibold text-gray-700">How do I upload sessions in bulk?</h3>
+            <p class="text-gray-600">Use the "Upload" button on the Sessions page to import an Excel file with session data.</p>
+        </div>
+    </div>
+    <h3 class="text-xl font-semibold text-gray-800 mt-8 mb-4">Submit a Question</h3>
+    <form method="post" class="space-y-6">
+        {% csrf_token %}
+        <div>
+            <label for="question" class="block text-gray-700 font-medium">Your Question</label>
+            <textarea name="question" id="question" rows="4" class="custom-input w-full"></textarea>
+        </div>
+        <div class="flex justify-end">
+            <button type="submit" class="btn-primary flex items-center">
+                <i class="fas fa-paper-plane mr-2"></i> Submit
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}
