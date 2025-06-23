@@ -30,6 +30,17 @@
 
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <div class="card p-6 bg-white rounded-lg shadow">
+            <h3 class="text-xl font-semibold text-gray-800 mb-4">Coming Soon...</h3>
+            {% for topic in learning_topics %}
+                <div class="flex justify-between items-center mb-4">
+                    <p class="font-medium text-gray-700">{{ topic.coming_soon }}</p>
+                    <a href="{{ topic.url }}" target="_blank" class="text-blue-600 hover:text-blue-800">View</a>
+                </div>
+            {% empty %}
+                <p class="text-gray-500">No upcoming topics found.</p>
+            {% endfor %}
+        </div>
+        <div class="card p-6 bg-white rounded-lg shadow">
             <h3 class="text-xl font-semibold text-gray-800 mb-4">Top 3 Upcoming Sessions</h3>
             {% if top_sessions %}
                 <ul class="space-y-4">
