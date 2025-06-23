@@ -9,7 +9,7 @@ def today_notifications_count(request):
     Admins don't get highlighted notification badges.
     """
     user = request.user
-    if user.is_authenticated and not user.is_staff:
+    if user.is_authenticated:
         count = RecentActivity.objects.filter(
             user=user, read=False, timestamp__date=date.today()
         ).count()
@@ -18,4 +18,4 @@ def today_notifications_count(request):
 
 
 def company_profile(request):
-    return {'company_profile': CompanyProfile.objects.first()}
+    return {"company_profile": CompanyProfile.objects.first()}

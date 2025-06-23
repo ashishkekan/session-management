@@ -16,10 +16,11 @@ PLACE_CHOICES = [
 
 # management/models.py
 ROLES = [
-    ('Employee', 'Employee'),
-    ('HR', 'HR'),
-    ('Manager', 'Manager'),
+    ("Employee", "Employee"),
+    ("HR", "HR"),
+    ("Manager", "Manager"),
 ]
+
 
 class Department(models.Model):
     """
@@ -45,10 +46,11 @@ class Department(models.Model):
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     department = models.ForeignKey(Department, on_delete=models.SET_NULL, null=True)
-    role = models.CharField(max_length=50, choices=ROLES, default='Employee')
+    role = models.CharField(max_length=50, choices=ROLES, default="Employee")
 
     def __str__(self):
         return f"{self.user.username} - {self.department.name if self.department else 'No Department'} - {self.role}"
+
 
 class SessionTopic(models.Model):
     """
@@ -114,12 +116,13 @@ class ExternalTopic(models.Model):
 
 # management/models.py
 ACTION_TYPES = [
-    ('CREATE', 'Create'),
-    ('UPDATE', 'Update'),
-    ('DELETE', 'Delete'),
-    ('LOGIN', 'Login'),
-    ('LOGOUT', 'Logout'),
+    ("CREATE", "Create"),
+    ("UPDATE", "Update"),
+    ("DELETE", "Delete"),
+    ("LOGIN", "Login"),
+    ("LOGOUT", "Logout"),
 ]
+
 
 class RecentActivity(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -135,7 +138,7 @@ class RecentActivity(models.Model):
 
 class CompanyProfile(models.Model):
     name = models.CharField(max_length=100, default="SessionXpert")
-    logo = models.ImageField(upload_to='logos/', null=True, blank=True)
+    logo = models.ImageField(upload_to="logos/", null=True, blank=True)
     contact_email = models.EmailField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -145,8 +148,8 @@ class CompanyProfile(models.Model):
     class Meta:
         verbose_name = "Company Profile"
         verbose_name_plural = "Company Profiles"
-        
-        
+
+
 # management/models.py
 class SetupChecklist(models.Model):
     task = models.CharField(max_length=100)
@@ -155,4 +158,3 @@ class SetupChecklist(models.Model):
 
     def __str__(self):
         return f"{self.task} - {'Completed' if self.completed else 'Pending'}"
-    

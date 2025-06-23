@@ -1,14 +1,17 @@
 from django.contrib.auth.models import User
 from management.models import RecentActivity
 
-def log_activity(user, action_type, description, target_users=None, edited_user=None, details=None):
+
+def log_activity(
+    user, action_type, description, target_users=None, edited_user=None, details=None
+):
     # Case: log activity for a user being edited directly
     if edited_user:
         RecentActivity.objects.create(
             user=edited_user,
             action_type=action_type,
             description=description,
-            details=details
+            details=details,
         )
         return
 
@@ -21,7 +24,7 @@ def log_activity(user, action_type, description, target_users=None, edited_user=
                 user=admin,
                 action_type=action_type,
                 description=f"[SYSTEM] {description}",
-                details=details
+                details=details,
             )
         return
 
@@ -37,7 +40,7 @@ def log_activity(user, action_type, description, target_users=None, edited_user=
                 user=admin,
                 action_type=action_type,
                 description=f"{user.username} - {description}",
-                details=details
+                details=details,
             )
     else:
         # User is staff → notify target users (usually non-staff)
@@ -46,5 +49,5 @@ def log_activity(user, action_type, description, target_users=None, edited_user=
                 user=u,
                 action_type=action_type,
                 description=description,
-                details=details
+                details=details,
             )

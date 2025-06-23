@@ -43,4 +43,5 @@ class ExternalTopicAdmin(admin.ModelAdmin):
     search_fields = ("coming_soon",)
     ordering = ("-created_at",)
 
+
 admin.site.register(CompanyProfile)

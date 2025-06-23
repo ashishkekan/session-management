@@ -47,6 +47,9 @@ from reportlab.lib.pagesizes import A4
 from reportlab.pdfgen import canvas
 from io import BytesIO
 
+from django.utils import timezone
+from django.template.response import TemplateResponse
+
 
 def is_admin(user):
     """
@@ -78,11 +81,11 @@ def export_sessions_pdf(request):
     sessions = SessionTopic.objects.all()
     for session in sessions:
         p.drawString(100, y, f"Topic: {session.topic}")
-        p.drawString(100, y-20, f"Conducted By: {session.conducted_by.get_full_name}")
-        p.drawString(100, y-40, f"Date: {session.date.strftime('%Y-%m-%d %H:%M')}")
-        p.drawString(100, y-60, f"Status: {session.status}")
-        p.drawString(100, y-80, f"Place: {session.place}")
-        p.drawString(100, y-100, "-"*50)
+        p.drawString(100, y - 20, f"Conducted By: {session.conducted_by.get_full_name}")
+        p.drawString(100, y - 40, f"Date: {session.date.strftime('%Y-%m-%d %H:%M')}")
+        p.drawString(100, y - 60, f"Status: {session.status}")
+        p.drawString(100, y - 80, f"Place: {session.place}")
+        p.drawString(100, y - 100, "-" * 50)
         y -= 120
         if y < 100:
             p.showPage()
@@ -90,9 +93,11 @@ def export_sessions_pdf(request):
     p.showPage()
     p.save()
     buffer.seek(0)
-    response = HttpResponse(buffer, content_type='application/pdf')
-    response['Content-Disposition'] = 'attachment; filename="sessions.pdf"'
-    log_activity(request.user, description="Exported sessions as PDF",action_type="CREATE")
+    response = HttpResponse(buffer, content_type="application/pdf")
+    response["Content-Disposition"] = 'attachment; filename="sessions.pdf"'
+    log_activity(
+        request.user, description="Exported sessions as PDF", action_type="CREATE"
+    )
     return response
 
 
@@ -124,21 +129,21 @@ def create_topic(request):
                 )
             else:
                 # Normal user action, log_activity will notify admins automatically
-                log_activity(request.user, description=f"Created a new session: '{session.topic}'.", action_type="CREATE SESSION")
+                log_activity(
+                    request.user,
+                    description=f"Created a new session: '{session.topic}'.",
+                    action_type="CREATE SESSION",
+                )
             return redirect("session_list")
     else:
         form = SessionTopicForm(user=request.user)
     return render(request, "session/create_topic.html", {"form": form})
 
 
-# management/views.py
-from django.utils import timezone
-from django.template.response import TemplateResponse
-
-
 def home(request):
     """this is the home page"""
     return TemplateResponse(request, "session/home.html")
+
 
 # management/views.py
 def dashboard(request):
@@ -161,43 +166,71 @@ def dashboard(request):
         checklist = SetupChecklist.objects.all()
         # Auto-check tasks
         if CompanyProfile.objects.filter(logo__isnull=False).exists():
-            SetupChecklist.objects.filter(task='Set company logo and name').update(completed=True)
+            SetupChecklist.objects.filter(task="Set company logo and name").update(
+                completed=True
+            )
         if User.objects.filter(is_staff=True).exists():
-            SetupChecklist.objects.filter(task='Add first admin user').update(completed=True)
+            SetupChecklist.objects.filter(task="Add first admin user").update(
+                completed=True
+            )
         if SessionTopic.objects.exists():
-            SetupChecklist.objects.filter(task='Create first session').update(completed=True)
+            SetupChecklist.objects.filter(task="Create first session").update(
+                completed=True
+            )
         if Department.objects.exists():
-            SetupChecklist.objects.filter(task='Add first department').update(completed=True)
+            SetupChecklist.objects.filter(task="Add first department").update(
+                completed=True
+            )
     if request.user.is_authenticated:
         user_profile = UserProfile.objects.get(user=request.user)
         role = user_profile.role
         total_users = User.objects.count() if is_admin else None
         total_sessions = SessionTopic.objects.count() if is_admin else None
         learning_topics = ExternalTopic.objects.filter(is_active=True)[:3]
-        top_sessions = SessionTopic.objects.filter(date__gte=timezone.now(), status='Pending').order_by('date')[:3]
-        completed = SessionTopic.objects.filter(status='Completed').order_by('-date')[:3] if is_admin else None
-        pending = SessionTopic.objects.filter(status='Pending').order_by('date')[:3] if is_admin else None
-        cancelled = SessionTopic.objects.filter(status='Cancelled').order_by('-date')[:3] if is_admin else None
-        upcoming_sessions = SessionTopic.objects.filter(
-            conducted_by=request.user, date__gte=timezone.now(), status='Pending'
-        ).order_by('date')[:3] if not is_admin else None
+        top_sessions = SessionTopic.objects.filter(
+            date__gte=timezone.now(), status="Pending"
+        ).order_by("date")[:3]
+        completed = (
+            SessionTopic.objects.filter(status="Completed").order_by("-date")[:3]
+            if is_admin
+            else None
+        )
+        pending = (
+            SessionTopic.objects.filter(status="Pending").order_by("date")[:3]
+            if is_admin
+            else None
+        )
+        cancelled = (
+            SessionTopic.objects.filter(status="Cancelled").order_by("-date")[:3]
+            if is_admin
+            else None
+        )
+        upcoming_sessions = (
+            SessionTopic.objects.filter(
+                conducted_by=request.user, date__gte=timezone.now(), status="Pending"
+            ).order_by("date")[:3]
+            if not is_admin
+            else None
+        )
         context = {
-            'company_profile': company_profile,
-            'is_admin': is_admin,
-            'role': role,
-            'total_users': total_users,
-            'total_sessions': total_sessions,
-            'learning_topics': learning_topics,
-            'top_sessions': top_sessions,
-            'completed': completed,
-            'pending': pending,
-            'cancelled': cancelled,
-            'upcoming_sessions': upcoming_sessions,
-            'checklist': checklist,
+            "company_profile": company_profile,
+            "is_admin": is_admin,
+            "role": role,
+            "total_users": total_users,
+            "total_sessions": total_sessions,
+            "learning_topics": learning_topics,
+            "top_sessions": top_sessions,
+            "completed": completed,
+            "pending": pending,
+            "cancelled": cancelled,
+            "upcoming_sessions": upcoming_sessions,
+            "checklist": checklist,
         }
-        return render(request, 'session/dashboard.html', context)
+        return render(request, "session/dashboard.html", context)
     else:
-        return render(request, 'session/dashboard.html', {'company_profile': company_profile})
+        return render(
+            request, "session/dashboard.html", {"company_profile": company_profile}
+        )
 
 
 def user_login(request):
@@ -218,7 +251,11 @@ def user_login(request):
         if form.is_valid():
             user = form.get_user()
             login(request, user)
-            log_activity(request.user, description="Logged in successfully.", action_type="LOGGED IN")
+            log_activity(
+                request.user,
+                description="Logged in successfully.",
+                action_type="LOGGED IN",
+            )
             return redirect("home")
         else:
             messages.error(request, "Invalid username or password.")
@@ -311,7 +348,12 @@ def edit_user(request, user_id):
         form = UserEditForm(request.POST, instance=user)
         if form.is_valid():
             form.save()
-            log_activity(request.user, description="Admin edited your profile.", action_type="Edit User", edited_user=user)
+            log_activity(
+                request.user,
+                description="Admin edited your profile.",
+                action_type="Edit User",
+                edited_user=user,
+            )
             messages.success(request, "User updated successfully.")
             return redirect("user_list")
     else:
@@ -367,7 +409,9 @@ def my_profile(request):
         if not form.is_valid():
             messages.error(request, "There was an error updating your profile.")
         form.save()
-        log_activity(employee, description="Updated their profile.", action_type="UPDATE PROFILE")
+        log_activity(
+            employee, description="Updated their profile.", action_type="UPDATE PROFILE"
+        )
         messages.success(request, "Profile updated successfully.")
         return redirect("my_profile")
     form = UserEditForm(instance=employee)
@@ -609,13 +653,13 @@ def edit_learning(request, learning_id):
                 log_activity(
                     user=request.user,
                     description=f"Admin updated learning topic: '{learning.coming_soon}'.",
-                    action_type='UPDATE',
+                    action_type="UPDATE",
                     target_users=User.objects.filter(is_staff=False),
                 )
             else:
                 log_activity(
-                    user=request.user, 
-                    description=f"Updated learning topic: '{learning.coming_soon}'."
+                    user=request.user,
+                    description=f"Updated learning topic: '{learning.coming_soon}'.",
                 )
             messages.success(request, "Learning updated successfully.")
             return redirect("learning-view")
@@ -671,17 +715,24 @@ def recent_activities(request):
     Returns:
         HttpResponse: Rendered page with a paginated list of recent activities.
     """
-    action_type = request.GET.get('action_type', '')
+    action_type = request.GET.get("action_type", "")
     activities = RecentActivity.objects.filter(user=request.user)
     if action_type:
         activities = activities.filter(action_type=action_type)
-    activities = activities.order_by('-timestamp')
+    activities = activities.order_by("-timestamp")
     activities.update(read=True)  # Mark as read
     paginator = Paginator(activities, 10)
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
-    return render(request, "session/recent_activities.html", {"activities": page_obj, 'action_types': ACTION_TYPES,
-        'selected_action_type': action_type})
+    return render(
+        request,
+        "session/recent_activities.html",
+        {
+            "activities": page_obj,
+            "action_types": ACTION_TYPES,
+            "selected_action_type": action_type,
+        },
+    )
 
 
 @login_required
@@ -721,7 +772,7 @@ def department_create(request):
             log_activity(
                 user=request.user,
                 description=f"Admin created new department: '{department.name}'.",
-                action_type='CREATE',
+                action_type="CREATE",
                 target_users=User.objects.filter(is_staff=False),
             )
             messages.success(request, "Department created successfully.")
@@ -753,7 +804,7 @@ def department_edit(request, pk):
             log_activity(
                 user=request.user,
                 description=f"Admin edited department: '{department.name}'.",
-                action_type='UPDATE',
+                action_type="UPDATE",
                 target_users=User.objects.filter(is_active=True, is_staff=False),
             )
             messages.success(request, "Department updated successfully.")
@@ -782,7 +833,7 @@ def department_delete(request, pk):
     log_activity(
         request.user,
         f"Admin deleted department: '{department.name}'.",
-        action_type='DELETE',
+        action_type="DELETE",
         target_users=User.objects.filter(is_active=True, is_staff=False),
     )
     messages.success(request, "Department deleted successfully.")
@@ -1017,16 +1068,21 @@ def company_profile(request):
         HttpResponse: Company profile form or redirect to home page on success.
     """
     profile, _ = CompanyProfile.objects.get_or_create(id=1)  # Single instance
-    if request.method == 'POST':
+    if request.method == "POST":
         form = CompanyProfileForm(request.POST, request.FILES, instance=profile)
         if form.is_valid():
             form.save()
-            log_activity(request.user, description=f"Updated company profile: {profile.name}", action_type="Edit Company")
+            log_activity(
+                request.user,
+                description=f"Updated company profile: {profile.name}",
+                action_type="Edit Company",
+            )
             messages.success(request, "Company profile updated successfully.")
-            return redirect('company_profile')
+            return redirect("company_profile")
     else:
         form = CompanyProfileForm(instance=profile)
-    return render(request, 'session/company_profile.html', {'form': form})
+    return render(request, "session/company_profile.html", {"form": form})
+
 
 @login_required
 def company_list(request):
@@ -1053,37 +1109,37 @@ def invite_admin(request):
     Returns:
         HttpResponse: Invitation form or redirect to user list on success.
     """
-    if request.method == 'POST':
+    if request.method == "POST":
         form = InviteAdminForm(request.POST)
         if form.is_valid():
-            email = form.cleaned_data['email']
-            department = form.cleaned_data['department']
+            email = form.cleaned_data["email"]
+            department = form.cleaned_data["department"]
             # Generate a temporary password
             temp_password = User.objects.make_random_password()
             user = User.objects.create_user(
-                username=email.split('@')[0],
+                username=email.split("@")[0],
                 email=email,
                 password=temp_password,
-                is_staff=True
+                is_staff=True,
             )
             UserProfile.objects.create(user=user, department=department)
             # Send email
             send_mail(
-                subject='SessionXpert Admin Invitation',
-                message=f'You have been invited as an admin. Your credentials:\nUsername: {user.username}\nPassword: {temp_password}\nPlease change your password after logging in.',
+                subject="SessionXpert Admin Invitation",
+                message=f"You have been invited as an admin. Your credentials:\nUsername: {user.username}\nPassword: {temp_password}\nPlease change your password after logging in.",
                 from_email=settings.DEFAULT_FROM_EMAIL,
                 recipient_list=[email],
             )
             log_activity(
                 user=request.user,
                 description=f"Invited admin: {user.username}",
-                action_type='INVITE',
+                action_type="INVITE",
                 target_users=User.objects.filter(is_active=True, is_staff=True),
             )
-            return redirect('user_list')
+            return redirect("user_list")
     else:
         form = InviteAdminForm()
-    return render(request, 'session/invite_admin.html', {'form': form})
+    return render(request, "session/invite_admin.html", {"form": form})
 
 
 @login_required
@@ -1099,22 +1155,22 @@ def faq(request):
     Returns:
         HttpResponse: FAQ page or redirect to FAQ page on submission.
     """
-    if request.method == 'POST':
-        question = request.POST.get('question')
+    if request.method == "POST":
+        question = request.POST.get("question")
         if question:
             send_mail(
-                subject='New FAQ Submission',
-                message=f'Question from {request.user.username}: {question}',
+                subject="New FAQ Submission",
+                message=f"Question from {request.user.username}: {question}",
                 from_email=settings.DEFAULT_FROM_EMAIL,
                 recipient_list=[settings.DEFAULT_FROM_EMAIL],
             )
             log_activity(
                 user=request.user,
                 description=f"User submitted FAQ: {question[:30]}...",
-                action_type='FAQ'
+                action_type="FAQ",
             )
-            return redirect('faq')
-    return render(request, 'session/faq.html')
+            return redirect("faq")
+    return render(request, "session/faq.html")
 
 
 @login_required
@@ -1131,12 +1187,12 @@ def support(request):
     Returns:
         HttpResponse: Support form or redirect to support page on success.
     """
-    if request.method == 'POST':
+    if request.method == "POST":
         form = SupportForm(request.POST or None)
         if form.is_valid():
-            subject = form.cleaned_data['subject']
-            message = form.cleaned_data['message']
-            priority = form.cleaned_data['priority']
+            subject = form.cleaned_data["subject"]
+            message = form.cleaned_data["message"]
+            priority = form.cleaned_data["priority"]
             full_message = f"Support Request from {request.user.username} ({request.user.email})\nPriority: {priority}\n\n{message}"
             send_mail(
                 subject=f"Support: {subject}",
@@ -1144,8 +1200,12 @@ def support(request):
                 from_email=settings.DEFAULT_FROM_EMAIL,
                 recipient_list=[settings.DEFAULT_FROM_EMAIL],
             )
-            log_activity(request.user, description=f"Submitted support request: {subject}", action_type='SUPPORT')
-            return redirect('support')
+            log_activity(
+                request.user,
+                description=f"Submitted support request: {subject}",
+                action_type="SUPPORT",
+            )
+            return redirect("support")
     else:
         form = SupportForm()
-    return render(request, 'session/support.html', {'form': form})
+    return render(request, "session/support.html", {"form": form})

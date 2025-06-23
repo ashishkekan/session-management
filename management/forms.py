@@ -3,7 +3,13 @@ from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.models import User
 from django.forms import DateTimeInput
 
-from management.models import CompanyProfile, Department, ExternalTopic, SessionTopic, UserProfile
+from management.models import (
+    CompanyProfile,
+    Department,
+    ExternalTopic,
+    SessionTopic,
+    UserProfile,
+)
 
 
 class DepartmentForm(forms.ModelForm):
@@ -60,23 +66,35 @@ class SessionTopicForm(forms.ModelForm):
         for field in self.fields.values():
             field.widget.attrs.update({"class": "custom-input"})
 
+
 # management/models.py
 ROLES = [
-    ('Employee', 'Employee'),
-    ('HR', 'HR'),
-    ('Manager', 'Manager'),
+    ("Employee", "Employee"),
+    ("HR", "HR"),
+    ("Manager", "Manager"),
 ]
+
 
 # management/forms.py
 class UserCreationForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput)
-    department = forms.ModelChoiceField(queryset=Department.objects.all(), required=True)
+    department = forms.ModelChoiceField(
+        queryset=Department.objects.all(), required=True
+    )
     is_staff = forms.BooleanField(required=False, label="Is Admin?")
     role = forms.ChoiceField(choices=ROLES, required=True)
 
     class Meta:
         model = User
-        fields = ["username", "first_name", "last_name", "email", "password", "is_staff", "role"]
+        fields = [
+            "username",
+            "first_name",
+            "last_name",
+            "email",
+            "password",
+            "is_staff",
+            "role",
+        ]
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -92,12 +110,15 @@ class UserCreationForm(forms.ModelForm):
             UserProfile.objects.create(
                 user=user,
                 department=self.cleaned_data["department"],
-                role=self.cleaned_data["role"]
+                role=self.cleaned_data["role"],
             )
         return user
 
+
 class UserEditForm(forms.ModelForm):
-    department = forms.ModelChoiceField(queryset=Department.objects.all(), required=True)
+    department = forms.ModelChoiceField(
+        queryset=Department.objects.all(), required=True
+    )
     role = forms.ChoiceField(choices=ROLES, required=True)
 
     class Meta:
@@ -110,7 +131,9 @@ class UserEditForm(forms.ModelForm):
             current_dept = self.instance.userprofile.department
             current_role = self.instance.userprofile.role
             if current_dept:
-                self.fields["department"].queryset = Department.objects.filter(id=current_dept.id)
+                self.fields["department"].queryset = Department.objects.filter(
+                    id=current_dept.id
+                )
                 self.fields["department"].initial = current_dept
                 self.fields["department"].disabled = True
             self.fields["role"].initial = current_role
@@ -122,7 +145,9 @@ class UserEditForm(forms.ModelForm):
         user = super().save(commit=commit)
         if commit:
             profile, _ = UserProfile.objects.get_or_create(user=user)
-            profile.department = self.cleaned_data.get("department") or self.fields["department"].initial
+            profile.department = (
+                self.cleaned_data.get("department") or self.fields["department"].initial
+            )
             profile.role = self.cleaned_data["role"]
             profile.save()
         return user
@@ -186,37 +211,59 @@ class SessionUploadForm(forms.Form):
 class CompanyProfileForm(forms.ModelForm):
     class Meta:
         model = CompanyProfile
-        fields = ['name', 'logo', 'contact_email']
+        fields = ["name", "logo", "contact_email"]
         widgets = {
-            'name': forms.TextInput(attrs={'class': 'form-control'}),
-            'logo': forms.FileInput(attrs={'class': 'form-control'}),
-            'contact_email': forms.EmailInput(attrs={'class': 'form-control'}),
+            "name": forms.TextInput(attrs={"class": "form-control"}),
+            "logo": forms.FileInput(attrs={"class": "form-control"}),
+            "contact_email": forms.EmailInput(attrs={"class": "form-control"}),
         }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for field in self.fields.values():
-            field.widget.attrs.update({'class': 'custom-input'})
-            
-            
+            field.widget.attrs.update({"class": "custom-input"})
+
+
 # management/forms.py
 class InviteAdminForm(forms.Form):
-    email = forms.EmailField(widget=forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Enter email'}))
-    department = forms.ModelChoiceField(queryset=Department.objects.all(), required=True)
+    email = forms.EmailField(
+        widget=forms.EmailInput(
+            attrs={"class": "form-control", "placeholder": "Enter email"}
+        )
+    )
+    department = forms.ModelChoiceField(
+        queryset=Department.objects.all(), required=True
+    )
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for field in self.fields.values():
-            field.widget.attrs.update({'class': 'custom-input'})
+            field.widget.attrs.update({"class": "custom-input"})
 
 
 # management/forms.py
 class SupportForm(forms.Form):
-    subject = forms.CharField(max_length=100, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter subject'}))
-    message = forms.CharField(widget=forms.Textarea(attrs={'class': 'form-control', 'rows': 5, 'placeholder': 'Describe your issue'}))
-    priority = forms.ChoiceField(choices=[('Low', 'Low'), ('Medium', 'Medium'), ('High', 'High')], widget=forms.Select(attrs={'class': 'form-control'}))
+    subject = forms.CharField(
+        max_length=100,
+        widget=forms.TextInput(
+            attrs={"class": "form-control", "placeholder": "Enter subject"}
+        ),
+    )
+    message = forms.CharField(
+        widget=forms.Textarea(
+            attrs={
+                "class": "form-control",
+                "rows": 5,
+                "placeholder": "Describe your issue",
+            }
+        )
+    )
+    priority = forms.ChoiceField(
+        choices=[("Low", "Low"), ("Medium", "Medium"), ("High", "High")],
+        widget=forms.Select(attrs={"class": "form-control"}),
+    )
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for field in self.fields.values():
-            field.widget.attrs.update({'class': 'custom-input'})
+            field.widget.attrs.update({"class": "custom-input"})
