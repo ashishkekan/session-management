@@ -88,6 +88,62 @@
                 <p class="text-gray-500">No upcoming sessions found.</p>
             {% endif %}
         </div>
+        {% elif role == "Admin" %}
+        <div class="card p-6">
+            <h3 class="text-xl font-semibold text-gray-800 mb-4">Completed Sessions</h3>
+            {% if completed %}
+                <ul class="space-y-4">
+                    {% for session in completed %}
+                        <li>
+                            <div class="flex justify-between items-center">
+                                <strong class="text-gray-700">{{ session.topic }}</strong>
+                                <span class="text-sm text-gray-500">{{ session.conducted_by.get_full_name }}</span>
+                            </div>
+                            <p class="text-sm text-gray-500">📅 {{ session.date|date:"M d, Y" }}</p>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p class="text-gray-500">No completed sessions found.</p>
+            {% endif %}
+        </div>
+        <div class="card p-6">
+            <h3 class="text-xl font-semibold text-gray-800 mb-4">Pending Sessions</h3>
+            {% if pending %}
+                <ul class="space-y-4">
+                    {% for session in pending %}
+                        <li>
+                            <div class="flex justify-between items-center">
+                                <strong class="text-gray-700">{{ session.topic }}</strong>
+                                <span class="text-sm text-gray-500">{{ session.conducted_by.get_full_name }}</span>
+                            </div>
+                            <p class="text-sm text-gray-500">📅 {{ session.date|date:"M d, Y" }}</p>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p class="text-gray-500">No pending sessions found.</p>
+            {% endif %}
+        </div>
+        <div class="card p-6">
+            <h3 class="text-xl font-semibold text-gray-800 mb-4">Cancelled Sessions</h3>
+            {% if cancelled %}
+                <ul class="space-y-4">
+                    {% for session in cancelled %}
+                        <li>
+                            <div class="flex justify-between items-center">
+                                <strong class="text-gray-700">{{ session.topic }}</strong>
+                                <span class="text-sm text-gray-500">{{ session.conducted_by.get_full_name }}</span>
+                            </div>
+                            <p class="text-sm text-gray-500">📅 {{ session.date|date:"M d, Y" }}</p>
+                            <p class="text-sm text-gray-500"><strong>Cancelled Reason: </strong>{{ session.cancelled_reason }}</p>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p class="text-gray-500">No cancelled sessions found.</p>
+            {% endif %}
+        </div>
         {% endif %}
     </div>
 </div>
