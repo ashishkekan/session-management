@@ -3,7 +3,7 @@
 {% block title %}Dashboard{% endblock %}
 
 {% block content %}
-<div class="max-w-6xl mx-auto py-16 px-4">
+<div class="max-w-8xl mx-auto py-6">
     <h2 class="text-2xl font-bold text-gray-800 mb-6">Welcome, {{ request.user.username|default:request.user.username }}!</h2>
     {% if is_admin %}
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
