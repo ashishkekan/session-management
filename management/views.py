@@ -81,7 +81,7 @@ def export_sessions_pdf(request):
     sessions = SessionTopic.objects.all()
     for session in sessions:
         p.drawString(100, y, f"Topic: {session.topic}")
-        p.drawString(100, y - 20, f"Conducted By: {session.conducted_by.get_full_name}")
+        p.drawString(100, y - 20, f"Conducted By: {session.conducted_by.get_full_name()}")
         p.drawString(100, y - 40, f"Date: {session.date.strftime('%Y-%m-%d %H:%M')}")
         p.drawString(100, y - 60, f"Status: {session.status}")
         p.drawString(100, y - 80, f"Place: {session.place}")
@@ -507,7 +507,8 @@ def edit_session_view(request, session_id):
             if request.user.is_staff:
                 log_activity(
                     request.user,
-                    f"Admin updated session: '{session.topic}'.",
+                    description=f"Admin updated session: '{session.topic}'.",
+                    action_type="Update Session",
                     target_users=User.objects.filter(is_staff=False),
                 )
             else:
