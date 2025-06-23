@@ -5,23 +5,23 @@
 {% block content %}
 <div class="card p-6">
     {% if request.user.is_staff %}
-    <div class="flex justify-between items-center mb-6">
+    <div class="flex justify-between items-center mb-6 flex-wrap gap-2">
         <h3 class="text-2xl font-bold text-gray-800">All Sessions with Assigned User</h3>
-        <div class="flex space-x-2">
+        <div class="flex space-x-2 flex-wrap gap-2">
             <form method="post" enctype="multipart/form-data" action="{% url 'import-sessions' %}" class="flex items-center">
                 {% csrf_token %}
                 <input type="file" name="excel_file" accept=".xlsx" class="hidden" id="excel_file" onchange="this.form.submit()">
-                <label for="excel_file" class="btn-primary flex items-center cursor-pointer">
+                <label for="excel_file" class="btn-primary flex items-center cursor-pointer px-4 py-2 text-sm">
                     <i class="fas fa-upload mr-2"></i> Upload
                 </label>
             </form>
-            <a href="{% url 'export-excel' %}" class="btn-primary flex items-center">
+            <a href="{% url 'export-excel' %}" class="btn-primary flex items-center px-4 py-2 text-sm">
                 <i class="fas fa-download mr-2"></i> Download
             </a>
-            <a href="{% url 'export_sessions_pdf' %}" class="btn-primary flex items-center">
+            <a href="{% url 'export_sessions_pdf' %}" class="btn-primary flex items-center px-4 py-2 text-sm">
                 <i class="fas fa-file-pdf mr-2"></i> Download PDF
             </a>
-            <a href="{% url 'create-topic' %}" class="btn-primary flex items-center">
+            <a href="{% url 'create-topic' %}" class="btn-primary flex items-center px-4 py-2 text-sm">
                 <i class="fas fa-plus mr-2"></i> Create
             </a>
         </div>
@@ -56,7 +56,7 @@
                             </td>
                             {% if request.user.is_staff %}
                                 <td class="px-6 py-4 text-gray-600">{{ session.conducted_by.get_full_name|default:session.conducted_by.username }}</td>
-                                <td class="px-6 py-9 flex">
+                                <td class="px-6 py-9 flex space-x-2">
                                     <a href="{% url 'edit_session' session.id %}" class="text-blue-600 hover:text-blue-800" title="Edit">
                                         <i class="fas fa-edit"></i>
                                     </a>
