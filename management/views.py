@@ -9,6 +9,7 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import User
 from django.core.paginator import Paginator
+from django.db.models import Q
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.timezone import now
@@ -323,12 +324,18 @@ def all_sessions_view(request):
     """
     View all sessions.
 
-    - Admins see all sessions.
-    - Regular users see only their own.
+    - Admins see all sessions, filtered by search query if provided.
+    - Regular users see only their own sessions, filtered by search query if provided.
+
+    Args:
+        request: HTTP request object.
 
     Returns:
-        HttpResponse: List of sessions.
+        HttpResponse: Rendered list of sessions with pagination.
     """
+    # Get the search query from the GET parameters
+    search_query = request.GET.get("q", "").strip()
+
     if request.user.is_staff:
         sessions = SessionTopic.objects.select_related("conducted_by").order_by("date")
     else:
@@ -337,9 +344,23 @@ def all_sessions_view(request):
             .filter(conducted_by=request.user)
             .order_by("date")
         )
+
+    # Apply search filter if query is provided
+    if search_query:
+        sessions = sessions.filter(
+            Q(topic__icontains=search_query)
+            | Q(status__icontains=search_query)
+            | Q(place__icontains=search_query)
+            | Q(conducted_by__first_name__icontains=search_query)
+            | Q(conducted_by__last_name__icontains=search_query)
+            | Q(cancelled_reason__icontains=search_query)
+        )
+
+    # Paginate the results
     paginator = Paginator(sessions, 10)
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
+
     return render(request, "session/all_sessions.html", {"sessions": page_obj})
 
 
