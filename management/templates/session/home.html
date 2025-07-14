@@ -1,165 +1,64 @@
 {% extends 'session/base.html' %}
-
-{% block title %}Dashboard{% endblock %}
-{% block header_title %}Dashboard Overview{% endblock %}
-
+{% block title %}Welcome to SessionXpert{% endblock %}
 {% block content %}
-<div class="dashboard-container space-y-8">
-    {% if not request.user.is_authenticated %}
-        <div class="card p-6">
-            <h2 class="text-2xl font-bold text-gray-800 mb-4">Welcome to the Learning Session Dashboard</h2>
-            <p class="text-gray-600 mb-4">This platform helps teams manage learning and development efficiently. Key features include:</p>
-            <ul class="list-disc pl-5 text-gray-600 space-y-2">
-                <li>View and manage upcoming learning topics and sessions</li>
-                <li>Track completed, pending, and cancelled sessions</li>
-                <li>Admin controls for managing users and sessions</li>
-                <li>Easy access to shared resources and materials</li>
-                <li>Personalized session dashboard for each user</li>
-            </ul>
-            <p class="mt-6">
-                <a href="{% url 'login' %}" class="btn-primary inline-flex items-center">
-                    <i class="fas fa-sign-in-alt mr-2"></i> Log In
-                </a>
-            </p>
+<section class="text-center py-16 bg-gradient-to-r from-blue-600 to-green-500 text-white rounded-xl">
+    <div class="max-w-4xl mx-auto px-4">
+        <h1 class="text-4xl md:text-5xl font-bold mb-4">Manage Internal Learning Sessions Like a Pro</h1>
+        <p class="text-lg md:text-xl mb-6">With SessionXpert, assign topics, schedule speakers, and track participation — all in one place.</p>
+        <div class="flex justify-center space-x-4">
+            <a href="#features" class="bg-white text-blue-700 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition">Explore Features</a>
+            <a href="mailto:your@email.com" class="bg-white text-green-700 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition">Book Free Demo</a>
         </div>
-    {% else %}
-        <div class="welcome-message">
-            <h3 class="text-3xl font-bold text-gray-800">👋 Welcome, {{ request.user.username|default:request.user.username }}!</h3>
-        </div>
-        {% if is_admin %}
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <a href="{% url 'user_list' %}" class="card p-6">
-                <div class="flex justify-between items-center">
-                    <div>
-                        <p class="text-gray-500 text-sm">Total Users</p>
-                        <h3 class="text-3xl font-bold text-blue-600">{{ total_users }}</h3>
-                    </div>
-                    <div class="bg-blue-100 p-3 rounded-full">
-                        <i class="fas fa-users text-blue-600 text-xl"></i>
-                    </div>
-                </div>
-                <p class="text-sm text-gray-500 mt-2">View All Users →</p>
-            </a>
-            <a href="{% url 'session_list' %}" class="card p-6">
-                <div class="flex justify-between items-center">
-                    <div>
-                        <p class="text-gray-500 text-sm">Total Sessions</p>
-                        <h3 class="text-3xl font-bold text-green-600">{{ total_sessions }}</h3>
-                    </div>
-                    <div class="bg-green-100 p-3 rounded-full">
-                        <i class="fas fa-calendar-check text-green-600 text-xl"></i>
-                    </div>
-                </div>
-                <p class="text-sm text-gray-500 mt-2">View All Sessions →</p>
-            </a>
-        </div>
-        {% endif %}
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <div class="card p-6">
-                <h3 class="text-xl font-semibold text-gray-800 mb-4">Coming Soon...</h3>
-                {% for topic in learning_topics %}
-                    <div class="flex justify-between items-center mb-4">
-                        <p class="font-medium text-gray-700">{{ topic.coming_soon }}</p>
-                        <a href="{{ topic.url }}" target="_blank" class="text-blue-600 hover:text-blue-800">View</a>
-                    </div>
-                {% empty %}
-                    <p class="text-gray-500">No upcoming topics found.</p>
-                {% endfor %}
+    </div>
+</section>
+
+<section id="features" class="py-16 bg-white">
+    <div class="max-w-6xl mx-auto px-4">
+        <h2 class="text-3xl font-bold text-center text-gray-800 mb-12">Key Features</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div class="p-6 border rounded-lg shadow-sm">
+                <i class="fas fa-user-plus text-3xl text-blue-600 mb-4"></i>
+                <h3 class="text-xl font-semibold mb-2">Employee Registration</h3>
+                <p class="text-gray-600">Quickly register team members and manage session roles.</p>
             </div>
-            <div class="card p-6">
-                <h3 class="text-xl font-semibold text-gray-800 mb-4">Top 3 Upcoming Sessions</h3>
-                {% if top_sessions %}
-                    <ul class="space-y-4">
-                        {% for session in top_sessions %}
-                            <li>
-                                <div class="flex justify-between items-center">
-                                    <strong class="text-gray-700">{{ session.topic }}</strong>
-                                    <span class="text-sm text-gray-500">{{ session.conducted_by.get_full_name }}</span>
-                                </div>
-                                <p class="text-sm text-gray-500">📅 {{ session.date|date:"M d, Y – h:i A" }}</p>
-                            </li>
-                        {% endfor %}
-                    </ul>
-                {% else %}
-                    <p class="text-gray-500">No upcoming sessions found.</p>
-                {% endif %}
+            <div class="p-6 border rounded-lg shadow-sm">
+                <i class="fas fa-tasks text-3xl text-green-600 mb-4"></i>
+                <h3 class="text-xl font-semibold mb-2">Topic Assignment</h3>
+                <p class="text-gray-600">Assign and monitor presentation topics with ease.</p>
             </div>
-            {% if is_admin %}
-                <div class="card p-6">
-                    <h3 class="text-xl font-semibold text-gray-800 mb-4">Completed Sessions</h3>
-                    {% if completed %}
-                        <ul class="space-y-4">
-                            {% for session in completed %}
-                                <li>
-                                    <div class="flex justify-between items-center">
-                                        <strong class="text-gray-700">{{ session.topic }}</strong>
-                                        <span class="text-sm text-gray-500">{{ session.conducted_by.get_full_name }}</span>
-                                    </div>
-                                    <p class="text-sm text-gray-500">📅 {{ session.date|date:"M d, Y" }}</p>
-                                </li>
-                            {% endfor %}
-                        </ul>
-                    {% else %}
-                        <p class="text-gray-500">No completed sessions found.</p>
-                    {% endif %}
-                </div>
-                <div class="card p-6">
-                    <h3 class="text-xl font-semibold text-gray-800 mb-4">Pending Sessions</h3>
-                    {% if pending %}
-                        <ul class="space-y-4">
-                            {% for session in pending %}
-                                <li>
-                                    <div class="flex justify-between items-center">
-                                        <strong class="text-gray-700">{{ session.topic }}</strong>
-                                        <span class="text-sm text-gray-500">{{ session.conducted_by.get_full_name }}</span>
-                                    </div>
-                                    <p class="text-sm text-gray-500">📅 {{ session.date|date:"M d, Y" }}</p>
-                                </li>
-                            {% endfor %}
-                        </ul>
-                    {% else %}
-                        <p class="text-gray-500">No pending sessions found.</p>
-                    {% endif %}
-                </div>
-                <div class="card p-6">
-                    <h3 class="text-xl font-semibold text-gray-800 mb-4">Cancelled Sessions</h3>
-                    {% if cancelled %}
-                        <ul class="space-y-4">
-                            {% for session in cancelled %}
-                                <li>
-                                    <div class="flex justify-between items-center">
-                                        <strong class="text-gray-700">{{ session.topic }}</strong>
-                                        <span class="text-sm text-gray-500">{{ session.conducted_by.get_full_name }}</span>
-                                    </div>
-                                    <p class="text-sm text-gray-500">📅 {{ session.date|date:"M d, Y" }}</p>
-                                    <p class="text-sm text-gray-500"><strong>Cancelled Reason: </strong>{{ session.cancelled_reason }}</p>
-                                </li>
-                            {% endfor %}
-                        </ul>
-                    {% else %}
-                        <p class="text-gray-500">No cancelled sessions found.</p>
-                    {% endif %}
-                </div>
-            {% else %}
-                <div class="card p-6">
-                    <h3 class="text-xl font-semibold text-gray-800 mb-4">Upcoming Sessions (For self)</h3>
-                    <p class="text-gray-600 mb-4"><strong>Note:</strong> Minimum 10 slides are required in your PPT.</p>
-                    {% if upcoming_sessions %}
-                        <ul class="space-y-4">
-                            {% for session in upcoming_sessions %}
-                                <li>
-                                    <strong class="text-gray-700">{{ session.topic }}</strong>
-                                    <p class="text-sm text-gray-500">📅 {{ session.date|date:"M d, Y, l" }}</p>
-                                    <p class="text-sm text-gray-500"><strong>Place: </strong>📍 {{ session.place }}</p>
-                                </li>
-                            {% endfor %}
-                        </ul>
-                    {% else %}
-                        <p class="text-gray-500">No upcoming sessions found.</p>
-                    {% endif %}
-                </div>
-            {% endif %}
+            <div class="p-6 border rounded-lg shadow-sm">
+                <i class="fas fa-calendar-alt text-3xl text-indigo-600 mb-4"></i>
+                <h3 class="text-xl font-semibold mb-2">Alternate Scheduling</h3>
+                <p class="text-gray-600">Configure sessions for alternate Fridays or Saturdays.</p>
+            </div>
+            <div class="p-6 border rounded-lg shadow-sm">
+                <i class="fas fa-chart-line text-3xl text-purple-600 mb-4"></i>
+                <h3 class="text-xl font-semibold mb-2">Tracking Dashboard</h3>
+                <p class="text-gray-600">Track participation and session history over time.</p>
+            </div>
         </div>
-    {% endif %}
-</div>
+    </div>
+</section>
+
+<section class="py-16 bg-gray-50">
+    <div class="max-w-5xl mx-auto px-4 text-center">
+        <h2 class="text-3xl font-bold text-gray-800 mb-8">Why Choose SessionXpert?</h2>
+        <ul class="grid grid-cols-1 sm:grid-cols-2 gap-6 text-left text-gray-700">
+            <li>✅ Builds a culture of continuous learning</li>
+            <li>✅ Saves time for HR and Admin teams</li>
+            <li>✅ Automates recurring learning sessions</li>
+            <li>✅ Customizable as per company needs</li>
+            <li>✅ Fast to deploy, no training needed</li>
+            <li>✅ Scalable for growing teams</li>
+        </ul>
+    </div>
+</section>
+
+<section class="py-16 bg-blue-700 text-white text-center">
+    <div class="max-w-3xl mx-auto px-4">
+        <h2 class="text-3xl font-bold mb-4">Ready to streamline your learning sessions?</h2>
+        <p class="mb-6">Let’s tailor SessionXpert for your organization.</p>
+        <a href="mailto:your@email.com" class="bg-white text-blue-700 px-8 py-3 rounded-lg font-bold hover:bg-gray-200 transition">Book Your Free Demo</a>
+    </div>
+</section>
 {% endblock %}

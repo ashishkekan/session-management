@@ -61,20 +61,34 @@ class SessionTopicForm(forms.ModelForm):
             field.widget.attrs.update({"class": "custom-input"})
 
 
-class UserCreationForm(forms.ModelForm):
-    """
-    Form for creating a new User, including fields for setting a password
-    and selecting a department.
-    """
+# management/models.py
+ROLES = [
+    ("Employee", "Employee"),
+    ("HR", "HR"),
+    ("Manager", "Manager"),
+]
 
+
+# management/forms.py
+class UserCreationForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput)
     department = forms.ModelChoiceField(
         queryset=Department.objects.all(), required=True
     )
+    is_staff = forms.BooleanField(required=False, label="Is Admin?")
+    role = forms.ChoiceField(choices=ROLES, required=True)
 
     class Meta:
         model = User
-        fields = ["username", "first_name", "last_name", "email", "password"]
+        fields = [
+            "username",
+            "first_name",
+            "last_name",
+            "email",
+            "password",
+            "is_staff",
+            "role",
+        ]
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -84,24 +98,22 @@ class UserCreationForm(forms.ModelForm):
     def save(self, commit=True):
         user = super().save(commit=False)
         user.set_password(self.cleaned_data["password"])
+        user.is_staff = self.cleaned_data["is_staff"]
         if commit:
             user.save()
             UserProfile.objects.create(
-                user=user, department=self.cleaned_data["department"]
+                user=user,
+                department=self.cleaned_data["department"],
+                role=self.cleaned_data["role"],
             )
         return user
 
 
 class UserEditForm(forms.ModelForm):
-    """
-    Form for editing an existing User, including department field with custom styling.
-    """
-
     department = forms.ModelChoiceField(
-        queryset=Department.objects.all(),
-        required=True,
-        empty_label="Select a department",
+        queryset=Department.objects.all(), required=True
     )
+    role = forms.ChoiceField(choices=ROLES, required=True)
 
     class Meta:
         model = User
@@ -109,19 +121,17 @@ class UserEditForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-
-        # If editing an existing user who already has a department
         if self.instance and hasattr(self.instance, "userprofile"):
             current_dept = self.instance.userprofile.department
+            current_role = self.instance.userprofile.role
             if current_dept:
-                # Lock the dropdown to only the current department
                 self.fields["department"].queryset = Department.objects.filter(
                     id=current_dept.id
                 )
                 self.fields["department"].initial = current_dept
-                self.fields["department"].disabled = True  # makes field non-editable
-
-        # Apply styling
+                self.fields["department"].disabled = True
+            self.fields["role"].initial = current_role
+            self.fields["role"].disabled = True
         for field in self.fields.values():
             field.widget.attrs.update({"class": "custom-input"})
 
@@ -129,10 +139,10 @@ class UserEditForm(forms.ModelForm):
         user = super().save(commit=commit)
         if commit:
             profile, _ = UserProfile.objects.get_or_create(user=user)
-            # If department field is disabled, use initial (since cleaned_data won't include disabled fields)
             profile.department = (
                 self.cleaned_data.get("department") or self.fields["department"].initial
             )
+            profile.role = self.cleaned_data["role"]
             profile.save()
         return user
 
@@ -190,3 +200,30 @@ class SessionUploadForm(forms.Form):
         help_text="Upload an Excel file (.xlsx) containing session data.",
         widget=forms.FileInput(attrs={"accept": ".xlsx"}),
     )
+
+
+class SupportForm(forms.Form):
+    subject = forms.CharField(
+        max_length=100,
+        widget=forms.TextInput(
+            attrs={"class": "form-control", "placeholder": "Enter subject"}
+        ),
+    )
+    message = forms.CharField(
+        widget=forms.Textarea(
+            attrs={
+                "class": "form-control",
+                "rows": 5,
+                "placeholder": "Describe your issue",
+            }
+        )
+    )
+    priority = forms.ChoiceField(
+        choices=[("Low", "Low"), ("Medium", "Medium"), ("High", "High")],
+        widget=forms.Select(attrs={"class": "form-control"}),
+    )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields.values():
+            field.widget.attrs.update({"class": "custom-input"})

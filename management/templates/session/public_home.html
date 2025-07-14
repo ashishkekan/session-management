@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to Session Management</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #f4f4f4; color: #333; }
+        header { background-color: #333; color: #fff; padding: 1em 0; text-align: center; }
+        .container { width: 80%; margin: auto; overflow: hidden; padding: 20px; }
+        .hero { background-color: #fff; padding: 20px; text-align: center; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        .hero h1 { font-size: 2.5em; margin-bottom: 10px; }
+        .hero p { font-size: 1.2em; margin-bottom: 20px; }
+        .features { display: flex; justify-content: space-around; margin-top: 20px; }
+        .feature { background-color: #fff; padding: 15px; border-radius: 8px; box-shadow: 0 0 5px rgba(0,0,0,0.1); width: 30%; text-align: center; }
+        .feature h3 { color: #333; }
+        footer { text-align: center; padding: 20px; background-color: #333; color: #fff; position: fixed; bottom: 0; width: 100%; }
+        .login-btn { display: inline-block; padding: 10px 20px; background-color: #5cb85c; color: white; text-decoration: none; border-radius: 5px; font-size: 1.1em; }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Session Management Platform</h1>
+    </header>
+    <div class="container">
+        <div class="hero">
+            <h1>Discover the Power of Organized Sessions</h1>
+            <p>Our platform helps you manage training, learning, and all kinds of sessions efficiently across your organization or multiple companies.</p>
+            <a href="{% url 'login' %}" class="login-btn">Login to Get Started</a>
+        </div>
+
+        <div class="features">
+            <div class="feature">
+                <h3>Multi-Company Support</h3>
+                <p>Manage distinct configurations and data for multiple companies seamlessly.</p>
+            </div>
+            <div class="feature">
+                <h3>Role-Based Access</h3>
+                <p>Granular control with roles like Admin, Manager, and Employee for each company.</p>
+            </div>
+            <div class="feature">
+                <h3>Comprehensive Session Management</h3>
+                <p>Schedule, track, and organize all your internal and external learning activities.</p>
+            </div>
+        </div>
+    </div>
+    <footer>
+        <p>&copy; 2025 Session Management Inc. All rights reserved.</p>
+    </footer>
+</body>
+</html>

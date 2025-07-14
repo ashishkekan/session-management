@@ -10,11 +10,11 @@
     <link rel="stylesheet" href="{% static 'management/style.css' %}">
 </head>
 <body class="font-sans text-gray-800">
-    <nav class="navbar fixed top-0 left-0 w-full z-50">
+    <nav class="navbar fixed top-0 left-0 w-full z-50 bg-blue-800">
         <div class="container mx-auto px-4 py-3 flex justify-between items-center">
             <div class="flex items-center space-x-3">
                 <h1 class="text-xl font-bold text-white">
-                    <span class="text-blue-300">Session</span>Xpert
+                    <span class="text-blue-300">SessionXpert</span>
                 </h1>
             </div>
             <div class="md:hidden">
@@ -22,9 +22,9 @@
                     <i class="fas fa-bars text-xl"></i>
                 </button>
             </div>
-            <div class="navbar-menu md:flex md:items-center md:space-x-2 hidden">
+            <div class="navbar-menu md:flex md:items-center md:space-x-2 hidden md:space-x-4">
                 {% if user.is_authenticated %}
-                    <a href="{% url 'home' %}" class="navbar-link text-white px-3 py-2 rounded-md flex items-center">
+                    <a href="{% url 'dashboard' %}" class="navbar-link text-white px-3 py-2 rounded-md flex items-center">
                         <i class="fas fa-tachometer-alt mr-2"></i> Dashboard
                     </a>
                     <a href="{% url 'session_list' %}" class="navbar-link text-white px-3 py-2 rounded-md flex items-center">
@@ -46,16 +46,14 @@
                             <i class="fas fa-user mr-2"></i> My Profile
                         </a>
                     {% endif %}
-                    {% if user.is_authenticated %}
-                        <a href="{% url 'recent_activities' %}" class="navbar-link text-white px-3 py-2 rounded-md flex items-center relative">
-                            <i class="fas fa-bell mr-2"></i> Notifications
-                            {% if today_notification_count > 0 %}
-                                <span class="absolute top-0 right-0 bg-red-500 text-xs text-white rounded-full h-5 w-5 flex items-center justify-center">
-                                    {{ today_notification_count }}
-                                </span>
-                            {% endif %}
-                        </a>
-                    {% endif %}
+                    <a href="{% url 'recent_activities' %}" class="navbar-link text-white px-3 py-2 rounded-md flex items-center relative">
+                        <i class="fas fa-bell mr-2"></i> Notifications
+                        {% if today_notification_count > 0 %}
+                            <span class="absolute top-0 right-0 bg-red-500 text-xs text-white rounded-full h-5 w-5 flex items-center justify-center">
+                                {{ today_notification_count }}
+                            </span>
+                        {% endif %}
+                    </a>
                     <a href="{% url 'logout' %}" class="navbar-link text-red-300 px-3 py-2 rounded-md flex items-center">
                         <i class="fas fa-sign-out-alt mr-2"></i> Logout
                     </a>
@@ -67,20 +65,12 @@
             </div>
         </div>
     </nav>
-    <div class="main-content">
+    <div class="main-content pt-24">
         <main class="container mx-auto py-8 px-4">
             {% if messages %}
                 <div class="mb-6 space-y-4">
                     {% for message in messages %}
-                        {% if message.tags == "success" %}
-                            <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 rounded-lg flex justify-between items-center">
-                        {% elif message.tags == "error" %}
-                            <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded-lg flex justify-between items-center">
-                        {% elif message.tags == "warning" %}
-                            <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 rounded-lg flex justify-between items-center">
-                        {% else %}
-                            <div class="bg-blue-100 border-l-4 border-blue-500 text-blue-700 p-4 rounded-lg flex justify-between items-center">
-                        {% endif %}
+                        <div class="p-4 rounded-lg flex justify-between items-center {% if message.tags == 'success' %}bg-green-100 border-l-4 border-green-500 text-green-700{% elif message.tags == 'error' %}bg-red-100 border-l-4 border-red-500 text-red-700{% elif message.tags == 'warning' %}bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700{% else %}bg-blue-100 border-l-4 border-blue-500 text-blue-700{% endif %}">
                             <span>{{ message }}</span>
                             <button type="button" class="hover:opacity-75" onclick="this.parentElement.style.display='none'">
                                 <i class="fas fa-times"></i>
@@ -89,11 +79,16 @@
                     {% endfor %}
                 </div>
             {% endif %}
+
             {% block content %}{% endblock %}
         </main>
     </div>
     <footer class="footer">
         <p>Copyright © {% now "Y" %} SessionXpert. All rights reserved.</p>
+        <p>
+            <a href="{% url 'faq' %}" class="hover:text-blue-800">FAQ & Help</a> |
+            <a href="{% url 'support' %}" class="hover:text-blue-800">Contact Support</a>
+        </p>
     </footer>
     <script>
         document.getElementById('menu-toggle').addEventListener('click', function() {

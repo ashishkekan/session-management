@@ -14,6 +14,13 @@ PLACE_CHOICES = [
     ("Auditorium", "Auditorium"),
 ]
 
+ROLES = [
+    ("Employee", "Employee"),
+    ("HR", "HR"),
+    ("Manager", "Manager"),
+    ("Admin", "Admin"),
+]
+
 
 class Department(models.Model):
     """
@@ -37,22 +44,12 @@ class Department(models.Model):
 
 
 class UserProfile(models.Model):
-    """
-    Extends the User model to include a department.
-
-    Fields:
-        user (OneToOneField): The associated user.
-        department (ForeignKey): The department the user belongs to.
-    """
-
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     department = models.ForeignKey(Department, on_delete=models.SET_NULL, null=True)
+    role = models.CharField(max_length=50, choices=ROLES, default="Employee")
 
     def __str__(self):
-        """
-        String representation of the user profile, showing the username and department.
-        """
-        return f"{self.user.username} - {self.department.name if self.department else 'No Department'}"
+        return f"{self.user.username} - {self.department.name if self.department else 'No Department'} - {self.role}"
 
 
 class SessionTopic(models.Model):
@@ -117,24 +114,31 @@ class ExternalTopic(models.Model):
         return self.coming_soon or "No Topic"
 
 
+ACTION_TYPES = [
+    ("CREATE", "Create"),
+    ("UPDATE", "Update"),
+    ("DELETE", "Delete"),
+    ("LOGIN", "Login"),
+    ("LOGOUT", "Logout"),
+]
+
+
 class RecentActivity(models.Model):
-    """
-    Represents recent activities performed by users.
-
-    Fields:
-        user (ForeignKey): The user who performed the activity.
-        description (TextField): A description of the activity.
-        timestamp (DateTimeField): The date and time when the activity occurred.
-        read (BooleanField): A flag indicating whether the activity has been read.
-    """
-
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    action_type = models.CharField(max_length=50, choices=ACTION_TYPES)
     description = models.TextField()
     timestamp = models.DateTimeField(auto_now_add=True)
     read = models.BooleanField(default=False)
+    details = models.JSONField(null=True, blank=True)
 
     def __str__(self):
-        """
-        String representation of the activity, showing the username and a snippet of the description.
-        """
-        return f"{self.user.username} - {self.description[:30]}"
+        return f"{self.user.username} - {self.action_type} - {self.description[:30]}"
+
+
+class SetupChecklist(models.Model):
+    task = models.CharField(max_length=100)
+    completed = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.task} - {'Completed' if self.completed else 'Pending'}"
