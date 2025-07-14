@@ -1,7 +1,6 @@
 {% extends 'session/base.html' %}
 {% block title %}Learning{% endblock %}
 {% block header_title %}Learning Topics{% endblock %}
-
 {% block content %}
 <div class="card p-6">
     {% if request.user.is_staff %}
@@ -42,7 +41,6 @@
     {% else %}
         <p class="text-gray-500">No sessions available.</p>
     {% endif %}
-    <!-- Pagination -->
     {% include "session/partial/pagination.html" with page_obj=sessions %}
 </div>
 {% endblock %}

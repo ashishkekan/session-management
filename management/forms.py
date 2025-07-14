@@ -3,13 +3,7 @@ from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.models import User
 from django.forms import DateTimeInput
 
-from management.models import (
-    CompanyProfile,
-    Department,
-    ExternalTopic,
-    SessionTopic,
-    UserProfile,
-)
+from management.models import Department, ExternalTopic, SessionTopic, UserProfile
 
 
 class DepartmentForm(forms.ModelForm):
@@ -208,40 +202,6 @@ class SessionUploadForm(forms.Form):
     )
 
 
-class CompanyProfileForm(forms.ModelForm):
-    class Meta:
-        model = CompanyProfile
-        fields = ["name", "logo", "contact_email"]
-        widgets = {
-            "name": forms.TextInput(attrs={"class": "form-control"}),
-            "logo": forms.FileInput(attrs={"class": "form-control"}),
-            "contact_email": forms.EmailInput(attrs={"class": "form-control"}),
-        }
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        for field in self.fields.values():
-            field.widget.attrs.update({"class": "custom-input"})
-
-
-# management/forms.py
-class InviteAdminForm(forms.Form):
-    email = forms.EmailField(
-        widget=forms.EmailInput(
-            attrs={"class": "form-control", "placeholder": "Enter email"}
-        )
-    )
-    department = forms.ModelChoiceField(
-        queryset=Department.objects.all(), required=True
-    )
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        for field in self.fields.values():
-            field.widget.attrs.update({"class": "custom-input"})
-
-
-# management/forms.py
 class SupportForm(forms.Form):
     subject = forms.CharField(
         max_length=100,

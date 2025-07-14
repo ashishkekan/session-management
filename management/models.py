@@ -14,7 +14,6 @@ PLACE_CHOICES = [
     ("Auditorium", "Auditorium"),
 ]
 
-# management/models.py
 ROLES = [
     ("Employee", "Employee"),
     ("HR", "HR"),
@@ -115,7 +114,6 @@ class ExternalTopic(models.Model):
         return self.coming_soon or "No Topic"
 
 
-# management/models.py
 ACTION_TYPES = [
     ("CREATE", "Create"),
     ("UPDATE", "Update"),
@@ -131,27 +129,12 @@ class RecentActivity(models.Model):
     description = models.TextField()
     timestamp = models.DateTimeField(auto_now_add=True)
     read = models.BooleanField(default=False)
-    details = models.JSONField(null=True, blank=True)  # Store additional data
+    details = models.JSONField(null=True, blank=True)
 
     def __str__(self):
         return f"{self.user.username} - {self.action_type} - {self.description[:30]}"
 
 
-class CompanyProfile(models.Model):
-    name = models.CharField(max_length=100, default="SessionXpert")
-    logo = models.ImageField(upload_to="logos/", null=True, blank=True)
-    contact_email = models.EmailField(null=True, blank=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return self.name
-
-    class Meta:
-        verbose_name = "Company Profile"
-        verbose_name_plural = "Company Profiles"
-
-
-# management/models.py
 class SetupChecklist(models.Model):
     task = models.CharField(max_length=100)
     completed = models.BooleanField(default=False)

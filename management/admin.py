@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from management.models import CompanyProfile, ExternalTopic, SessionTopic, UserProfile
+from management.models import ExternalTopic, SessionTopic, UserProfile
 
 
 @admin.register(SessionTopic)
@@ -44,5 +44,4 @@ class ExternalTopicAdmin(admin.ModelAdmin):
     ordering = ("-created_at",)
 
 
-admin.site.register(CompanyProfile)
 admin.site.register(UserProfile)

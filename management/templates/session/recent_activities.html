@@ -1,4 +1,3 @@
-<!-- session/recent_activities.html -->
 {% extends "session/base.html" %}
 {% block title %}Recent Activities{% endblock %}
 {% block header_title %}Recent Activities{% endblock %}
@@ -40,7 +39,6 @@
     {% else %}
         <p class="text-gray-500">No recent activities found.</p>
     {% endif %}
-    <!-- Pagination -->
     {% include "session/partial/pagination.html" with page_obj=activities %}
 </div>
 {% endblock %}

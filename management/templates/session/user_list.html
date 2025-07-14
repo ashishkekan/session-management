@@ -1,8 +1,6 @@
 {% extends 'session/base.html' %}
-
 {% block title %}Users{% endblock %}
 {% block header_title %}Registered Users{% endblock %}
-
 {% block content %}
 <div class="card p-8">
     {% if request.user.is_staff %}
@@ -22,13 +20,8 @@
                     {% endfor %}
                 </select>
             </form>
-            
             <a href="{% url 'add_user' %}" class="btn-primary flex items-center px-3 py-2 text-sm">
                 <i class="fas fa-plus mr-2"></i> Create
-            </a>
-
-            <a href="{% url 'invite_admin' %}" class="btn-primary flex items-center px-3 py-2 text-sm">
-                <i class="fas fa-envelope mr-2"></i> Invite Admin
             </a>
         </div>
     </div>
@@ -79,7 +72,6 @@
             </tbody>
         </table>
     </div>
-    <!-- Pagination -->
     {% include "session/partial/pagination.html" with page_obj=users %}
 </div>
 {% endblock %}

@@ -1,28 +1,31 @@
 from datetime import datetime
+from io import BytesIO
 
 import openpyxl
 import pandas as pd
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth import login, logout, update_session_auth_hash
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import User
+from django.core.mail import send_mail
 from django.core.paginator import Paginator
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
+from django.template.response import TemplateResponse
+from django.utils import timezone
 from django.utils.timezone import now
 from openpyxl import Workbook, load_workbook
 from openpyxl.utils import get_column_letter
-from django.core.mail import send_mail
-from django.conf import settings
+from reportlab.lib.pagesizes import A4
+from reportlab.pdfgen import canvas
 
 from management.forms import (
-    CompanyProfileForm,
     CustomPasswordChangeForm,
     DepartmentForm,
     ExternalTopicForm,
-    InviteAdminForm,
     SessionTopicForm,
     SessionUploadForm,
     SupportForm,
@@ -33,7 +36,6 @@ from management.models import (
     ACTION_TYPES,
     PLACE_CHOICES,
     STATUSES,
-    CompanyProfile,
     Department,
     ExternalTopic,
     RecentActivity,
@@ -42,18 +44,17 @@ from management.models import (
     UserProfile,
 )
 from management.utils import log_activity
-from django.http import HttpResponse
-from reportlab.lib.pagesizes import A4
-from reportlab.pdfgen import canvas
-from io import BytesIO
-
-from django.utils import timezone
-from django.template.response import TemplateResponse
 
 
 def is_admin(user):
     """
-    Check if the user is an admin (staff).
+    Check if the user is an admin.
+
+    Args:
+        user: The User object to check.
+
+    Returns:
+        bool: True if the user is a staff member (admin), False otherwise.
     """
     return user.is_staff
 
@@ -145,7 +146,6 @@ def home(request):
     return TemplateResponse(request, "session/home.html")
 
 
-# management/views.py
 def dashboard(request):
     """
     Display the dashboard for authenticated and unauthenticated users.
@@ -159,16 +159,10 @@ def dashboard(request):
     Returns:
         HttpResponse: Rendered dashboard page with context.
     """
-    company_profile = CompanyProfile.objects.first()
     is_admin = request.user.is_staff
     checklist = None
     if is_admin:
         checklist = SetupChecklist.objects.all()
-        # Auto-check tasks
-        if CompanyProfile.objects.filter(logo__isnull=False).exists():
-            SetupChecklist.objects.filter(task="Set company logo and name").update(
-                completed=True
-            )
         if User.objects.filter(is_staff=True).exists():
             SetupChecklist.objects.filter(task="Add first admin user").update(
                 completed=True
@@ -213,7 +207,6 @@ def dashboard(request):
             else None
         )
         context = {
-            "company_profile": company_profile,
             "is_admin": is_admin,
             "role": role,
             "total_users": total_users,
@@ -228,9 +221,7 @@ def dashboard(request):
         }
         return render(request, "session/dashboard.html", context)
     else:
-        return render(
-            request, "session/dashboard.html", {"company_profile": company_profile}
-        )
+        return render(request, "session/dashboard.html")
 
 
 def user_login(request):
@@ -280,19 +271,6 @@ def user_logout(request):
         log_activity(request.user, description="Logged out.", action_type="LOGGED OUT")
     logout(request)
     return redirect("login")
-
-
-def is_admin(user):
-    """
-    Check if the user is an admin.
-
-    Args:
-        user: The User object to check.
-
-    Returns:
-        bool: True if the user is a staff member (admin), False otherwise.
-    """
-    return user.is_staff
 
 
 @login_required
@@ -597,7 +575,8 @@ def create_external_topic(request):
             if request.user.is_staff:
                 log_activity(
                     request.user,
-                    f"Admin added new learning topic: '{topic.coming_soon}'.",
+                    description=f"Admin added new learning topic: '{topic.coming_soon}'.",
+                    action_type="Add",
                     target_users=User.objects.filter(is_staff=False),
                 )
             else:
@@ -1051,96 +1030,6 @@ def upload_sessions_excel(request):
             return redirect("session_list")
 
     return redirect("session_list")
-
-
-@login_required
-@user_passes_test(is_admin)
-def company_profile(request):
-    """
-    Allow admins to update the company profile.
-
-    Manages the single instance of the company profile (name, logo, email)
-    and logs the update activity.
-
-    Args:
-        request: The HTTP request object.
-
-    Returns:
-        HttpResponse: Company profile form or redirect to home page on success.
-    """
-    profile, _ = CompanyProfile.objects.get_or_create(id=1)  # Single instance
-    if request.method == "POST":
-        form = CompanyProfileForm(request.POST, request.FILES, instance=profile)
-        if form.is_valid():
-            form.save()
-            log_activity(
-                request.user,
-                description=f"Updated company profile: {profile.name}",
-                action_type="Edit Company",
-            )
-            messages.success(request, "Company profile updated successfully.")
-            return redirect("company_profile")
-    else:
-        form = CompanyProfileForm(instance=profile)
-    return render(request, "session/company_profile.html", {"form": form})
-
-
-@login_required
-def company_list(request):
-    """Display the list of companies"""
-    companies = CompanyProfile.objects.all()
-    paginator = Paginator(companies, 10)
-    page_number = request.GET.get("page")
-    page_obj = paginator.get_page(page_number)
-    return render(request, "session/company-list.html", {"companies": page_obj})
-
-
-@login_required
-@user_passes_test(is_admin)
-def invite_admin(request):
-    """
-    Allow admins to invite new admin users via email.
-
-    Creates a new admin user with a temporary password, sends an invitation email,
-    and logs the activity.
-
-    Args:
-        request: The HTTP request object.
-
-    Returns:
-        HttpResponse: Invitation form or redirect to user list on success.
-    """
-    if request.method == "POST":
-        form = InviteAdminForm(request.POST)
-        if form.is_valid():
-            email = form.cleaned_data["email"]
-            department = form.cleaned_data["department"]
-            # Generate a temporary password
-            temp_password = User.objects.make_random_password()
-            user = User.objects.create_user(
-                username=email.split("@")[0],
-                email=email,
-                password=temp_password,
-                is_staff=True,
-            )
-            UserProfile.objects.create(user=user, department=department)
-            # Send email
-            send_mail(
-                subject="SessionXpert Admin Invitation",
-                message=f"You have been invited as an admin. Your credentials:\nUsername: {user.username}\nPassword: {temp_password}\nPlease change your password after logging in.",
-                from_email=settings.DEFAULT_FROM_EMAIL,
-                recipient_list=[email],
-            )
-            log_activity(
-                user=request.user,
-                description=f"Invited admin: {user.username}",
-                action_type="INVITE",
-                target_users=User.objects.filter(is_active=True, is_staff=True),
-            )
-            return redirect("user_list")
-    else:
-        form = InviteAdminForm()
-    return render(request, "session/invite_admin.html", {"form": form})
 
 
 @login_required

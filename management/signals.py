@@ -1,9 +1,10 @@
-from django.db.models.signals import post_save, post_delete
-from django.contrib.auth.signals import user_logged_in, user_logged_out
-from django.dispatch import receiver
 from django.contrib.auth.models import User
-from .models import SessionTopic, Department, UserProfile, ExternalTopic
-from .utils import log_activity
+from django.contrib.auth.signals import user_logged_in, user_logged_out
+from django.db.models.signals import post_delete, post_save
+from django.dispatch import receiver
+
+from management.models import Department, ExternalTopic, SessionTopic, UserProfile
+from management.utils import log_activity
 
 
 @receiver(user_logged_in)

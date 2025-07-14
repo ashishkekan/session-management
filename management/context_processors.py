@@ -1,6 +1,6 @@
 from datetime import date
 
-from management.models import CompanyProfile, RecentActivity
+from management.models import RecentActivity
 
 
 def today_notifications_count(request):
@@ -15,7 +15,3 @@ def today_notifications_count(request):
         ).count()
         return {"today_notification_count": count}
     return {"today_notification_count": 0}
-
-
-def company_profile(request):
-    return {"company_profile": CompanyProfile.objects.first()}
