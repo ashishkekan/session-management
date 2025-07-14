@@ -247,7 +247,7 @@ def user_login(request):
                 description="Logged in successfully.",
                 action_type="LOGGED IN",
             )
-            return redirect("home")
+            return redirect("dashboard")
         else:
             messages.error(request, "Invalid username or password.")
     else:
